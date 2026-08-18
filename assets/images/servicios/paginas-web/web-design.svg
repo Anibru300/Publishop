@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0c29"/>
+      <stop offset="50%" style="stop-color:#302b63"/>
+      <stop offset="100%" style="stop-color:#24243e"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#ec4899"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bgGrad)"/>
+  
+  <!-- Laptop -->
+  <rect x="200" y="150" width="400" height="260" rx="20" fill="#1a1a2e" stroke="url(#accentGrad)" stroke-width="4"/>
+  <rect x="220" y="170" width="360" height="200" rx="8" fill="#0f0c29"/>
+  
+  <!-- Code lines -->
+  <rect x="240" y="200" width="120" height="12" rx="6" fill="#7c3aed" opacity="0.8"/>
+  <rect x="240" y="230" width="200" height="10" rx="5" fill="#ec4899" opacity="0.6"/>
+  <rect x="240" y="250" width="160" height="10" rx="5" fill="#94a3b8" opacity="0.5"/>
+  <rect x="240" y="280" width="140" height="10" rx="5" fill="#7c3aed" opacity="0.7"/>
+  <rect x="240" y="300" width="180" height="10" rx="5" fill="#ec4899" opacity="0.6"/>
+  <rect x="240" y="330" width="100" height="10" rx="5" fill="#94a3b8" opacity="0.5"/>
+  
+  <!-- Laptop base -->
+  <path d="M180 410 L620 410 L640 440 L160 440 Z" fill="#1a1a2e" stroke="url(#accentGrad)" stroke-width="3"/>
+  <rect x="360" y="415" width="80" height="8" rx="4" fill="#0f0c29"/>
+  
+  <!-- Floating elements -->
+  <circle cx="150" cy="120" r="30" fill="url(#accentGrad)" opacity="0.2"/>
+  <circle cx="650" cy="480" r="40" fill="url(#accentGrad)" opacity="0.15"/>
+  <rect x="680" y="180" width="40" height="40" rx="8" fill="url(#accentGrad)" opacity="0.2" transform="rotate(15 700 200)"/>
+  
+  <!-- Text -->
+  <text x="400" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#ffffff">Páginas Web Profesionales</text>
+  <text x="400" y="555" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#94a3b8">Diseño moderno · Responsive · WhatsApp integrado</text>
+</svg>

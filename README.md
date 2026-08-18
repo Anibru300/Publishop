@@ -49,7 +49,28 @@ publishop/
 ├── assets/
 │   ├── images/
 │   │   ├── logo.jpg
-│   │   └── productos/      # Galería de productos por categoría
+│   │   ├── servicios/      # Imágenes de los servicios principales
+│   │   │   ├── paginas-web/
+│   │   │   ├── laser/
+│   │   │   └── sublimacion/
+│   │   ├── productos/      # Galería de productos por categoría
+│   │   │   ├── lonas/
+│   │   │   ├── dtf/
+│   │   │   ├── vinil/
+│   │   │   ├── plumas/
+│   │   │   ├── tazas/
+│   │   │   ├── termos/
+│   │   │   ├── mdf/
+│   │   │   └── general/
+│   │   └── facebook/       # Respaldo organizado de fotos de Facebook
+│   │       ├── lonas/
+│   │       ├── dtf/
+│   │       ├── vinil/
+│   │       ├── plumas/
+│   │       ├── tazas/
+│   │       ├── termos/
+│   │       ├── mdf/
+│   │       └── general/
 │   └── videos/
 │       └── hero.mp4        # Video de fondo del hero
 ├── README.md
