@@ -1,0 +1,84 @@
+# Publishop 🎨
+
+**Sitio web profesional de Publishop** — Especialistas en personalización y publicidad en León, Guanajuato.
+
+> "Dale vida a tus ideas"
+
+![Publishop Logo](assets/images/logo.jpg)
+
+## 🌐 Ver sitio en vivo
+
+El sitio está disponible en GitHub Pages:
+**https://anibru300.github.io/Publishop**
+
+## 📋 Descripción
+
+Publishop es un negocio dedicado a la personalización de productos mediante diversas técnicas de impresión y grabado:
+
+- 🔥 Grabado láser en termos, plumas, MDF, cuero y más
+- 👕 Sublimación en playeras, tazas, rompecabezas y artículos especiales
+- 🎨 Impresión DTF (incluyendo reflejante)
+- ✂️ Corte de vinil para calcomanías, etiquetas y lonas
+- 🪵 Corte y grabado en MDF
+- 📇 Papelería e impresión: tarjetas, flyers, stickers, invitaciones
+
+## 🛠 Tecnologías utilizadas
+
+- **HTML5** semántico y accesible
+- **CSS3** con variables, flexbox, grid y animaciones
+- **JavaScript vanilla** para interactividad
+- **Font Awesome** para iconografía
+- **Google Fonts** (Poppins + Montserrat)
+- **GitHub Pages** para hosting gratuito
+
+## 📁 Estructura del proyecto
+
+```
+publishop/
+├── index.html              # Página principal
+├── css/
+│   └── styles.css          # Estilos del sitio
+├── js/
+│   └── main.js             # Interactividad
+├── assets/
+│   ├── images/
+│   │   ├── logo.jpg
+│   │   └── productos/      # Galería de productos
+│   └── videos/
+│       └── hero.mp4        # Video de fondo del hero
+├── README.md
+└── .gitignore
+```
+
+## 📞 Contacto
+
+- **WhatsApp:** [477 841 16 55](https://wa.me/524778411655)
+- **Teléfono:** 477 272 91 21
+- **Correo:** publishop.leongto@gmail.com
+- **Ubicación:** San Mateo #206, Col. La Florida, León, Gto.
+- **Facebook:** [Publi Shop León Gto.](https://www.facebook.com/publishop.leon.gto)
+- **Instagram:** [@publishop.leon.gto](https://www.instagram.com/publishop.leon.gto)
+
+## 🚀 Cómo ejecutar localmente
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/Anibru300/Publishop.git
+   ```
+
+2. Abre el archivo `index.html` en tu navegador favorito.
+
+3. Opcional: usa un servidor local para una mejor experiencia:
+   ```bash
+   cd Publishop
+   python -m http.server 8000
+   ```
+   Luego visita `http://localhost:8000`
+
+## 📄 Licencia
+
+© Publishop. Todos los derechos reservados.
+
+---
+
+Hecho con ❤️ en León, Guanajuato.
