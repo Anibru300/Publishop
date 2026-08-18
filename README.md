@@ -13,14 +13,20 @@ El sitio está disponible en GitHub Pages:
 
 ## 📋 Descripción
 
-Publishop es un negocio dedicado a la personalización de productos mediante diversas técnicas de impresión y grabado:
+Publishop ofrece soluciones de personalización y presencia digital:
 
-- 🔥 Grabado láser en termos, plumas, MDF, cuero y más
+**Servicios principales:**
+- 💻 Diseño de páginas webs profesionales
+- 🔥 Grabado y corte láser en termos, plumas, MDF, cuero y más
 - 👕 Sublimación en playeras, tazas, rompecabezas y artículos especiales
-- 🎨 Impresión DTF (incluyendo reflejante)
-- ✂️ Corte de vinil para calcomanías, etiquetas y lonas
-- 🪵 Corte y grabado en MDF
+
+**Productos por categoría:**
+- 🎨 Impresión DTF (playeras, textiles)
+- ✂️ Corte de vinil (calcomanías, etiquetas, vasos, termos)
+- 🪵 Corte y grabado en MDF (figuras, invitaciones, decoración)
 - 📇 Papelería e impresión: tarjetas, flyers, stickers, invitaciones
+- 🥤 Termos, tazas y plumas personalizadas
+- 🏳️ Lonas publicitarias
 
 ## 🛠 Tecnologías utilizadas
 
@@ -43,7 +49,7 @@ publishop/
 ├── assets/
 │   ├── images/
 │   │   ├── logo.jpg
-│   │   └── productos/      # Galería de productos
+│   │   └── productos/      # Galería de productos por categoría
 │   └── videos/
 │       └── hero.mp4        # Video de fondo del hero
 ├── README.md

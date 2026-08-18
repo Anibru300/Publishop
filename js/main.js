@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const navToggle = document.getElementById('navToggle');
     const navMenu = document.getElementById('navMenu');
     const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('section[id]');
+    const navDropdowns = document.querySelectorAll('.nav-dropdown');
+    const sections = document.querySelectorAll('section[id], .service-featured[id]');
     const particlesContainer = document.getElementById('particles');
     const counters = document.querySelectorAll('.stat-number');
     const filterBtns = document.querySelectorAll('.filter-btn');
@@ -42,11 +43,23 @@ document.addEventListener('DOMContentLoaded', () => {
         navToggle.classList.toggle('active');
     });
 
+    // Mobile dropdowns
+    navDropdowns.forEach(dropdown => {
+        const link = dropdown.querySelector('.nav-link');
+        link.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                e.preventDefault();
+                dropdown.classList.toggle('active');
+            }
+        });
+    });
+
     // Close mobile menu on link click
-    navLinks.forEach(link => {
+    document.querySelectorAll('.nav-menu a, .dropdown-menu a').forEach(link => {
         link.addEventListener('click', () => {
             navMenu.classList.remove('active');
             navToggle.classList.remove('active');
+            navDropdowns.forEach(d => d.classList.remove('active'));
         });
     });
 
@@ -55,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let current = '';
         
         sections.forEach(section => {
-            const sectionTop = section.offsetTop - 100;
+            const sectionTop = section.offsetTop - 120;
             const sectionHeight = section.offsetHeight;
             
             if (window.pageYOffset >= sectionTop && window.pageYOffset < sectionTop + sectionHeight) {
@@ -65,10 +78,15 @@ document.addEventListener('DOMContentLoaded', () => {
         
         navLinks.forEach(link => {
             link.classList.remove('active');
-            if (link.getAttribute('href') === `#${current}`) {
+            const href = link.getAttribute('href');
+            if (href === `#${current}` || (current && href === `#productos` && isProductCategory(current))) {
                 link.classList.add('active');
             }
         });
+    }
+
+    function isProductCategory(id) {
+        return ['lonas', 'dtf', 'vinil', 'plumas', 'tazas', 'termos', 'mdf'].includes(id);
     }
 
     // Generate particles
@@ -96,7 +114,11 @@ document.addEventListener('DOMContentLoaded', () => {
     createParticles();
 
     // Counter animation
+    let countersAnimated = false;
     function animateCounters() {
+        if (countersAnimated) return;
+        countersAnimated = true;
+        
         counters.forEach(counter => {
             const target = parseInt(counter.getAttribute('data-count'));
             const duration = 2000;
@@ -143,28 +165,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Product filter
+    function filterProducts(category) {
+        filterBtns.forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('data-filter') === category);
+        });
+        
+        productItems.forEach(item => {
+            if (category === 'all' || item.getAttribute('data-category') === category) {
+                item.classList.remove('hidden');
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'scale(1)';
+                }, 10);
+            } else {
+                item.style.opacity = '0';
+                item.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                    item.classList.add('hidden');
+                }, 300);
+            }
+        });
+    }
+
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
             const filter = btn.getAttribute('data-filter');
-            
-            productItems.forEach(item => {
-                if (filter === 'all' || item.getAttribute('data-category') === filter) {
-                    item.classList.remove('hidden');
-                    setTimeout(() => {
-                        item.style.opacity = '1';
-                        item.style.transform = 'scale(1)';
-                    }, 10);
-                } else {
-                    item.style.opacity = '0';
-                    item.style.transform = 'scale(0.8)';
-                    setTimeout(() => {
-                        item.classList.add('hidden');
-                    }, 300);
-                }
-            });
+            filterProducts(filter);
         });
     });
 
@@ -172,6 +198,28 @@ document.addEventListener('DOMContentLoaded', () => {
     productItems.forEach(item => {
         item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
     });
+
+    // Handle URL hash for product categories
+    function handleHashFilter() {
+        const hash = window.location.hash.replace('#', '');
+        const validCategories = ['lonas', 'dtf', 'vinil', 'plumas', 'tazas', 'termos', 'mdf'];
+        
+        if (validCategories.includes(hash)) {
+            setTimeout(() => {
+                filterProducts(hash);
+                const productsSection = document.getElementById('productos');
+                if (productsSection) {
+                    productsSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 300);
+        }
+    }
+
+    // Check hash on load
+    handleHashFilter();
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleHashFilter);
 
     // Contact form handling
     if (contactForm) {
@@ -191,12 +239,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Smooth scroll for anchor links (fallback)
+    // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const href = this.getAttribute('href');
+            const targetId = href.replace('#', '');
+            const validCategories = ['lonas', 'dtf', 'vinil', 'plumas', 'tazas', 'termos', 'mdf'];
+            
+            if (validCategories.includes(targetId)) {
+                e.preventDefault();
+                window.location.hash = targetId;
+                return;
+            }
+            
+            const target = document.querySelector(href);
             if (target) {
+                e.preventDefault();
                 target.scrollIntoView({
                     behavior: 'smooth',
                     block: 'start'

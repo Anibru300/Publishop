@@ -34,8 +34,26 @@
             </button>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#inicio" class="nav-link active">Inicio</a></li>
-                <li><a href="#servicios" class="nav-link">Servicios</a></li>
-                <li><a href="#productos" class="nav-link">Productos</a></li>
+                <li class="nav-dropdown">
+                    <a href="#servicios" class="nav-link">Servicios <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#servicios-web">Páginas webs</a></li>
+                        <li><a href="#servicios-laser">Grabado y corte láser</a></li>
+                        <li><a href="#servicios-sublimacion">Sublimación</a></li>
+                    </ul>
+                </li>
+                <li class="nav-dropdown">
+                    <a href="#productos" class="nav-link">Productos <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#lonas">Lonas</a></li>
+                        <li><a href="#dtf">DTF</a></li>
+                        <li><a href="#vinil">Vinil</a></li>
+                        <li><a href="#plumas">Plumas</a></li>
+                        <li><a href="#tazas">Tazas</a></li>
+                        <li><a href="#termos">Termos</a></li>
+                        <li><a href="#mdf">MDF</a></li>
+                    </ul>
+                </li>
                 <li><a href="#proceso" class="nav-link">Proceso</a></li>
                 <li><a href="#contacto" class="nav-link">Contacto</a></li>
             </ul>
@@ -139,68 +157,68 @@
         <div class="container">
             <div class="section-header" data-aos="fade-up">
                 <span class="section-tag">Nuestros servicios</span>
-                <h2 class="section-title">Técnicas de <span class="gradient-text">personalización</span></h2>
-                <p class="section-desc">Contamos con múltiples tecnologías para adaptarnos a cualquier proyecto.</p>
+                <h2 class="section-title">Soluciones <span class="gradient-text">profesionales</span></h2>
+                <p class="section-desc">Además de personalización física, también creamos presencia digital para tu negocio.</p>
             </div>
-            <div class="services-grid">
-                <div class="service-card" data-aos="fade-up" data-aos-delay="0">
+            <div class="services-grid services-main">
+                <!-- Páginas webs -->
+                <div class="service-card service-featured" id="servicios-web" data-aos="fade-up" data-aos-delay="0">
                     <div class="service-image">
-                        <img src="assets/images/productos/termos-grabados.jpg" alt="Grabado láser en termos">
+                        <img src="assets/images/productos/lona-negocio.jpg" alt="Páginas webs para negocios">
+                        <div class="service-icon service-icon-large"><i class="fas fa-laptop-code"></i></div>
                     </div>
                     <div class="service-content">
-                        <div class="service-icon"><i class="fas fa-fire"></i></div>
-                        <h3>Grabado Láser</h3>
-                        <p>Termos, plumas, madera, cuero y más con precisión milimétrica y acabado permanente.</p>
+                        <h3>Páginas webs</h3>
+                        <p>Diseño y desarrollo de sitios web profesionales para tu negocio. Landing pages, catálogos de productos y páginas informativas que te ayudan a vender más.</p>
+                        <ul class="service-list">
+                            <li><i class="fas fa-check"></i> Diseño moderno y responsive</li>
+                            <li><i class="fas fa-check"></i> Optimizado para celular</li>
+                            <li><i class="fas fa-check"></i> Enlace directo a WhatsApp</li>
+                            <li><i class="fas fa-check"></i> Hosting y dominio opcional</li>
+                        </ul>
+                        <a href="https://wa.me/524778411655?text=Hola%20Publishop,%20me%20interesa%20una%20página%20web" class="btn btn-primary" target="_blank">
+                            <i class="fab fa-whatsapp"></i> Cotizar página web
+                        </a>
                     </div>
                 </div>
-                <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+                <!-- Grabado y corte láser -->
+                <div class="service-card service-featured" id="servicios-laser" data-aos="fade-up" data-aos-delay="150">
                     <div class="service-image">
-                        <img src="assets/images/productos/playera-sublimada.jpg" alt="Playera sublimada">
+                        <img src="assets/images/productos/mdf-laser.jpg" alt="Grabado y corte láser">
+                        <div class="service-icon service-icon-large"><i class="fas fa-fire"></i></div>
                     </div>
                     <div class="service-content">
-                        <div class="service-icon"><i class="fas fa-tshirt"></i></div>
+                        <h3>Grabado y corte láser</h3>
+                        <p>Personalización permanente y de alta precisión sobre termos, plumas, MDF, cuero, acrílico y más. Ideal para regalos corporativos y detalles personalizados.</p>
+                        <ul class="service-list">
+                            <li><i class="fas fa-check"></i> Grabado en termos y plumas</li>
+                            <li><i class="fas fa-check"></i> Corte y grabado en MDF</li>
+                            <li><i class="fas fa-check"></i> Acabado duradero y elegante</li>
+                            <li><i class="fas fa-check"></i> Perfecto para empresas y eventos</li>
+                        </ul>
+                        <a href="https://wa.me/524778411655?text=Hola%20Publishop,%20me%20interesa%20grabado%20láser" class="btn btn-primary" target="_blank">
+                            <i class="fab fa-whatsapp"></i> Cotizar láser
+                        </a>
+                    </div>
+                </div>
+                <!-- Sublimación -->
+                <div class="service-card service-featured" id="servicios-sublimacion" data-aos="fade-up" data-aos-delay="300">
+                    <div class="service-image">
+                        <img src="assets/images/productos/playera-sublimada.jpg" alt="Sublimación">
+                        <div class="service-icon service-icon-large"><i class="fas fa-tshirt"></i></div>
+                    </div>
+                    <div class="service-content">
                         <h3>Sublimación</h3>
-                        <p>Playeras, tazas, rompecabezas y artículos especiales con colores vibrantes.</p>
-                    </div>
-                </div>
-                <div class="service-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="service-image">
-                        <img src="assets/images/productos/playeras-dtf.jpg" alt="Playera DTF">
-                    </div>
-                    <div class="service-content">
-                        <div class="service-icon"><i class="fas fa-fill-drip"></i></div>
-                        <h3>Impresión DTF</h3>
-                        <p>Impresión directa sobre película para cualquier tipo de tela, incluyendo reflejante.</p>
-                    </div>
-                </div>
-                <div class="service-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="service-image">
-                        <img src="assets/images/productos/vasos-vinil.jpg" alt="Vinil">
-                    </div>
-                    <div class="service-content">
-                        <div class="service-icon"><i class="fas fa-cut"></i></div>
-                        <h3>Corte de Vinil</h3>
-                        <p>Calcomanías, etiquetas, lonas y decoración en vinil de alta durabilidad.</p>
-                    </div>
-                </div>
-                <div class="service-card" data-aos="fade-up" data-aos-delay="400">
-                    <div class="service-image">
-                        <img src="assets/images/productos/mdf-laser.jpg" alt="MDF">
-                    </div>
-                    <div class="service-content">
-                        <div class="service-icon"><i class="fas fa-shapes"></i></div>
-                        <h3>Corte y Grabado MDF</h3>
-                        <p>Figuras, llaveros, invitaciones y decoración en madera personalizada.</p>
-                    </div>
-                </div>
-                <div class="service-card" data-aos="fade-up" data-aos-delay="500">
-                    <div class="service-image">
-                        <img src="assets/images/productos/tarjetas.jpg" alt="Tarjetas de presentación">
-                    </div>
-                    <div class="service-content">
-                        <div class="service-icon"><i class="fas fa-id-card"></i></div>
-                        <h3>Papelería e Impresión</h3>
-                        <p>Tarjetas de presentación, flyers, stickers, invitaciones y material publicitario.</p>
+                        <p>Impresión full color en playeras, tazas, rompecabezas y artículos especiales. Colores vibrantes que no se desgastan con el uso.</p>
+                        <ul class="service-list">
+                            <li><i class="fas fa-check"></i> Playeras y gorras</li>
+                            <li><i class="fas fa-check"></i> Tazas y rompecabezas</li>
+                            <li><i class="fas fa-check"></i> Colores brillantes y duraderos</li>
+                            <li><i class="fas fa-check"></i> Desde una pieza</li>
+                        </ul>
+                        <a href="https://wa.me/524778411655?text=Hola%20Publishop,%20me%20interesa%20sublimación" class="btn btn-primary" target="_blank">
+                            <i class="fab fa-whatsapp"></i> Cotizar sublimación
+                        </a>
                     </div>
                 </div>
             </div>
@@ -211,100 +229,131 @@
     <section class="section products" id="productos">
         <div class="container">
             <div class="section-header" data-aos="fade-up">
-                <span class="section-tag">Galería</span>
-                <h2 class="section-title">Nuestros <span class="gradient-text">trabajos</span></h2>
-                <p class="section-desc">Algunos ejemplos de lo que podemos crear para ti.</p>
+                <span class="section-tag">Galería de productos</span>
+                <h2 class="section-title">Personalización por <span class="gradient-text">categoría</span></h2>
+                <p class="section-desc">Explora nuestros trabajos organizados por tipo de producto.</p>
             </div>
             <div class="products-filter" data-aos="fade-up">
                 <button class="filter-btn active" data-filter="all">Todos</button>
+                <button class="filter-btn" data-filter="lonas">Lonas</button>
+                <button class="filter-btn" data-filter="dtf">DTF</button>
+                <button class="filter-btn" data-filter="vinil">Vinil</button>
+                <button class="filter-btn" data-filter="plumas">Plumas</button>
+                <button class="filter-btn" data-filter="tazas">Tazas</button>
                 <button class="filter-btn" data-filter="termos">Termos</button>
-                <button class="filter-btn" data-filter="playeras">Playeras</button>
-                <button class="filter-btn" data-filter="papeleria">Papelería</button>
-                <button class="filter-btn" data-filter="otros">Otros</button>
+                <button class="filter-btn" data-filter="mdf">MDF</button>
             </div>
             <div class="products-grid" data-aos="fade-up">
-                <div class="product-item" data-category="termos">
-                    <img src="assets/images/productos/termos-grabados.jpg" alt="Termos grabados">
+                <!-- Lonas -->
+                <div class="product-item" id="lonas" data-category="lonas">
+                    <img src="assets/images/productos/lona.jpg" alt="Lona publicitaria">
                     <div class="product-overlay">
-                        <h4>Termos grabados láser</h4>
-                        <p>Personalización elegante y permanente</p>
+                        <h4>Lona publicitaria</h4>
+                        <p>Impresión gran formato para negocios</p>
                     </div>
                 </div>
-                <div class="product-item" data-category="playeras">
-                    <img src="assets/images/productos/playera-sublimada.jpg" alt="Playera sublimada">
+                <div class="product-item" data-category="lonas">
+                    <img src="assets/images/productos/lona-negocio.jpg" alt="Lona en negocio">
                     <div class="product-overlay">
-                        <h4>Playera sublimada</h4>
-                        <p>Diseños full color de alta calidad</p>
+                        <h4>Lona en fachada</h4>
+                        <p>Publicidad exterior de alto impacto</p>
                     </div>
                 </div>
-                <div class="product-item" data-category="otros">
+                <!-- DTF -->
+                <div class="product-item" id="dtf" data-category="dtf">
+                    <img src="assets/images/productos/dtf.jpg" alt="Impresión DTF">
+                    <div class="product-overlay">
+                        <h4>Impresión DTF</h4>
+                        <p>Colores intensos sobre cualquier tela</p>
+                    </div>
+                </div>
+                <div class="product-item" data-category="dtf">
+                    <img src="assets/images/productos/playeras-dtf.jpg" alt="Playeras DTF">
+                    <div class="product-overlay">
+                        <h4>Playeras DTF</h4>
+                        <p>Acabado profesional y duradero</p>
+                    </div>
+                </div>
+                <!-- Vinil -->
+                <div class="product-item" id="vinil" data-category="vinil">
+                    <img src="assets/images/productos/calcomanias.jpg" alt="Calcomanías vinil">
+                    <div class="product-overlay">
+                        <h4>Calcomanías vinil</h4>
+                        <p>Stickers personalizados de alta resistencia</p>
+                    </div>
+                </div>
+                <div class="product-item" data-category="vinil">
+                    <img src="assets/images/productos/vasos-vinil.jpg" alt="Vasos con vinil">
+                    <div class="product-overlay">
+                        <h4>Vasos con vinil</h4>
+                        <p>Personalización adherible para cualquier superficie</p>
+                    </div>
+                </div>
+                <div class="product-item" data-category="vinil">
+                    <img src="assets/images/productos/termos-vinil.jpg" alt="Termos con vinil">
+                    <div class="product-overlay">
+                        <h4>Termos con vinil</h4>
+                        <p>Diseños resistentes al uso diario</p>
+                    </div>
+                </div>
+                <!-- Plumas -->
+                <div class="product-item" id="plumas" data-category="plumas">
                     <img src="assets/images/productos/plumas.jpg" alt="Plumas personalizadas">
                     <div class="product-overlay">
-                        <h4>Plumas personalizadas</h4>
-                        <p>Grabado láser sobre metal</p>
+                        <h4>Plumas grabadas láser</h4>
+                        <p>Detalle elegante para empresas y eventos</p>
                     </div>
                 </div>
-                <div class="product-item" data-category="otros">
+                <!-- Tazas -->
+                <div class="product-item" id="tazas" data-category="tazas">
                     <img src="assets/images/productos/taza.jpg" alt="Taza personalizada">
                     <div class="product-overlay">
                         <h4>Tazas sublimadas</h4>
-                        <p>El regalo perfecto</p>
+                        <p>El regalo perfecto para cualquier ocasión</p>
                     </div>
                 </div>
-                <div class="product-item" data-category="otros">
-                    <img src="assets/images/productos/lona.jpg" alt="Lona publicitaria">
+                <!-- Termos -->
+                <div class="product-item" id="termos" data-category="termos">
+                    <img src="assets/images/productos/termos-grabados.jpg" alt="Termos grabados">
                     <div class="product-overlay">
-                        <h4>Lonas publicitarias</h4>
-                        <p>Impresión grande formato</p>
+                        <h4>Termos grabados láser</h4>
+                        <p>Personalización permanente y elegante</p>
                     </div>
                 </div>
-                <div class="product-item" data-category="papeleria">
-                    <img src="assets/images/productos/tarjetas.jpg" alt="Tarjetas de presentación">
+                <div class="product-item" data-category="termos">
+                    <img src="assets/images/productos/termo-laser.jpg" alt="Termo grabado láser">
                     <div class="product-overlay">
-                        <h4>Tarjetas de presentación</h4>
-                        <p>Profesionales y memorables</p>
+                        <h4>Termo grabado láser</h4>
+                        <p>Texto, logos y fechas especiales</p>
                     </div>
                 </div>
-                <div class="product-item" data-category="otros">
+                <div class="product-item" data-category="termos">
+                    <img src="assets/images/productos/termos-laser.jpg" alt="Termos láser">
+                    <div class="product-overlay">
+                        <h4>Termos personalizados</h4>
+                        <p>Ideales para equipos de trabajo</p>
+                    </div>
+                </div>
+                <!-- MDF -->
+                <div class="product-item" id="mdf" data-category="mdf">
                     <img src="assets/images/productos/mdf-laser.jpg" alt="Grabado láser MDF">
                     <div class="product-overlay">
                         <h4>Grabado láser en MDF</h4>
                         <p>Detalles únicos en madera</p>
                     </div>
                 </div>
-                <div class="product-item" data-category="otros">
-                    <img src="assets/images/productos/calcomanias.jpg" alt="Calcomanías">
-                    <div class="product-overlay">
-                        <h4>Calcomanías</h4>
-                        <p>Stickers personalizados</p>
-                    </div>
-                </div>
-                <div class="product-item" data-category="playeras">
-                    <img src="assets/images/productos/playeras-dtf.jpg" alt="Playeras DTF">
-                    <div class="product-overlay">
-                        <h4>Playeras DTF</h4>
-                        <p>Colores intensos y duraderos</p>
-                    </div>
-                </div>
-                <div class="product-item" data-category="otros">
+                <div class="product-item" data-category="mdf">
                     <img src="assets/images/productos/figuras-mdf.jpg" alt="Figuras MDF">
                     <div class="product-overlay">
                         <h4>Figuras en MDF</h4>
-                        <p>Recortes personalizados</p>
+                        <p>Recortes personalizados para decoración</p>
                     </div>
                 </div>
-                <div class="product-item" data-category="termos">
-                    <img src="assets/images/productos/termos-vinil.jpg" alt="Termos con vinil">
+                <div class="product-item" data-category="mdf">
+                    <img src="assets/images/productos/invitaciones.jpg" alt="Invitaciones MDF">
                     <div class="product-overlay">
-                        <h4>Termos con vinil</h4>
-                        <p>Diseños adheribles de calidad</p>
-                    </div>
-                </div>
-                <div class="product-item" data-category="papeleria">
-                    <img src="assets/images/productos/invitaciones.jpg" alt="Invitaciones">
-                    <div class="product-overlay">
-                        <h4>Invitaciones</h4>
-                        <p>Para eventos especiales</p>
+                        <h4>Invitaciones en MDF</h4>
+                        <p>Souvenirs y detalles para eventos</p>
                     </div>
                 </div>
             </div>
@@ -445,10 +494,11 @@
                 <div class="footer-services">
                     <h4>Servicios</h4>
                     <ul>
-                        <li>Grabado láser</li>
+                        <li>Páginas webs</li>
+                        <li>Grabado y corte láser</li>
                         <li>Sublimación</li>
                         <li>DTF</li>
-                        <li>Corte de vinil</li>
+                        <li>Vinil</li>
                     </ul>
                 </div>
             </div>
