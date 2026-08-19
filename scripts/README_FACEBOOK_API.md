@@ -161,7 +161,28 @@ Las imágenes se guardan en `assets/images/facebook_extracted/`.
 
 ---
 
-## 🤖 Respuestas automáticas
+## 🤖 Script maestro de automatización
+
+El script `run_automation.py` ejecuta todas las tareas automatizables de una sola vez:
+
+```bash
+python run_automation.py              # Ejecutar todo
+python run_automation.py --posts      # Solo publicaciones del día
+python run_automation.py --extract    # Solo extraer contenido
+python run_automation.py --insights   # Solo estadísticas
+python run_automation.py --dry-run    # Simular sin publicar
+```
+
+### Automatizar con Windows Task Scheduler
+
+Sigue la guía en `WINDOWS_SCHEDULER.md` para programar:
+- 2 publicaciones diarias automáticas
+- Extracción semanal de contenido
+- Guardado diario de estadísticas
+
+---
+
+## 🤖 Respuestas automáticas (limitado)
 
 El script `auto_responder.py` revisa mensajes y comentarios recientes y sugiere respuestas automáticas según palabras clave.
 
@@ -171,19 +192,13 @@ python auto_responder.py --comments     # Revisar comentarios
 python auto_responder.py --all          # Revisar ambos
 ```
 
-### Permisos adicionales necesarios
+### Limitaciones actuales
 
-Para que el auto_responder funcione, debes agregar estos permisos en tu app de Meta:
-
-1. Ve a tu app en [developers.facebook.com](https://developers.facebook.com)
-2. Busca **"Administrar todos los aspectos de tu página"** en los casos de uso.
-3. Activa:
-   - ✅ `pages_manage_engagement` → para responder comentarios
-   - ✅ `pages_messaging` → para responder mensajes de Messenger
-4. Vuelve a generar tu token de acceso de usuario y tu Page Access Token.
-5. Actualiza el archivo `.env` con el nuevo token.
-
-> ⚠️ Estos permisos pueden requerir **App Review** para uso público. Para pruebas en tu propia página, funciona en modo desarrollo.
+> ⚠️ **Meta ha deprecado el permiso `pages_read_user_content`**, que es requerido internamente por `pages_manage_engagement`. Esto causa un error conocido al intentar responder comentarios.
+>
+> Para responder **mensajes de Messenger** automáticamente se necesita `pages_messaging`, que en muchos casos requiere **App Review + Business Verification**.
+>
+> **Recomendación:** Usa Meta Business Suite para responder mensajes y comentarios manualmente. Enfócate en las publicaciones automáticas, que es lo que más ayuda a crecer.
 
 ---
 
