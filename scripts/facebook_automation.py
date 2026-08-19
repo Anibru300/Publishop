@@ -34,8 +34,8 @@ load_dotenv()
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Lee variables de entorno o usa valores directos (no recomendado subir tokens)
-PAGE_ID = os.getenv("PAGE_ID", "")
-PAGE_ACCESS_TOKEN = os.getenv("PAGE_ACCESS_TOKEN", "")
+PAGE_ID = os.getenv("PAGE_ID", "").strip()
+PAGE_ACCESS_TOKEN = os.getenv("PAGE_ACCESS_TOKEN", "").strip()
 
 # Versión de la API de Facebook (puedes actualizarla)
 GRAPH_API_VERSION = "v18.0"

@@ -32,15 +32,19 @@ jobs:
         PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
         PAGE_ACCESS_TOKEN: ${{ secrets.FACEBOOK_PAGE_ACCESS_TOKEN }}
       run: |
-        python - <<PY
+        python3 -c "
         import os
+        page_id = os.environ['PAGE_ID'].strip()
+        token = os.environ['PAGE_ACCESS_TOKEN'].strip()
         with open('.env', 'w', encoding='utf-8') as f:
-            f.write(f"PAGE_ID={os.environ['PAGE_ID']}\n")
-            f.write(f"PAGE_ACCESS_TOKEN={os.environ['PAGE_ACCESS_TOKEN']}\n")
-        print(f"Archivo .env creado")
-        print(f"PAGE_ID tiene {len(os.environ['PAGE_ID'])} caracteres")
-        print(f"TOKEN tiene {len(os.environ['PAGE_ACCESS_TOKEN'])} caracteres")
-        PY
+            f.write(f'PAGE_ID={page_id}\n')
+            f.write(f'PAGE_ACCESS_TOKEN={token}\n')
+        print(f'Archivo .env creado')
+        print(f'PAGE_ID: {page_id}')
+        print(f'TOKEN longitud: {len(token)}')
+        print(f'TOKEN inicio: {token[:20]}')
+        print(f'TOKEN final: {token[-10:]}')
+        "
 
     - name: Verificar calendario
       working-directory: ./scripts
