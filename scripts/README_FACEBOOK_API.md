@@ -117,6 +117,57 @@ El **Page Access Token** es la "llave" que le da permiso al programa para public
 
 ---
 
+## 📅 Calendario de publicaciones automáticas
+
+Ya incluimos un calendario de contenido para toda la semana en `content_calendar.json`.
+
+### Publicar el día de hoy:
+```bash
+python weekly_scheduler.py
+```
+
+### Publicar un día específico:
+```bash
+python weekly_scheduler.py --day Lunes
+```
+
+### Publicar todo el calendario (prueba):
+```bash
+python weekly_scheduler.py --all
+```
+
+> 💡 Para automatizarlo realmente cada día, puedes programar el script con el Programador de Tareas de Windows o con `cron`.
+
+---
+
+## 📥 Extraer contenido de tu página
+
+Puedes descargar las fotos y videos de tus publicaciones anteriores para reutilizarlos.
+
+```bash
+python content_extractor.py     # Extrae publicaciones a extracted_content.json
+python download_images.py       # Descarga las imágenes organizadas por categoría
+```
+
+Las imágenes se guardan en `assets/images/facebook_extracted/`.
+
+---
+
+## 🤖 Respuestas automáticas
+
+El script `auto_responder.py` revisa mensajes y comentarios recientes y sugiere respuestas automáticas según palabras clave.
+
+```bash
+python auto_responder.py --messages     # Revisar mensajes
+python auto_responder.py --comments     # Revisar comentarios
+python auto_responder.py --all          # Revisar ambos
+```
+
+> ⚠️ Para responder mensajes automáticamente necesitas el permiso adicional `pages_messaging`.
+> Para responder comentarios necesitas `pages_manage_engagement`.
+
+---
+
 ## 📊 ¿Qué más puedes hacer con el script?
 
 El script incluye funciones para:
