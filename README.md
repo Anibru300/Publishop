@@ -1,10 +1,10 @@
-# Publishop 🎨
+# PUBLI SHOP LEÓN GTO 🎨
 
-**Sitio web profesional de Publishop** — Especialistas en personalización y publicidad en León, Guanajuato.
+**Sitio web profesional de PUBLI SHOP LEÓN GTO** — Especialistas en personalización y publicidad en León, Guanajuato.
 
 > "Dale vida a tus ideas"
 
-![Publishop Logo](assets/images/logo.jpg)
+![PUBLI SHOP LEÓN GTO Logo](assets/images/logo.jpg)
 
 ## 🌐 Ver sitio en vivo
 
@@ -13,7 +13,7 @@ El sitio está disponible en GitHub Pages:
 
 ## 📋 Descripción
 
-Publishop ofrece soluciones de personalización y presencia digital:
+PUBLI SHOP LEÓN GTO ofrece soluciones de personalización y presencia digital:
 
 **Servicios principales:**
 - 💻 Diseño de páginas webs profesionales
@@ -79,11 +79,11 @@ publishop/
 
 ## 📞 Contacto
 
-- **WhatsApp:** [477 841 16 55](https://wa.me/524778411655)
-- **Teléfono:** 477 272 91 21
-- **Correo:** publishop.leongto@gmail.com
+- **WhatsApp:** [477 841 1655](https://wa.me/524778411655)
+- **Teléfono:** 477 841 1655
+- **Correo:** publi.shop.leongto@gmail.com
 - **Ubicación:** San Mateo #206, Col. La Florida, León, Gto.
-- **Facebook:** [Publi Shop León Gto.](https://www.facebook.com/publishop.leon.gto)
+- **Facebook:** [PUBLI SHOP LEÓN GTO](https://www.facebook.com/profile.php?id=61561137908571)
 - **Instagram:** [@publishop.leon.gto](https://www.instagram.com/publishop.leon.gto)
 
 ## 🚀 Cómo ejecutar localmente
@@ -104,7 +104,7 @@ publishop/
 
 ## 📄 Licencia
 
-© Publishop. Todos los derechos reservados.
+© PUBLI SHOP LEÓN GTO. Todos los derechos reservados.
 
 ---
 
