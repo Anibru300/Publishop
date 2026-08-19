@@ -84,7 +84,6 @@ publishop/
 - **Correo:** publi.shop.leongto@gmail.com
 - **Ubicación:** San Mateo #206, Col. La Florida, León, Gto.
 - **Facebook:** [PUBLI SHOP LEÓN GTO](https://www.facebook.com/profile.php?id=61561137908571)
-- **Instagram:** [@publishop.leon.gto](https://www.instagram.com/publishop.leon.gto)
 
 ## 🚀 Cómo ejecutar localmente
 
