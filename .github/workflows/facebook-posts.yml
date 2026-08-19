@@ -28,15 +28,19 @@ jobs:
 
     - name: Crear archivo .env con secretos
       working-directory: ./scripts
-      run: |
-        echo "PAGE_ID=${{ secrets.FACEBOOK_PAGE_ID }}" > .env
-        echo "PAGE_ACCESS_TOKEN=${{ secrets.FACEBOOK_PAGE_ACCESS_TOKEN }}" >> .env
-        echo "Archivo .env creado"
-        echo "PAGE_ID tiene ${#PAGE_ID} caracteres"
-        echo "TOKEN tiene ${#FACEBOOK_PAGE_ACCESS_TOKEN} caracteres"
       env:
         PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
-        FACEBOOK_PAGE_ACCESS_TOKEN: ${{ secrets.FACEBOOK_PAGE_ACCESS_TOKEN }}
+        PAGE_ACCESS_TOKEN: ${{ secrets.FACEBOOK_PAGE_ACCESS_TOKEN }}
+      run: |
+        python - <<PY
+        import os
+        with open('.env', 'w', encoding='utf-8') as f:
+            f.write(f"PAGE_ID={os.environ['PAGE_ID']}\n")
+            f.write(f"PAGE_ACCESS_TOKEN={os.environ['PAGE_ACCESS_TOKEN']}\n")
+        print(f"Archivo .env creado")
+        print(f"PAGE_ID tiene {len(os.environ['PAGE_ID'])} caracteres")
+        print(f"TOKEN tiene {len(os.environ['PAGE_ACCESS_TOKEN'])} caracteres")
+        PY
 
     - name: Verificar calendario
       working-directory: ./scripts
