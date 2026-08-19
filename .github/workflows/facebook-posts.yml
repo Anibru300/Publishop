@@ -50,7 +50,7 @@ jobs:
       working-directory: ./scripts
       run: |
         echo "Día UTC actual: $(date -u +%A)"
-        python -c "import json; data=json.load(open('content_calendar.json')); print(f'Total de posts en calendario: {len(data[\"calendar\"])}')"
+        python -c "import json; data=json.load(open('content_calendar.json')); print('Total de posts en calendario:', len(data['calendar']))"
 
     - name: Publicar en Facebook
       working-directory: ./scripts
