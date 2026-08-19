@@ -121,6 +121,8 @@ El **Page Access Token** es la "llave" que le da permiso al programa para public
 
 Ya incluimos un calendario de contenido para toda la semana en `content_calendar.json`.
 
+**El calendario está configurado para 2 publicaciones por día:** una por la mañana y otra por la tarde. Esto ayuda a mantener tu página activa y llegar a más clientes potenciales.
+
 ### Publicar el día de hoy:
 ```bash
 python weekly_scheduler.py
@@ -131,12 +133,18 @@ python weekly_scheduler.py
 python weekly_scheduler.py --day Lunes
 ```
 
+### Simular sin publicar:
+```bash
+python weekly_scheduler.py --dry-run
+python weekly_scheduler.py --day Lunes --dry-run
+```
+
 ### Publicar todo el calendario (prueba):
 ```bash
 python weekly_scheduler.py --all
 ```
 
-> 💡 Para automatizarlo realmente cada día, puedes programar el script con el Programador de Tareas de Windows o con `cron`.
+> 💡 **Para automatizarlo realmente cada día**, programa el script con el **Programador de Tareas de Windows** para que se ejecute 2 veces al día, por ejemplo a las 10:00 y 18:00.
 
 ---
 
@@ -163,8 +171,19 @@ python auto_responder.py --comments     # Revisar comentarios
 python auto_responder.py --all          # Revisar ambos
 ```
 
-> ⚠️ Para responder mensajes automáticamente necesitas el permiso adicional `pages_messaging`.
-> Para responder comentarios necesitas `pages_manage_engagement`.
+### Permisos adicionales necesarios
+
+Para que el auto_responder funcione, debes agregar estos permisos en tu app de Meta:
+
+1. Ve a tu app en [developers.facebook.com](https://developers.facebook.com)
+2. Busca **"Administrar todos los aspectos de tu página"** en los casos de uso.
+3. Activa:
+   - ✅ `pages_manage_engagement` → para responder comentarios
+   - ✅ `pages_messaging` → para responder mensajes de Messenger
+4. Vuelve a generar tu token de acceso de usuario y tu Page Access Token.
+5. Actualiza el archivo `.env` con el nuevo token.
+
+> ⚠️ Estos permisos pueden requerir **App Review** para uso público. Para pruebas en tu propia página, funciona en modo desarrollo.
 
 ---
 
