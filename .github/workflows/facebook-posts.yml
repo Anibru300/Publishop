@@ -31,6 +31,18 @@ jobs:
       run: |
         echo "PAGE_ID=${{ secrets.FACEBOOK_PAGE_ID }}" > .env
         echo "PAGE_ACCESS_TOKEN=${{ secrets.FACEBOOK_PAGE_ACCESS_TOKEN }}" >> .env
+        echo "Archivo .env creado"
+        echo "PAGE_ID tiene ${#PAGE_ID} caracteres"
+        echo "TOKEN tiene ${#FACEBOOK_PAGE_ACCESS_TOKEN} caracteres"
+      env:
+        PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+        FACEBOOK_PAGE_ACCESS_TOKEN: ${{ secrets.FACEBOOK_PAGE_ACCESS_TOKEN }}
+
+    - name: Verificar calendario
+      working-directory: ./scripts
+      run: |
+        echo "Día UTC actual: $(date -u +%A)"
+        python -c "import json; data=json.load(open('content_calendar.json')); print(f'Total de posts en calendario: {len(data[\"calendar\"])}')"
 
     - name: Publicar en Facebook
       working-directory: ./scripts
