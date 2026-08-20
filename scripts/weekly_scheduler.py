@@ -45,6 +45,12 @@ def load_calendar():
         return json.load(f)["calendar"]
 
 
+def _time_to_minutes(time_str):
+    """Convierte una hora 'HH:MM' a minutos desde medianoche."""
+    hour, minute = map(int, time_str.split(":"))
+    return hour * 60 + minute
+
+
 def publish_post(post_data, dry_run=False):
     """Publica una entrada del calendario."""
     image_path = IMAGES_BASE_DIR / post_data["image"]
@@ -71,17 +77,33 @@ def publish_post(post_data, dry_run=False):
         return False
 
 
-def get_today_posts(calendar):
-    """Obtiene todas las publicaciones del día de hoy."""
+def get_today_posts(calendar, time_slot=None):
+    """
+    Obtiene las publicaciones del día de hoy.
+
+    Args:
+        calendar: Lista de publicaciones del calendario.
+        time_slot: None para todas, 'morning' para publicaciones antes de las 14:00,
+                   'evening' para publicaciones desde las 14:00 en adelante.
+    """
     days_es = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
     today = days_es[datetime.now().weekday()]
-    return [post for post in calendar if post["day"] == today]
+    posts = [post for post in calendar if post["day"] == today]
+
+    if time_slot == "morning":
+        posts = [p for p in posts if _time_to_minutes(p["time"]) < 14 * 60]
+    elif time_slot == "evening":
+        posts = [p for p in posts if _time_to_minutes(p["time"]) >= 14 * 60]
+
+    return posts
 
 
 def main():
     parser = argparse.ArgumentParser(description="Publicador semanal de PUBLI SHOP LEÓN GTO")
     parser.add_argument("--all", action="store_true", help="Publicar todo el calendario")
     parser.add_argument("--day", type=str, help="Publicar un día específico (ej: Lunes)")
+    parser.add_argument("--time-slot", type=str, choices=["morning", "evening"],
+                        help="Filtrar por franja horaria: morning (<14:00) o evening (>=14:00)")
     parser.add_argument("--dry-run", action="store_true", help="Simular sin publicar")
     args = parser.parse_args()
 
@@ -108,8 +130,9 @@ def main():
             print(f"❌ No se encontraron publicaciones para {args.day}")
 
     else:
-        posts = get_today_posts(calendar)
-        print(f"🚀 Publicando {len(posts)} publicaciones del día de hoy...\n")
+        posts = get_today_posts(calendar, time_slot=args.time_slot)
+        slot_label = f" [{args.time_slot}]" if args.time_slot else ""
+        print(f"🚀 Publicando{slot_label} {len(posts)} publicaciones del día de hoy...\n")
         if posts:
             success = 0
             for post in posts:

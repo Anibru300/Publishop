@@ -29,6 +29,7 @@ from facebook_automation import get_page_insights
 
 
 DRY_RUN = False
+TIME_SLOT = None
 
 
 def publish_post(post):
@@ -43,7 +44,7 @@ def run_posts():
     print("=" * 50 + "\n")
 
     calendar = load_calendar()
-    posts = get_today_posts(calendar)
+    posts = get_today_posts(calendar, time_slot=TIME_SLOT)
 
     if not posts:
         print("❌ No hay publicaciones programadas para hoy.")
@@ -115,10 +116,13 @@ def main():
     parser.add_argument("--extract", action="store_true", help="Solo extracción")
     parser.add_argument("--insights", action="store_true", help="Solo estadísticas")
     parser.add_argument("--dry-run", action="store_true", help="Simular sin publicar")
+    parser.add_argument("--time-slot", type=str, choices=["morning", "evening"],
+                        help="Franja horaria: morning (<14:00) o evening (>=14:00)")
     args = parser.parse_args()
 
-    global DRY_RUN
+    global DRY_RUN, TIME_SLOT
     DRY_RUN = args.dry_run
+    TIME_SLOT = args.time_slot
 
     print("🚀 PUBLI SHOP LEÓN GTO - Automatización Maestra")
     print(f"📅 {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")

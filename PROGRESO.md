@@ -57,10 +57,19 @@ Se creó el workflow `.github/workflows/facebook-posts.yml` para publicar autom�
 
 ### Horarios programados:
 
-| Hora UTC | Hora aproximada México | Acción |
-|----------|------------------------|--------|
-| 16:00 UTC | 10:00 a.m. | Publicar posts del día |
-| 00:00 UTC | 6:00 p.m. | Publicar posts del día |
+| Hora UTC | Hora aproximada México | Franja | Publicación |
+|----------|------------------------|--------|-------------|
+| 16:00 UTC | 10:00 a.m. | `morning` | 1 post matutino del día |
+| 00:00 UTC | 6:00 p.m. | `evening` | 1 post vespertino del día |
+
+> **Total: 2 publicaciones diarias, una por cada franja horaria.**
+
+### Lógica de publicación:
+
+- El workflow determina automáticamente la franja horaria según la hora UTC de ejecución.
+- `morning`: publica el post del día programado antes de las 14:00 (hora México).
+- `evening`: publica el post del día programado desde las 14:00 en adelante.
+- Esto evita publicar duplicados y respeta los horarios estratégicos del calendario.
 
 ### Secretos configurados en GitHub:
 
@@ -70,8 +79,8 @@ Se creó el workflow `.github/workflows/facebook-posts.yml` para publicar autom�
 ### Estado actual:
 
 - Workflow ejecutándose correctamente desde GitHub Actions.
-- Último problema detectado: error `publish_actions` deprecado.
-- Pendiente: verificar que GitHub Actions use la última versión del workflow con escritura del `.env` mediante Python.
+- Lógica de franjas horarias implementada para publicar 1 post por ejecución.
+- Pendiente: monitorear las próximas ejecuciones para confirmar que publica sin duplicados.
 
 Guía de configuración: `scripts/GITHUB_ACTIONS_SETUP.md`
 
