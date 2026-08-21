@@ -28,7 +28,7 @@ import argparse
 from pathlib import Path
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from facebook_automation import post_photo
+from facebook_automation import post_photo, is_duplicate_post
 
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -73,6 +73,10 @@ def publish_post(post_data, dry_run=False):
         print(f"     Imagen: {image_path}")
         print(f"     Texto: {post_data['message'][:80]}...\n")
         return True
+
+    if not dry_run and is_duplicate_post(post_data["message"]):
+        print(f"  ⚠️ Publicación duplicada detectada, no se publicará")
+        return False
 
     try:
         post_photo(

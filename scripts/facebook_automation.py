@@ -185,6 +185,46 @@ def verify_post_exists(post_id: str):
         return False
 
 
+def is_duplicate_post(message: str, hours_back: int = 24):
+    """
+    Verifica si ya existe una publicación reciente con el mismo mensaje.
+    Útil para evitar publicaciones duplicadas si el workflow se ejecuta
+    más de una vez para la misma franja horaria.
+    """
+    _check_config()
+    endpoint = f"{PAGE_ID}/posts"
+    params = {
+        "fields": "id,message,created_time",
+        "limit": 10,
+    }
+    try:
+        result = _make_request("GET", endpoint, params=params)
+        posts = result.get("data", [])
+
+        from datetime import datetime, timezone, timedelta
+        now = datetime.now(timezone.utc)
+        cutoff = now - timedelta(hours=hours_back)
+
+        for post in posts:
+            post_message = post.get("message", "") or ""
+            created_time_str = post.get("created_time")
+            if not created_time_str:
+                continue
+
+            try:
+                post_time = datetime.fromisoformat(created_time_str.replace("Z", "+00:00"))
+            except ValueError:
+                continue
+
+            if post_time >= cutoff and post_message.strip() == message.strip():
+                return True
+
+        return False
+    except Exception as e:
+        print(f"⚠️ No se pudo verificar duplicados: {e}")
+        return False
+
+
 def get_recent_posts(limit: int = 5):
     """Obtiene las últimas publicaciones de tu página."""
     _check_config()
