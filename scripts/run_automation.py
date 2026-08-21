@@ -144,6 +144,7 @@ def main():
     parser.add_argument("--posts", action="store_true", help="Solo publicaciones")
     parser.add_argument("--extract", action="store_true", help="Solo extracción")
     parser.add_argument("--insights", action="store_true", help="Solo estadísticas")
+    parser.add_argument("--validate", action="store_true", help="Solo validar configuración y token")
     parser.add_argument("--dry-run", action="store_true", help="Simular sin publicar")
     parser.add_argument("--time-slot", type=str, choices=["morning", "evening"],
                         help="Franja horaria: morning (<14:00) o evening (>=14:00)")
