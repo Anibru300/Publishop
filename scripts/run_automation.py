@@ -127,6 +127,10 @@ def run_posts():
 
     print(f"\n📊 Resumen: {success}/{len(posts)} publicaciones exitosas.")
 
+    if not DRY_RUN and success == 0 and len(posts) > 0:
+        print("\n❌ No se publicó ninguna publicación.")
+        sys.exit(1)
+
 
 def run_extraction():
     """Extrae el contenido más reciente de la página."""
