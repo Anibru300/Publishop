@@ -19,8 +19,11 @@ import sys
 import json
 from pathlib import Path
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 sys.stdout.reconfigure(encoding="utf-8")
+
+MEXICO_TZ = ZoneInfo("America/Mexico_City")
 
 # Importamos funciones de otros scripts
 from weekly_scheduler import load_calendar, get_today_posts, publish_post as _publish_post
@@ -92,7 +95,7 @@ def run_insights():
                 history = json.load(f)
 
         history.append({
-            "date": datetime.now().isoformat(),
+            "date": datetime.now(MEXICO_TZ).isoformat(),
             "fan_count": insights.get("fan_count"),
             "followers_count": insights.get("followers_count"),
             "talking_about_count": insights.get("talking_about_count"),
@@ -124,8 +127,10 @@ def main():
     DRY_RUN = args.dry_run
     TIME_SLOT = args.time_slot
 
+    mexico_now = datetime.now(MEXICO_TZ)
     print("🚀 PUBLI SHOP LEÓN GTO - Automatización Maestra")
-    print(f"📅 {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+    print(f"📅 Hora del servidor (UTC): {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"📅 Hora de México (usada para el calendario): {mexico_now.strftime('%Y-%m-%d %H:%M:%S %Z')}\n")
 
     # Si no se especifica nada, ejecutamos todo
     run_all = not (args.posts or args.extract or args.insights)

@@ -27,6 +27,7 @@ import json
 import argparse
 from pathlib import Path
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from facebook_automation import post_photo
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -34,6 +35,14 @@ sys.stdout.reconfigure(encoding="utf-8")
 BASE_DIR = Path(__file__).parent
 CALENDAR_FILE = BASE_DIR / "content_calendar.json"
 IMAGES_BASE_DIR = BASE_DIR.parent / "assets" / "images" / "facebook_extracted"
+
+
+MEXICO_TZ = ZoneInfo("America/Mexico_City")
+
+
+def get_mexico_now():
+    """Devuelve la fecha/hora actual en zona horaria de México (León, Gto.)."""
+    return datetime.now(MEXICO_TZ)
 
 
 def load_calendar():
@@ -79,7 +88,7 @@ def publish_post(post_data, dry_run=False):
 
 def get_today_posts(calendar, time_slot=None):
     """
-    Obtiene las publicaciones del día de hoy.
+    Obtiene las publicaciones del día de hoy en hora de México.
 
     Args:
         calendar: Lista de publicaciones del calendario.
@@ -87,7 +96,10 @@ def get_today_posts(calendar, time_slot=None):
                    'evening' para publicaciones desde las 14:00 en adelante.
     """
     days_es = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
-    today = days_es[datetime.now().weekday()]
+    mexico_now = get_mexico_now()
+    today = days_es[mexico_now.weekday()]
+    print(f"📅 Hora de México: {mexico_now.strftime('%Y-%m-%d %H:%M:%S %Z')}")
+    print(f"📅 Día detectado: {today}")
     posts = [post for post in calendar if post["day"] == today]
 
     if time_slot == "morning":

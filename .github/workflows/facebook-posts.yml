@@ -24,7 +24,7 @@ jobs:
     - name: Instalar dependencias
       run: |
         python -m pip install --upgrade pip
-        pip install requests python-dotenv
+        pip install -r scripts/requirements.txt
 
     - name: Crear archivo .env con secretos
       working-directory: ./scripts
@@ -48,21 +48,27 @@ jobs:
 
     - name: Verificar calendario
       working-directory: ./scripts
+      env:
+        TZ: America/Mexico_City
       run: |
         echo "Día UTC actual: $(date -u +%A)"
         echo "Hora UTC actual: $(date -u +%H:%M)"
+        echo "Día México: $(date +%A)"
+        echo "Hora México: $(date +%H:%M)"
         python -c "import json; data=json.load(open('content_calendar.json')); print('Total de posts en calendario:', len(data['calendar']))"
 
     - name: Determinar franja horaria
       id: slot
+      env:
+        TZ: America/Mexico_City
       run: |
-        HOUR=$(date -u +%H)
-        if [ "$HOUR" -ge 8 ] && [ "$HOUR" -lt 20 ]; then
+        HOUR=$(date +%H)
+        if [ "$HOUR" -ge 0 ] && [ "$HOUR" -lt 14 ]; then
           echo "slot=morning" >> $GITHUB_OUTPUT
-          echo "🌅 Franja horaria: morning (publicación matutina)"
+          echo "🌅 Franja horaria: morning (publicación matutina, hora de México: $HOUR:00)"
         else
           echo "slot=evening" >> $GITHUB_OUTPUT
-          echo "🌙 Franja horaria: evening (publicación vespertina)"
+          echo "🌙 Franja horaria: evening (publicación vespertina, hora de México: $HOUR:00)"
         fi
 
     - name: Publicar en Facebook
