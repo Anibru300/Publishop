@@ -74,7 +74,7 @@ def publish_post(post_data, dry_run=False):
         print(f"     Texto: {post_data['message'][:80]}...\n")
         return True
 
-    if not dry_run and is_duplicate_post(post_data["message"]):
+    if not dry_run and is_duplicate_post(post_data["message"], hours_back=168):
         print(f"  ⚠️ Publicación duplicada detectada, no se publicará")
         return False
 

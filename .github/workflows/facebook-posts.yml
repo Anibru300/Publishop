@@ -17,7 +17,11 @@ on:
 jobs:
   post-to-facebook:
     runs-on: ubuntu-latest
-    
+    env:
+      PYTHONIOENCODING: utf-8
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+
     steps:
     - name: Descargar código
       uses: actions/checkout@v4
