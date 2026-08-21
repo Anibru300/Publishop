@@ -93,8 +93,21 @@ def _make_request(method, endpoint, data=None, files=None, params=None):
         return response.json()
     except requests.exceptions.HTTPError as e:
         error_data = e.response.json() if e.response.text else {}
-        error_message = error_data.get("error", {}).get("message", str(e))
-        raise Exception(f"Error de Facebook API: {error_message}") from e
+        error = error_data.get("error", {})
+        error_message = error.get("message", str(e))
+        error_code = error.get("code")
+        error_subcode = error.get("error_subcode")
+
+        if error_code == 190:
+            raise Exception(f"❌ Token expirado o revocado: {error_message}") from e
+        if error_code == 200:
+            raise Exception(f"❌ Permisos insuficientes: {error_message}") from e
+        if error_code == 104:
+            raise Exception(f"❌ Límite de solicitudes alcanzado: {error_message}") from e
+        if error_code == 100:
+            raise Exception(f"❌ Parámetro inválido: {error_message}") from e
+
+        raise Exception(f"Error de Facebook API ({error_code}/{error_subcode}): {error_message}") from e
     except Exception as e:
         raise Exception(f"Error en la petición: {str(e)}") from e
 
@@ -141,12 +154,36 @@ def post_photo(message: str, photo_path: str):
     if not post_id:
         raise Exception("Meta no devolvió un ID de publicación")
     print("✅ Publicación creada correctamente")
+
+    if not verify_post_exists(post_id):
+        raise Exception(f"La publicación {post_id} no pudo ser verificada en Facebook")
+
     return result
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 # FUNCIONES PARA LEER INFORMACIÓN
 # ─────────────────────────────────────────────────────────────────────────────
+
+def verify_post_exists(post_id: str):
+    """
+    Verifica que una publicación realmente exista en Facebook.
+    Retorna True si existe, False en caso contrario.
+    """
+    _check_config()
+    endpoint = f"{post_id}"
+    params = {"fields": "id,created_time"}
+    try:
+        result = _make_request("GET", endpoint, params=params)
+        if result.get("id") == post_id:
+            print("✅ Publicación verificada en Facebook")
+            return True
+        print("⚠️ La publicación no coincide con el ID esperado")
+        return False
+    except Exception as e:
+        print(f"⚠️ No se pudo verificar la publicación: {e}")
+        return False
+
 
 def get_recent_posts(limit: int = 5):
     """Obtiene las últimas publicaciones de tu página."""

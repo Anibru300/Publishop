@@ -33,11 +33,42 @@ from facebook_automation import get_page_insights, validate_page_token
 
 DRY_RUN = False
 TIME_SLOT = None
+TARGET_DAY = None
 
 
 def publish_post(post):
     """Wrapper para respetar el modo dry-run."""
     return _publish_post(post, dry_run=DRY_RUN)
+
+
+def run_posts_for_day(day):
+    """Publica las publicaciones de un día específico."""
+    print("\n" + "=" * 50)
+    print(f"📅 PUBLICACIONES DE {day.upper()}")
+    print("=" * 50 + "\n")
+
+    calendar = load_calendar()
+    posts = [p for p in calendar if p["day"] == day]
+
+    if TIME_SLOT:
+        from weekly_scheduler import _time_to_minutes
+        if TIME_SLOT == "morning":
+            posts = [p for p in posts if _time_to_minutes(p["time"]) < 14 * 60]
+        else:
+            posts = [p for p in posts if _time_to_minutes(p["time"]) >= 14 * 60]
+
+    if not posts:
+        print(f"❌ No hay publicaciones programadas para {day}.")
+        return
+
+    mode = "SIMULACIÓN" if DRY_RUN else "Publicando"
+    print(f"🚀 {mode} {len(posts)} publicaciones...\n")
+    success = 0
+    for post in posts:
+        if publish_post(post):
+            success += 1
+
+    print(f"\n📊 Resumen: {success}/{len(posts)} publicaciones exitosas.")
 
 
 def validate_environment():
@@ -148,11 +179,14 @@ def main():
     parser.add_argument("--dry-run", action="store_true", help="Simular sin publicar")
     parser.add_argument("--time-slot", type=str, choices=["morning", "evening"],
                         help="Franja horaria: morning (<14:00) o evening (>=14:00)")
+    parser.add_argument("--day", type=str,
+                        help="Día específico para publicar (ej: Viernes). Usar solo para pruebas.")
     args = parser.parse_args()
 
-    global DRY_RUN, TIME_SLOT
+    global DRY_RUN, TIME_SLOT, TARGET_DAY
     DRY_RUN = args.dry_run
     TIME_SLOT = args.time_slot
+    TARGET_DAY = args.day
 
     mexico_now = datetime.now(MEXICO_TZ)
     print("🚀 PUBLI SHOP LEÓN GTO - Automatización Maestra")
@@ -173,7 +207,10 @@ def main():
         if not validate_environment():
             print("\n❌ Validación fallida. No se ejecutarán publicaciones.")
             return
-        run_posts()
+        if TARGET_DAY:
+            run_posts_for_day(TARGET_DAY)
+        else:
+            run_posts()
 
     if run_all or args.extract:
         run_extraction()

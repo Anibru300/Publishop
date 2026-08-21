@@ -6,7 +6,13 @@ on:
     - cron: '0 16 * * *'
     # 00:00 UTC = 6:00 p.m. hora de México (aproximado)
     - cron: '0 0 * * *'
-  workflow_dispatch:  # Permite ejecutar manualmente desde GitHub
+  workflow_dispatch:
+    # Permite ejecutar manualmente desde GitHub
+    inputs:
+      day:
+        description: 'Día de prueba (opcional, ej: Viernes). Dejar vacío para usar el día actual.'
+        required: false
+        default: ''
 
 jobs:
   post-to-facebook:
@@ -72,7 +78,11 @@ jobs:
     - name: Publicar en Facebook
       working-directory: ./scripts
       run: |
-        python run_automation.py --posts --time-slot ${{ steps.slot.outputs.slot }}
+        if [ -n "${{ github.event.inputs.day }}" ]; then
+          python run_automation.py --posts --time-slot ${{ steps.slot.outputs.slot }} --day ${{ github.event.inputs.day }}
+        else
+          python run_automation.py --posts --time-slot ${{ steps.slot.outputs.slot }}
+        fi
 
     - name: Guardar estadísticas
       working-directory: ./scripts
