@@ -20,7 +20,7 @@ load_dotenv()
 
 PAGE_ID = os.getenv("PAGE_ID", "")
 PAGE_ACCESS_TOKEN = os.getenv("PAGE_ACCESS_TOKEN", "")
-GRAPH_API_VERSION = "v18.0"
+GRAPH_API_VERSION = "v22.0"
 BASE_URL = f"https://graph.facebook.com/{GRAPH_API_VERSION}"
 
 

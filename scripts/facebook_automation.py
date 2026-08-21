@@ -38,7 +38,7 @@ PAGE_ID = os.getenv("PAGE_ID", "").strip()
 PAGE_ACCESS_TOKEN = os.getenv("PAGE_ACCESS_TOKEN", "").strip()
 
 # Versión de la API de Facebook (puedes actualizarla)
-GRAPH_API_VERSION = "v18.0"
+GRAPH_API_VERSION = "v22.0"
 BASE_URL = f"https://graph.facebook.com/{GRAPH_API_VERSION}"
 
 
