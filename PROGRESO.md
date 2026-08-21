@@ -80,7 +80,8 @@ Se creó el workflow `.github/workflows/facebook-posts.yml` para publicar autom�
 
 - Workflow ejecutándose correctamente desde GitHub Actions.
 - Lógica de franjas horarias implementada para publicar 1 post por ejecución.
-- Pendiente: monitorear las próximas ejecuciones para confirmar que publica sin duplicados.
+- ✅ **Corregido (20 ago 2026):** el día del calendario y la franja horaria ahora se calculan con la hora de México (`America/Mexico_City`), evitando que la publicación vespertina use el día equivocado en UTC.
+- Pendiente: ejecutar una prueba manual desde GitHub Actions y confirmar que publica sin duplicados.
 
 Guía de configuración: `scripts/GITHUB_ACTIONS_SETUP.md`
 
