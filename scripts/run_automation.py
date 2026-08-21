@@ -74,6 +74,10 @@ def run_posts_for_day(day):
         print("\n❌ No se publicó ninguna publicación.")
         sys.exit(1)
 
+    if not DRY_RUN and success == 0 and len(posts) > 0:
+        print("\n❌ No se publicó ninguna publicación.")
+        sys.exit(1)
+
 
 def validate_environment():
     """Valida configuración segura antes de publicar."""
