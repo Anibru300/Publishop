@@ -53,6 +53,26 @@ def _check_config():
         )
 
 
+def validate_page_token():
+    """
+    Valida que el token pueda acceder a la página configurada.
+    No imprime el token ni el PAGE_ID completo.
+    Devuelve (bool, mensaje).
+    """
+    _check_config()
+    endpoint = f"{PAGE_ID}"
+    params = {"fields": "id,name"}
+    try:
+        result = _make_request("GET", endpoint, params=params)
+        page_id_returned = result.get("id")
+        page_name = result.get("name", "Desconocida")
+        if page_id_returned != PAGE_ID:
+            return False, "❌ PAGE_ID no coincide con la página accesible por el token"
+        return True, f"✅ Token válido\n✅ Página accesible\n✅ Página correcta: {page_name}"
+    except Exception as e:
+        return False, f"❌ Token inválido\n❌ Página inaccesible\n{str(e)}"
+
+
 def _make_request(method, endpoint, data=None, files=None, params=None):
     """Realiza una petición a la Graph API y devuelve la respuesta JSON."""
     url = f"{BASE_URL}/{endpoint}"
@@ -117,7 +137,10 @@ def post_photo(message: str, photo_path: str):
         files = {"file": image_file}
         result = _make_request("POST", endpoint, data=data, files=files)
 
-    print(f"✅ Publicación con foto exitosa. ID: {result.get('id')}")
+    post_id = result.get("id")
+    if not post_id:
+        raise Exception("Meta no devolvió un ID de publicación")
+    print("✅ Publicación creada correctamente")
     return result
 
 

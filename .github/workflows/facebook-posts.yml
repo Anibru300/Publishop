@@ -39,14 +39,12 @@ jobs:
         with open('.env', 'w', encoding='utf-8') as f:
             f.write(f'PAGE_ID={page_id}\n')
             f.write(f'PAGE_ACCESS_TOKEN={token}\n')
-        print(f'Archivo .env creado')
-        print(f'PAGE_ID: {page_id}')
-        print(f'TOKEN longitud: {len(token)}')
-        print(f'TOKEN inicio: {token[:20]}')
-        print(f'TOKEN final: {token[-10:]}')
+        print('Archivo .env creado')
+        print('PAGE_ID configurado:', 'Sí' if page_id else 'No')
+        print('PAGE_ACCESS_TOKEN configurado:', 'Sí' if token else 'No')
         "
 
-    - name: Verificar calendario
+    - name: Verificar calendario y entorno
       working-directory: ./scripts
       env:
         TZ: America/Mexico_City
@@ -55,7 +53,7 @@ jobs:
         echo "Hora UTC actual: $(date -u +%H:%M)"
         echo "Día México: $(date +%A)"
         echo "Hora México: $(date +%H:%M)"
-        python -c "import json; data=json.load(open('content_calendar.json')); print('Total de posts en calendario:', len(data['calendar']))"
+        python run_automation.py --validate
 
     - name: Determinar franja horaria
       id: slot

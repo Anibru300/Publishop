@@ -80,6 +80,7 @@ def publish_post(post_data, dry_run=False):
             photo_path=str(image_path),
         )
         print(f"  ✅ Publicado: {post_data['day']} {post_data['time']} - {post_data['category']}")
+        print("  ✅ Publicación creada correctamente")
         return True
     except Exception as e:
         print(f"  ❌ Error publicando {post_data['day']} {post_data['time']}: {e}")

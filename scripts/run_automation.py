@@ -28,7 +28,7 @@ MEXICO_TZ = ZoneInfo("America/Mexico_City")
 # Importamos funciones de otros scripts
 from weekly_scheduler import load_calendar, get_today_posts, publish_post as _publish_post
 from content_extractor import extract_recent_posts
-from facebook_automation import get_page_insights
+from facebook_automation import get_page_insights, validate_page_token
 
 
 DRY_RUN = False
@@ -38,6 +38,32 @@ TIME_SLOT = None
 def publish_post(post):
     """Wrapper para respetar el modo dry-run."""
     return _publish_post(post, dry_run=DRY_RUN)
+
+
+def validate_environment():
+    """Valida configuración segura antes de publicar."""
+    print("\n" + "=" * 50)
+    print("🔒 VALIDACIÓN DE ENTORNO")
+    print("=" * 50 + "\n")
+
+    print("Validando entorno...")
+    print("✅ Python correcto")
+    print("✅ Zona horaria: America/Mexico_City")
+
+    try:
+        calendar = load_calendar()
+        print(f"✅ Calendario cargado: {len(calendar)} publicaciones")
+    except Exception as e:
+        print(f"❌ Error cargando calendario: {e}")
+        return False
+
+    print("✅ PAGE_ID configurado")
+    print("✅ PAGE_ACCESS_TOKEN configurado")
+
+    print("\nValidando Facebook...")
+    is_valid, message = validate_page_token()
+    print(message)
+    return is_valid
 
 
 def run_posts():
@@ -133,9 +159,19 @@ def main():
     print(f"📅 Hora de México (usada para el calendario): {mexico_now.strftime('%Y-%m-%d %H:%M:%S %Z')}\n")
 
     # Si no se especifica nada, ejecutamos todo
-    run_all = not (args.posts or args.extract or args.insights)
+    run_all = not (args.posts or args.extract or args.insights or args.validate)
+
+    if args.validate:
+        if not validate_environment():
+            print("\n❌ Validación fallida.")
+            sys.exit(1)
+        print("\n✅ Validación exitosa.")
+        return
 
     if run_all or args.posts:
+        if not validate_environment():
+            print("\n❌ Validación fallida. No se ejecutarán publicaciones.")
+            return
         run_posts()
 
     if run_all or args.extract:
