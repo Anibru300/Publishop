@@ -10,9 +10,9 @@
     {
       "day": "Lunes",
       "time": "18:00",
-      "category": "servicios",
-      "image": "general/general_46_01_Somos_publishop.jpg",
-      "message": "💡 ¿Sabías que en PUBLI SHOP LEÓN GTO hacemos todo tipo de personalización?\n\nDesde termos y tazas hasta lonas, playeras y MDF. Todo con acabado profesional y entrega en León, Gto.\n\n📲 Escríbenos al WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#PubliShopLeon #Personalizacion #LeonGto #DaleVidaATusIdeas #ServiciosDePersonalizacion"
+      "category": "corte_laser",
+      "image": "mdf/mdf_28_01_Grabado_laser_y_corte_en_MDF.jpg",
+      "message": "🔥✂️ Precisión en cada corte.\n\nEn PUBLI SHOP LEÓN GTO trabajamos corte y grabado láser en MDF, acrílico, cuero y más. Ideal para regalos, decoración y negocios.\n\n📲 Cotiza por WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#CorteLaser #GrabadoLaser #MDF #Personalizacion #PubliShopLeon #DaleVidaATusIdeas"
     },
     {
       "day": "Martes",
@@ -24,9 +24,9 @@
     {
       "day": "Martes",
       "time": "19:00",
-      "category": "tips",
-      "image": "termos/termos_42_01_Termo_con_grabado_laser_a_tu_.jpg",
-      "message": "💡 Tip del día:\n\nUn termo personalizado con el nombre o logo de tu empresa es un excelente regalo corporativo que tus clientes y empleados usarán todos los días.\n\n🎁 Refuerza tu marca con productos útiles.\n\n📲 Cotiza por WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#TipDelDia #MarketingPersonalizado #RegalosCorporativos #PubliShopLeon"
+      "category": "mdf",
+      "image": "mdf/mdf_05_01_Retratos_en_MDF_.jpg",
+      "message": "🖼️🌳 Recuerdos únicos en MDF.\n\nRetratos, figuras y letreros con grabado y corte láser. Un regalo original que sorprende a cualquiera.\n\n📲 Cotiza por WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#RetratosEnMDF #GrabadoLaser #RegalosOriginales #PubliShopLeon #DetallesUnicos"
     },
     {
       "day": "Miércoles",
@@ -38,64 +38,64 @@
     {
       "day": "Miércoles",
       "time": "18:30",
-      "category": "mdf",
-      "image": "mdf/mdf_04_01__COFRES_PERSONALIZADOS_CON_G.jpg",
-      "message": "🎁🌳 Regalos que se guardan para siempre.\n\nCofres personalizados en MDF con grabado láser. Perfectos para aniversarios, bodas, cumpleaños y detalles especiales.\n\n📲 Cotiza por WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#CofresPersonalizados #MDF #GrabadoLaser #RegalosEspeciales #PubliShopLeon"
-    },
-    {
-      "day": "Jueves",
-      "time": "11:00",
       "category": "tazas",
       "image": "tazas/tazas_31_01_Tazas_personalizadas_.jpg",
       "message": "☕✨ Cada mañana merece un buen recuerdo.\n\nTazas personalizadas con sublimación. Perfectas para regalos, recuerdos de eventos o para tu negocio.\n\n📲 Cotiza por WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#TazasPersonalizadas #Sublimacion #Regalos #PubliShopLeon #TazasConFoto"
     },
     {
       "day": "Jueves",
+      "time": "11:00",
+      "category": "lonas",
+      "image": "vinil/vinil_29_01_Lonas.jpg",
+      "message": "🌈✨ Dale vida a tu negocio.\n\nLonas publicitarias, vinil de corte e impreso, calcomanías y etiquetas. Ideal para publicidad, packaging y decoración.\n\n📲 Cotiza por WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#Lonas #Vinil #Calcomanias #Publicidad #PubliShopLeon #EtiquetasPersonalizadas"
+    },
+    {
+      "day": "Jueves",
+      "time": "19:00",
+      "category": "termos",
+      "image": "termos/termos_42_01_Termo_con_grabado_laser_a_tu_.jpg",
+      "message": "🎁💼 El regalo corporativo ideal.\n\nTermos personalizados con grabado láser para empresas, eventos y campañas de marca. Acabado profesional y duradero.\n\n📲 Cotiza por WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#RegalosCorporativos #TermosPersonalizados #GrabadoLaser #PubliShopLeon #MarketingPersonalizado"
+    },
+    {
+      "day": "Viernes",
+      "time": "10:00",
+      "category": "mdf",
+      "image": "mdf/mdf_04_01__COFRES_PERSONALIZADOS_CON_G.jpg",
+      "message": "🎁🌳 Regalos que se guardan para siempre.\n\nCofres personalizados en MDF con grabado láser. Perfectos para aniversarios, bodas, cumpleaños y detalles especiales.\n\n📲 Cotiza por WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#CofresPersonalizados #MDF #GrabadoLaser #RegalosEspeciales #PubliShopLeon"
+    },
+    {
+      "day": "Viernes",
+      "time": "18:00",
+      "category": "vinil",
+      "image": "vinil/vinil_30_01_Etiquetas_personalizadas.jpg",
+      "message": "🏷️✨ Etiquetas y calcomanías que destacan tu marca.\n\nVinil de corte e impreso para productos, empaques, vehículos y negocios. Resistentes y de alta calidad.\n\n📲 Cotiza por WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#EtiquetasPersonalizadas #Calcomanias #Vinil #Publicidad #PubliShopLeon #DaleVidaATusIdeas"
+    },
+    {
+      "day": "Sábado",
+      "time": "11:00",
+      "category": "tazas",
+      "image": "tazas/tazas_49_01_Lindas_tazas_para_padrinos_.jpg",
+      "message": "☕🎉 Recuerdos que se quedan en el corazón.\n\nTazas personalizadas para padrinos, eventos, cumpleaños y fechas especiales. Diseño único y duradero.\n\n📲 Cotiza por WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#TazasPersonalizadas #Recuerdos #Padrinos #Sublimacion #PubliShopLeon #Eventos"
+    },
+    {
+      "day": "Sábado",
       "time": "19:00",
       "category": "clientes",
       "image": "general/general_41_01_Gracias_por_sus_pedidos_de_ho.jpg",
       "message": "🙏💜 Gracias a todos nuestros clientes por confiar en PUBLI SHOP LEÓN GTO.\n\nCada pedido que hacemos lleva dedicación, calidad y mucho cariño. ¿Tú ya hiciste el tuyo?\n\n📲 WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#ClientesFelices #PubliShopLeon #DaleVidaATusIdeas #HechoConAmor #LeonGto"
     },
     {
-      "day": "Viernes",
-      "time": "10:00",
-      "category": "vinil",
-      "image": "vinil/vinil_36_01___Cotiza_con_nosotros_tus_lo.jpg",
-      "message": "🌈✨ Dale vida a tu negocio.\n\nLonas publicitarias, vinil de corte e impreso, calcomanías y etiquetas. Ideal para publicidad, packaging y decoración.\n\n📲 Cotiza por WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#Lonas #Vinil #Calcomanias #Publicidad #PubliShopLeon #EtiquetasPersonalizadas"
-    },
-    {
-      "day": "Viernes",
-      "time": "18:00",
-      "category": "promocion",
-      "image": "dtf/dtf_09_01_DTF_textil.jpg",
-      "message": "🎉 ¡Viernes de personalización!\n\n¿Tienes un evento próximo? Playeras, tazas, termos o detalles personalizados para tus invitados. Cotiza sin compromiso.\n\n📲 WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#ViernesDePersonalizacion #Eventos #RegalosParaInvitados #PubliShopLeon #CotizaAhora"
-    },
-    {
-      "day": "Sábado",
-      "time": "11:00",
-      "category": "mdf",
-      "image": "mdf/mdf_05_01_Retratos_en_MDF_.jpg",
-      "message": "🖼️🌳 Recuerdos únicos en MDF.\n\nRetratos, figuras y letreros con grabado y corte láser. Un regalo original que sorprende a cualquiera.\n\n📲 Cotiza por WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#RetratosEnMDF #GrabadoLaser #RegalosOriginales #PubliShopLeon #DetallesUnicos"
-    },
-    {
-      "day": "Sábado",
-      "time": "19:00",
-      "category": "faq",
-      "image": "plumas/plumas_47_01_Variedad_de_colores_en_plumas_.jpg",
-      "message": "❓ Pregunta frecuente: ¿Cuánto tiempo tarda un pedido?\n\nDepende del producto y la cantidad, pero trabajamos con tiempos récord. Para pedidos urgentes, pregunta por disponibilidad.\n\n📲 WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#FAQ #PreguntasFrecuentes #PubliShopLeon #TiemposDeEntrega #CotizaAhora"
-    },
-    {
       "day": "Domingo",
       "time": "11:00",
-      "category": "general",
-      "image": "general/general_44_01_Lindo_detalle__.jpg",
+      "category": "servicios",
+      "image": "general/general_46_01_Somos_publishop.jpg",
       "message": "☀️ ¡Buenos días! En PUBLI SHOP LEÓN GTO estamos listos para recibir tus ideas.\n\nTermos, tazas, playeras, plumas, MDF, vinil, lonas y más. Todo personalizado a tu gusto.\n\n📲 WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#PubliShopLeon #DaleVidaATusIdeas #Personalizacion #LeonGto #Domingo"
     },
     {
       "day": "Domingo",
       "time": "18:00",
       "category": "cta",
-      "image": "tazas/tazas_49_01_Lindas_tazas_para_padrinos_.jpg",
+      "image": "vinil/vinil_36_01___Cotiza_con_nosotros_tus_lo.jpg",
       "message": "🎁✨ ¿Buscas el regalo perfecto?\n\nEn PUBLI SHOP LEÓN GTO convertimos tus ideas en regalos únicos. Mándanos mensaje y cotiza sin compromiso.\n\n📲 WhatsApp: 477 841 1655\n🌐 https://anibru300.github.io/Publishop\n\n#RegalosPersonalizados #PubliShopLeon #CotizaAhora #DaleVidaATusIdeas #LeonGto"
     }
   ]
