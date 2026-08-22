@@ -28,13 +28,14 @@ import argparse
 from pathlib import Path
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from facebook_automation import post_photo, is_duplicate_post
+from facebook_automation import post_photo, post_carousel, post_video, is_duplicate_post
 
 sys.stdout.reconfigure(encoding="utf-8")
 
 BASE_DIR = Path(__file__).parent
 CALENDAR_FILE = BASE_DIR / "content_calendar.json"
 IMAGES_BASE_DIR = BASE_DIR.parent / "assets" / "images" / "facebook_extracted"
+VIDEOS_BASE_DIR = BASE_DIR.parent / "assets" / "videos"
 
 
 MEXICO_TZ = ZoneInfo("America/Mexico_City")
@@ -62,15 +63,35 @@ def _time_to_minutes(time_str):
 
 def publish_post(post_data, dry_run=False):
     """Publica una entrada del calendario."""
-    image_path = IMAGES_BASE_DIR / post_data["image"]
+    post_type = post_data.get("type", "photo")
 
-    if not image_path.exists():
-        print(f"  ⚠️ Imagen no encontrada: {image_path}")
-        return False
+    # Validar recursos según el tipo
+    if post_type == "carousel":
+        image_paths = [IMAGES_BASE_DIR / img for img in post_data.get("images", [])]
+        for img_path in image_paths:
+            if not img_path.exists():
+                print(f"  ⚠️ Imagen no encontrada: {img_path}")
+                return False
+    elif post_type == "video":
+        video_path = VIDEOS_BASE_DIR / post_data["video"]
+        if not video_path.exists():
+            print(f"  ⚠️ Video no encontrado: {video_path}")
+            return False
+    else:
+        image_path = IMAGES_BASE_DIR / post_data["image"]
+        if not image_path.exists():
+            print(f"  ⚠️ Imagen no encontrada: {image_path}")
+            return False
 
     if dry_run:
-        print(f"  🧪 [SIMULACIÓN] {post_data['day']} {post_data['time']} - {post_data['category']}")
-        print(f"     Imagen: {image_path}")
+        print(f"  🧪 [SIMULACIÓN] {post_data['day']} {post_data['time']} - {post_data['category']} ({post_type})")
+        if post_type == "carousel":
+            for img_path in image_paths:
+                print(f"     Imagen: {img_path}")
+        elif post_type == "video":
+            print(f"     Video: {video_path}")
+        else:
+            print(f"     Imagen: {image_path}")
         print(f"     Texto: {post_data['message'][:80]}...\n")
         return True
 
@@ -79,12 +100,24 @@ def publish_post(post_data, dry_run=False):
         return False
 
     try:
-        post_photo(
-            message=post_data["message"],
-            photo_path=str(image_path),
-        )
+        if post_type == "carousel":
+            photo_paths = [str(img_path) for img_path in image_paths]
+            post_carousel(
+                message=post_data["message"],
+                photo_paths=photo_paths,
+            )
+        elif post_type == "video":
+            post_video(
+                message=post_data["message"],
+                video_path=str(video_path),
+                title=post_data.get("title"),
+            )
+        else:
+            post_photo(
+                message=post_data["message"],
+                photo_path=str(image_path),
+            )
         print(f"  ✅ Publicado: {post_data['day']} {post_data['time']} - {post_data['category']}")
-        print("  ✅ Publicación creada correctamente")
         return True
     except Exception as e:
         print(f"  ❌ Error publicando {post_data['day']} {post_data['time']}: {e}")

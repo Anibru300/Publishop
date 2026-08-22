@@ -161,6 +161,108 @@ def post_photo(message: str, photo_path: str):
     return result
 
 
+def upload_unpublished_photo(photo_path: str):
+    """
+    Sube una foto a Facebook sin publicarla y devuelve su media_fbid.
+    Se usa para construir carruseles de imágenes.
+    """
+    _check_config()
+    path = Path(photo_path)
+    if not path.exists():
+        raise FileNotFoundError(f"❌ No se encontró la imagen: {photo_path}")
+
+    endpoint = f"{PAGE_ID}/photos"
+    data = {"published": "false"}
+
+    with open(path, "rb") as image_file:
+        files = {"file": image_file}
+        result = _make_request("POST", endpoint, data=data, files=files)
+
+    media_fbid = result.get("id")
+    if not media_fbid:
+        raise Exception("Meta no devolvió un media_fbid para la foto")
+    return media_fbid
+
+
+def post_carousel(message: str, photo_paths: list):
+    """
+    Publica un carrusel de fotos en la página.
+
+    Args:
+        message: Texto de la publicación.
+        photo_paths: Lista de rutas de imágenes (recomendado mismo aspect ratio).
+    """
+    _check_config()
+
+    if not photo_paths:
+        raise ValueError("❌ Se requiere al menos una imagen para el carrusel")
+
+    if len(photo_paths) > 10:
+        raise ValueError("❌ Facebook permite máximo 10 imágenes por carrusel")
+
+    # Subimos cada foto sin publicar
+    media_fbids = []
+    for photo_path in photo_paths:
+        media_fbid = upload_unpublished_photo(photo_path)
+        media_fbids.append(media_fbid)
+
+    # Publicamos el feed post con las fotos adjuntas
+    endpoint = f"{PAGE_ID}/feed"
+    attached_media = json.dumps([{"media_fbid": fbid} for fbid in media_fbids])
+    data = {
+        "message": message,
+        "attached_media": attached_media,
+    }
+
+    result = _make_request("POST", endpoint, data=data)
+    post_id = result.get("id")
+    if not post_id:
+        raise Exception("Meta no devolvió un ID de publicación")
+
+    print(f"✅ Carrusel publicado correctamente. ID: {post_id}")
+
+    if not verify_post_exists(post_id):
+        raise Exception(f"La publicación {post_id} no pudo ser verificada en Facebook")
+
+    return result
+
+
+def post_video(message: str, video_path: str, title: str = None):
+    """
+    Publica un video en la página.
+
+    Args:
+        message: Descripción del video.
+        video_path: Ruta al archivo de video.
+        title: Título opcional del video.
+    """
+    _check_config()
+    path = Path(video_path)
+    if not path.exists():
+        raise FileNotFoundError(f"❌ No se encontró el video: {video_path}")
+
+    endpoint = f"{PAGE_ID}/videos"
+    data = {"description": message}
+    if title:
+        data["title"] = title
+
+    with open(path, "rb") as video_file:
+        files = {"file": video_file}
+        result = _make_request("POST", endpoint, data=data, files=files)
+
+    video_id = result.get("id")
+    if not video_id:
+        raise Exception("Meta no devolvió un ID de video")
+
+    print(f"✅ Video publicado correctamente. ID: {video_id}")
+
+    # Los videos pueden tardar en procesarse; la verificación es opcional
+    if not verify_post_exists(video_id):
+        print(f"⚠️ El video aún se procesa, pero fue subido con ID: {video_id}")
+
+    return result
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # FUNCIONES PARA LEER INFORMACIÓN
 # ─────────────────────────────────────────────────────────────────────────────
