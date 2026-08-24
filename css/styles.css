@@ -1539,3 +1539,157 @@ ul {
         margin-top: 40px;
     }
 }
+
+/* =====================================================
+   Misión, Visión, Valores y servicios mejorados
+   ===================================================== */
+
+/* Mission, Vision, Values */
+.mvv {
+    background: var(--darker);
+}
+
+.mvv-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+}
+
+.mvv-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 40px;
+    transition: var(--transition);
+}
+
+.mvv-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(124, 58, 237, 0.3);
+    box-shadow: var(--shadow);
+}
+
+.mvv-card-wide {
+    grid-column: 1 / -1;
+}
+
+.mvv-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    background: var(--gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--white);
+    margin-bottom: 24px;
+}
+
+.mvv-card h3 {
+    color: var(--white);
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+}
+
+.mvv-card > p {
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+.values-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 10px;
+}
+
+.value-item {
+    display: flex;
+    gap: 14px;
+}
+
+.value-item > i {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 10px;
+    background: rgba(124, 58, 237, 0.15);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--secondary);
+    font-size: 1rem;
+}
+
+.value-item h4 {
+    color: var(--white);
+    font-size: 1rem;
+    margin-bottom: 6px;
+}
+
+.value-item p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Services improvements */
+.services-two {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.service-example {
+    background: rgba(124, 58, 237, 0.08);
+    border: 1px solid rgba(124, 58, 237, 0.25);
+    border-radius: 12px;
+    padding: 18px;
+    margin: 24px 0;
+}
+
+.service-example h4 {
+    color: var(--secondary);
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.service-example p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .mvv-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .mvv-card-wide {
+        grid-column: 1;
+    }
+    
+    .values-list {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .services-two {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .values-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .mvv-card {
+        padding: 28px;
+    }
+}
