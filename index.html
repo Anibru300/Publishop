@@ -231,53 +231,70 @@
                 <h2 class="section-title">Especialidades <span class="gradient-text">PUBLI SHOP</span></h2>
                 <p class="section-desc">Nos enfocamos en dos servicios principales para entregarte la mejor calidad: presencia digital y personalización con láser.</p>
             </div>
-            <div class="services-grid services-main services-two">
-                <!-- Páginas webs personalizadas -->
-                <div class="service-card service-featured" id="servicios-web" data-aos="fade-up" data-aos-delay="0">
-                    <div class="service-image">
-                        <img src="assets/images/servicios/paginas-web/web-design.svg" alt="Creación de páginas web personalizadas">
-                        <div class="service-icon service-icon-large"><i class="fas fa-laptop-code"></i></div>
-                    </div>
-                    <div class="service-content">
-                        <h3>Creación de páginas web personalizadas</h3>
-                        <p>Diseñamos y desarrollamos sitios web a la medida de tu negocio. Desde landing pages que venden hasta catálogos de productos y páginas informativas profesionales.</p>
-                        <ul class="service-list">
-                            <li><i class="fas fa-check"></i> Diseño único, moderno y responsive</li>
-                            <li><i class="fas fa-check"></i> Optimizado para Google y celulares</li>
-                            <li><i class="fas fa-check"></i> Botón directo a WhatsApp</li>
-                            <li><i class="fas fa-check"></i> Hosting, dominio y correo opcional</li>
-                        </ul>
-                        <div class="service-example">
-                            <h4><i class="fas fa-star"></i> Ejemplo real</h4>
-                            <p>Esta misma página web fue diseñada por nosotros para mostrar nuestros servicios, productos y contacto de forma clara y profesional.</p>
+
+            <!-- Tabs -->
+            <div class="services-tabs" data-aos="fade-up">
+                <button class="service-tab active" data-tab="web">
+                    <i class="fas fa-laptop-code"></i>
+                    <span>Páginas web personalizadas</span>
+                </button>
+                <button class="service-tab" data-tab="laser">
+                    <i class="fas fa-fire"></i>
+                    <span>Maquila de grabado y corte láser</span>
+                </button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="services-tabs-content" data-aos="fade-up" data-aos-delay="100">
+                <!-- Web Tab -->
+                <div class="service-tab-panel active" id="tab-web">
+                    <div class="service-tab-layout">
+                        <div class="service-tab-image">
+                            <img src="assets/images/servicios/paginas-web/web-design.svg" alt="Creación de páginas web personalizadas">
                         </div>
-                        <a href="https://wa.me/524778411655?text=Hola%20PUBLI%20SHOP%20LE%C3%93N%20GTO,%20me%20interesa%20una%20página%20web%20personalizada" class="btn btn-primary" target="_blank">
-                            <i class="fab fa-whatsapp"></i> Cotizar página web
-                        </a>
+                        <div class="service-tab-info">
+                            <h3>Creación de páginas web personalizadas</h3>
+                            <p>Diseñamos y desarrollamos sitios web a la medida de tu negocio. Desde landing pages que venden hasta catálogos de productos y páginas informativas profesionales.</p>
+                            <ul class="service-list">
+                                <li><i class="fas fa-check"></i> Diseño único, moderno y responsive</li>
+                                <li><i class="fas fa-check"></i> Optimizado para Google y celulares</li>
+                                <li><i class="fas fa-check"></i> Botón directo a WhatsApp</li>
+                                <li><i class="fas fa-check"></i> Hosting, dominio y correo opcional</li>
+                            </ul>
+                            <div class="service-example">
+                                <h4><i class="fas fa-star"></i> Ejemplo real</h4>
+                                <p>Esta misma página web fue diseñada por nosotros para mostrar nuestros servicios, productos y contacto de forma clara y profesional.</p>
+                            </div>
+                            <a href="https://wa.me/524778411655?text=Hola%20PUBLI%20SHOP%20LE%C3%93N%20GTO,%20me%20interesa%20una%20página%20web%20personalizada" class="btn btn-primary" target="_blank">
+                                <i class="fab fa-whatsapp"></i> Cotizar página web
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <!-- Maquila de grabado y corte láser -->
-                <div class="service-card service-featured" id="servicios-laser" data-aos="fade-up" data-aos-delay="150">
-                    <div class="service-image">
-                        <img src="assets/images/servicios/laser/laser-service.jpg" alt="Maquila de grabado y corte láser">
-                        <div class="service-icon service-icon-large"><i class="fas fa-fire"></i></div>
-                    </div>
-                    <div class="service-content">
-                        <h3>Maquila de grabado y corte láser</h3>
-                        <p>Ofrecemos maquila de grabado y corte láser sobre diversos materiales. Ideal para negocios que necesitan producción personalizada con acabado profesional.</p>
-                        <ul class="service-list">
-                            <li><i class="fas fa-check"></i> Grabado en termos, plumas y metal</li>
-                            <li><i class="fas fa-check"></i> Corte y grabado en MDF, acrílico y cuero</li>
-                            <li><i class="fas fa-check"></i> Regalos corporativos y eventos</li>
-                            <li><i class="fas fa-check"></i> Desde una pieza hasta volúmenes</li>
-                        </ul>
-                        <div class="service-example">
-                            <h4><i class="fas fa-star"></i> Ejemplo real</h4>
-                            <p>Termos corporativos grabados con el logo de la empresa para eventos de fin de año: un regalo útil, elegante y duradero.</p>
+
+                <!-- Laser Tab -->
+                <div class="service-tab-panel" id="tab-laser">
+                    <div class="service-tab-layout">
+                        <div class="service-tab-image">
+                            <img src="assets/images/servicios/laser/laser-service.jpg" alt="Maquila de grabado y corte láser">
                         </div>
-                        <a href="https://wa.me/524778411655?text=Hola%20PUBLI%20SHOP%20LE%C3%93N%20GTO,%20me%20interesa%20maquila%20de%20grabado%20y%20corte%20láser" class="btn btn-primary" target="_blank">
-                            <i class="fab fa-whatsapp"></i> Cotizar maquila láser
-                        </a>
+                        <div class="service-tab-info">
+                            <h3>Maquila de grabado y corte láser</h3>
+                            <p>Ofrecemos maquila de grabado y corte láser sobre diversos materiales. Ideal para negocios que necesitan producción personalizada con acabado profesional.</p>
+                            <ul class="service-list">
+                                <li><i class="fas fa-check"></i> Grabado en termos, plumas y metal</li>
+                                <li><i class="fas fa-check"></i> Corte y grabado en MDF, acrílico y cuero</li>
+                                <li><i class="fas fa-check"></i> Regalos corporativos y eventos</li>
+                                <li><i class="fas fa-check"></i> Desde una pieza hasta volúmenes</li>
+                            </ul>
+                            <div class="service-example">
+                                <h4><i class="fas fa-star"></i> Ejemplo real</h4>
+                                <p>Termos corporativos grabados con el logo de la empresa para eventos de fin de año: un regalo útil, elegante y duradero.</p>
+                            </div>
+                            <a href="https://wa.me/524778411655?text=Hola%20PUBLI%20SHOP%20LE%C3%93N%20GTO,%20me%20interesa%20maquila%20de%20grabado%20y%20corte%20láser" class="btn btn-primary" target="_blank">
+                                <i class="fab fa-whatsapp"></i> Cotizar maquila láser
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

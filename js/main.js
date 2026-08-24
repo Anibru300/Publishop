@@ -221,6 +221,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // Listen for hash changes
     window.addEventListener('hashchange', handleHashFilter);
 
+    // Services Tabs
+    const serviceTabs = document.querySelectorAll('.service-tab');
+    const servicePanels = document.querySelectorAll('.service-tab-panel');
+    
+    serviceTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetTab = tab.getAttribute('data-tab');
+            
+            // Remove active from all tabs and panels
+            serviceTabs.forEach(t => t.classList.remove('active'));
+            servicePanels.forEach(p => p.classList.remove('active'));
+            
+            // Add active to clicked tab and corresponding panel
+            tab.classList.add('active');
+            const targetPanel = document.getElementById(`tab-${targetTab}`);
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+            }
+        });
+    });
+
     // FAQ Accordion
     const faqItems = document.querySelectorAll('.faq-item');
     
