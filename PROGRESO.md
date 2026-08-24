@@ -107,10 +107,15 @@ Guía de configuración: `scripts/GITHUB_ACTIONS_SETUP.md`
 2. Se mejoraron los mensajes de error para indicar claramente cómo regenerar el token.
 3. Se actualizó `README_FACEBOOK_API.md` con instrucciones más detalladas.
 
-**Pendiente por parte del usuario:**
-- Regenerar el Page Access Token en Graph API Explorer.
-- Actualizar el secreto `FACEBOOK_PAGE_ACCESS_TOKEN` en GitHub.
-- Ejecutar el workflow manualmente para verificar.
+**Resuelto:**
+- ✅ Page Access Token regenerado correctamente desde `me/accounts`.
+- ✅ Token actualizado en `publishop/scripts/.env` local.
+- ✅ Token actualizado en secreto `FACEBOOK_PAGE_ACCESS_TOKEN` de GitHub.
+- ✅ Publicaciones de prueba publicadas exitosamente.
+- ✅ Código mejorado subido a GitHub (`commit e2022c2`).
+
+**Vencimiento del token actual:** ~22 de octubre de 2026  
+**Recordatorio:** Renovar a principios de octubre de 2026.
 
 ---
 
@@ -132,10 +137,15 @@ Guía de configuración: `scripts/GITHUB_ACTIONS_SETUP.md`
 
 ## 📌 6. Próximos pasos pendientes
 
-1. **Corregir token de Facebook:**
-   - Regenerar el Page Access Token en Graph API Explorer con permisos `pages_manage_posts`, `pages_read_engagement` y `pages_show_list`.
-   - Actualizar el secreto `FACEBOOK_PAGE_ACCESS_TOKEN` en GitHub.
-   - Ejecutar el workflow manualmente y confirmar que publica.
+1. **Verificar publicaciones automáticas de mañana:**
+   - Lunes 25 de agosto a las 10:00 a.m. México: post de termos.
+   - Lunes 25 de agosto a las 6:00 p.m. México: post de servicios.
+   - Si falla, revisar logs de GitHub Actions.
+
+2. **Renovar token de Facebook a principios de octubre de 2026:**
+   - El token actual vence ~22 de octubre de 2026.
+   - Repetir proceso: Graph API Explorer → ampliar User Token → `me/accounts` → copiar Page Token → actualizar GitHub Secrets.
+   - Considerar App Review + Business Verification para obtener token permanente.
 
 2. **Crecimiento en redes sociales:**
    - Configurar Instagram Business y conectarlo.
