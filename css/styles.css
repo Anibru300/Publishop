@@ -1845,3 +1845,32 @@ ul {
         font-size: 1.4rem;
     }
 }
+
+/* =====================================================
+   Icono de imagen en pestaña de servicios
+   ===================================================== */
+
+.tab-icon-img {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: rgba(124, 58, 237, 0.15);
+    padding: 4px;
+    transition: var(--transition);
+}
+
+.service-tab:hover .tab-icon-img,
+.service-tab.active .tab-icon-img {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .tab-icon-img {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+    }
+}
