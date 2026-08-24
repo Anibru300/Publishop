@@ -1874,3 +1874,26 @@ ul {
         min-width: 32px;
     }
 }
+
+/* =====================================================
+   Mensaje de confirmación del formulario
+   ===================================================== */
+
+.form-message {
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    display: none;
+}
+
+.form-message-success {
+    background: rgba(37, 211, 102, 0.1);
+    border: 1px solid rgba(37, 211, 102, 0.3);
+    color: #4ade80;
+}
+
+.form-message-success i {
+    margin-right: 8px;
+}

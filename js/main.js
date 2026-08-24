@@ -265,21 +265,50 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Contact form handling
+    // Contact form handling — send via WhatsApp
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
             const btn = contactForm.querySelector('button[type="submit"]');
             const originalText = btn.innerHTML;
+            const formMessage = document.getElementById('formMessage');
             
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            // Get form values
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const message = document.getElementById('message').value.trim();
+            
+            // Build WhatsApp message
+            const whatsappMessage = encodeURIComponent(
+                `Hola PUBLI SHOP LEÓN GTO, me interesa cotizar:\n\n` +
+                `*Nombre:* ${name}\n` +
+                `*Correo:* ${email}\n` +
+                (phone ? `*Teléfono:* ${phone}\n` : '') +
+                `*Mensaje:* ${message}`
+            );
+            
+            const whatsappUrl = `https://wa.me/524778411655?text=${whatsappMessage}`;
+            
+            // Show success message
+            if (formMessage) {
+                formMessage.innerHTML = '<i class="fas fa-check-circle"></i> Tu mensaje está listo. Te llevamos a WhatsApp para enviarlo.';
+                formMessage.className = 'form-message form-message-success';
+                formMessage.style.display = 'block';
+            }
+            
+            // Update button
+            btn.innerHTML = '<i class="fab fa-whatsapp"></i> Abriendo WhatsApp...';
             btn.disabled = true;
             
-            // Formspree handles the actual submission and redirects to gracias.html
-            // This provides visual feedback before redirection
+            // Open WhatsApp in new tab
+            window.open(whatsappUrl, '_blank');
+            
+            // Redirect to thanks page after a short delay
             setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }, 5000);
+                window.location.href = 'gracias.html';
+            }, 2000);
         });
     }
 
