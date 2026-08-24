@@ -221,6 +221,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // Listen for hash changes
     window.addEventListener('hashchange', handleHashFilter);
 
+    // FAQ Accordion
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        
+        question.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+            
+            // Close all other items
+            faqItems.forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.classList.remove('active');
+                    otherItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                }
+            });
+            
+            // Toggle current item
+            item.classList.toggle('active');
+            question.setAttribute('aria-expanded', !isActive);
+        });
+    });
+
     // Contact form handling
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
@@ -230,12 +253,12 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
             btn.disabled = true;
             
-            // Formspree handles the actual submission
-            // This just provides visual feedback
+            // Formspree handles the actual submission and redirects to gracias.html
+            // This provides visual feedback before redirection
             setTimeout(() => {
                 btn.innerHTML = originalText;
                 btn.disabled = false;
-            }, 3000);
+            }, 5000);
         });
     }
 
