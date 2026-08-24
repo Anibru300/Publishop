@@ -62,6 +62,8 @@ El **Page Access Token** es la "llave" que le da permiso al programa para public
 
 ### Convertir el token de usuario a token de página
 
+**Este paso es obligatorio.** No uses el token que aparece al hacer clic en "Generate Access Token", ese es un **User Access Token** y NO puede publicar.
+
 1. En el campo de la URL del Graph API Explorer, escribe:
    ```
    me/accounts
@@ -69,6 +71,7 @@ El **Page Access Token** es la "llave" que le da permiso al programa para public
 2. Haz clic en **"Submit"**.
 3. Verás una lista de las páginas que administras.
 4. Busca tu página `Publishop` y copia el valor de **`access_token`**.
+5. **Verifica que es un Page Access Token**: el token debe comenzar con `EAAG` o similar y ser mucho más largo que el token de usuario.
 
 > ⚠️ Este token expira cada **60 días** en modo desarrollo. Para que no expire, tu app necesita pasar por **App Review** y **Business Verification** (más adelante).
 
@@ -247,7 +250,7 @@ Errores comunes:
 | Error | Solución |
 |-------|----------|
 | `Invalid token` | Tu token expiró o no tiene los permisos correctos. Repite el Paso 4. |
-| `(#200) Permissions error` | Tu app no tiene el permiso `pages_manage_posts`. Verifica en el Graph API Explorer. |
+| `(#200) Permissions error` o `publish_actions are not available. It has been deprecated` | Estás usando un **User Access Token** en lugar de un **Page Access Token**, o el token de página no tiene el permiso `pages_manage_posts`. Ve a Graph API Explorer, consulta `me/accounts` y copia el `access_token` de tu página. |
 | `Page not found` | El `PAGE_ID` está mal escrito. Verifica en Configuración de la página. |
 | `Unsupported post type` | Estás usando un parámetro no válido. Revisa el mensaje de error. |
 

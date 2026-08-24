@@ -55,11 +55,16 @@ def _check_config():
 
 def validate_page_token():
     """
-    Valida que el token pueda acceder a la página configurada.
+    Valida que el token pueda acceder a la página configurada y que tenga
+    permisos suficientes para leer publicaciones (indica que es un token
+    de página real y no solo un token de usuario básico).
+
     No imprime el token ni el PAGE_ID completo.
     Devuelve (bool, mensaje).
     """
     _check_config()
+
+    # 1. Verificar acceso básico a la página
     endpoint = f"{PAGE_ID}"
     params = {"fields": "id,name"}
     try:
@@ -68,9 +73,27 @@ def validate_page_token():
         page_name = result.get("name", "Desconocida")
         if page_id_returned != PAGE_ID:
             return False, "❌ PAGE_ID no coincide con la página accesible por el token"
-        return True, f"✅ Token válido\n✅ Página accesible\n✅ Página correcta: {page_name}"
     except Exception as e:
         return False, f"❌ Token inválido\n❌ Página inaccesible\n{str(e)}"
+
+    # 2. Verificar que puede leer publicaciones (requiere pages_read_engagement)
+    try:
+        _make_request("GET", f"{PAGE_ID}/posts", params={"limit": 1})
+    except Exception as e:
+        return False, (
+            f"✅ Página accesible: {page_name}\n"
+            f"❌ El token no puede leer publicaciones de la página\n"
+            f"❌ {str(e)}\n\n"
+            f"💡 Solución: genera un PAGE ACCESS TOKEN desde Graph API Explorer "
+            f"con los permisos pages_manage_posts, pages_read_engagement y pages_show_list."
+        )
+
+    return True, (
+        f"✅ Token válido\n"
+        f"✅ Página accesible\n"
+        f"✅ Página correcta: {page_name}\n"
+        f"✅ Permisos de lectura confirmados"
+    )
 
 
 def _make_request(method, endpoint, data=None, files=None, params=None):
@@ -99,9 +122,22 @@ def _make_request(method, endpoint, data=None, files=None, params=None):
         error_subcode = error.get("error_subcode")
 
         if error_code == 190:
-            raise Exception(f"❌ Token expirado o revocado: {error_message}") from e
+            raise Exception(
+                f"❌ Token expirado o revocado: {error_message}\n\n"
+                f"💡 Los tokens de página en modo desarrollo expiran cada 60 días. "
+                f"Regenera el token en https://developers.facebook.com/tools/explorer "
+                f"y actualiza el secreto FACEBOOK_PAGE_ACCESS_TOKEN en GitHub."
+            ) from e
         if error_code == 200:
-            raise Exception(f"❌ Permisos insuficientes: {error_message}") from e
+            raise Exception(
+                f"❌ Permisos insuficientes: {error_message}\n\n"
+                f"💡 Probablemente estás usando un User Access Token en lugar de un Page Access Token, "
+                f"o el token de página no incluye el permiso 'pages_manage_posts'.\n"
+                f"   1. Ve a https://developers.facebook.com/tools/explorer\n"
+                f"   2. Genera un token con los permisos: pages_manage_posts, pages_read_engagement, pages_show_list\n"
+                f"   3. Consulta 'me/accounts' y copia el access_token de tu página\n"
+                f"   4. Actualiza el secreto FACEBOOK_PAGE_ACCESS_TOKEN en GitHub con ese token."
+            ) from e
         if error_code == 104:
             raise Exception(f"❌ Límite de solicitudes alcanzado: {error_message}") from e
         if error_code == 100:

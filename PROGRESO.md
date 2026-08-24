@@ -78,10 +78,10 @@ Se creó el workflow `.github/workflows/facebook-posts.yml` para publicar autom�
 
 ### Estado actual:
 
-- ✅ Workflow ejecutándose correctamente desde GitHub Actions.
+- ⚠️ Workflow ejecutándose pero fallando por token de Facebook incorrecto (ver incidente 2026-08-23).
 - ✅ Lógica de franjas horarias implementada para publicar 1 post por ejecución.
 - ✅ Día del calendario y franja horaria calculados con hora de México (`America/Mexico_City`).
-- ✅ Token de página validado antes de publicar, sin exponer secretos en logs.
+- ✅ Validación de token mejorada: ahora detecta tokens sin permisos de lectura/escritura.
 - ✅ Graph API actualizada a v22.0.
 - ✅ Publicaciones verificadas después de crearlas con `GET /{post_id}`.
 - ✅ Protección contra duplicados: no publica si el mismo mensaje ya existe en los últimos 7 días.
@@ -92,7 +92,29 @@ Guía de configuración: `scripts/GITHUB_ACTIONS_SETUP.md`
 
 ---
 
-## ⚠️ 4. Limitaciones encontradas
+## ⚠️ 4. Incidentes recientes
+
+### 2026-08-23 — Fallo de publicación por token incorrecto
+
+**Error:**
+- `Invalid OAuth 2.0 Access Token`
+- `(#200) The permission(s) publish_actions are not available. It has been deprecated.`
+
+**Causa:** El secreto `FACEBOOK_PAGE_ACCESS_TOKEN` en GitHub no es un **Page Access Token** válido con permiso `pages_manage_posts`. Puede ser un User Access Token o un token de página sin los permisos necesarios.
+
+**Solución aplicada:**
+1. Se mejoró `facebook_automation.py` para detectar este error durante la validación inicial (ahora también prueba lectura de posts con `/{PAGE_ID}/posts`).
+2. Se mejoraron los mensajes de error para indicar claramente cómo regenerar el token.
+3. Se actualizó `README_FACEBOOK_API.md` con instrucciones más detalladas.
+
+**Pendiente por parte del usuario:**
+- Regenerar el Page Access Token en Graph API Explorer.
+- Actualizar el secreto `FACEBOOK_PAGE_ACCESS_TOKEN` en GitHub.
+- Ejecutar el workflow manualmente para verificar.
+
+---
+
+## ⚠️ 5. Limitaciones encontradas
 
 ### No se pudo automatizar respuestas de comentarios:
 
@@ -108,11 +130,12 @@ Guía de configuración: `scripts/GITHUB_ACTIONS_SETUP.md`
 
 ---
 
-## 📌 5. Próximos pasos pendientes
+## 📌 6. Próximos pasos pendientes
 
-1. **Verificar GitHub Actions:**
-   - Confirmar que el workflow publica correctamente desde GitHub.
-   - Revisar log del paso "Crear archivo .env con secretos" y "Publicar en Facebook".
+1. **Corregir token de Facebook:**
+   - Regenerar el Page Access Token en Graph API Explorer con permisos `pages_manage_posts`, `pages_read_engagement` y `pages_show_list`.
+   - Actualizar el secreto `FACEBOOK_PAGE_ACCESS_TOKEN` en GitHub.
+   - Ejecutar el workflow manualmente y confirmar que publica.
 
 2. **Crecimiento en redes sociales:**
    - Configurar Instagram Business y conectarlo.
