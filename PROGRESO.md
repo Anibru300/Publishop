@@ -1,6 +1,6 @@
 # 📋 Progreso del Proyecto PUBLI SHOP LEÓN GTO
 
-> Última actualización: 18 de agosto de 2026
+> Última actualización: 5 de septiembre de 2026
 
 ---
 
@@ -36,6 +36,7 @@ Se creó una carpeta `scripts/` con herramientas de automatización oficiales de
 | `weekly_scheduler.py` | Publicar según calendario (soporta 2 posts/día) | ✅ Funcionando |
 | `run_automation.py` | Script maestro que ejecuta todo | ✅ Funcionando |
 | `auto_responder.py` | Responder mensajes/comentarios automáticamente | ⚠️ Limitado por Meta |
+| `image_rotator.py` | Rotación de imágenes sin repetición | ✅ Funcionando |
 
 ### Calendario de contenido:
 
@@ -75,6 +76,15 @@ Se creó el workflow `.github/workflows/facebook-posts.yml` para publicar autom�
 
 - `FACEBOOK_PAGE_ID`: `293448483863008`
 - `FACEBOOK_PAGE_ACCESS_TOKEN`: Token de página de Facebook
+
+### Rotación de imágenes y textos (nuevo — 5 de septiembre de 2026):
+
+- ✅ Las publicaciones ya **no repiten imágenes**: cada post elige la imagen menos usada recientemente de su categoría (`image_rotator.py`).
+- ✅ Estado persistente en `scripts/used_images.json`, commiteado automáticamente por el workflow después de cada publicación.
+- ✅ Carpeta prioritaria `assets/images/nuevas/`: las fotos nuevas que suba el usuario se publican primero (subcarpetas por categoría opcionales).
+- ✅ Textos: cada publicación tiene 2 variantes que alternan semana a semana (`messages` en el calendario).
+- 📱 Guía para subir fotos desde el celular: `scripts/COMO_SUBIR_IMAGENES.md` (GitHub → Add file → Upload files).
+- 📊 Pool actual: 65 imágenes (~5 semanas sin repetir a 2 posts/día).
 
 ### Estado actual:
 

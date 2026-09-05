@@ -1,0 +1,12 @@
+CARPETA DE IMÁGENES NUEVAS
+==========================
+
+Sube aquí las fotos nuevas para las publicaciones de Facebook.
+Las imágenes de esta carpeta se publican PRIMERO, antes que las antiguas.
+
+Opciones:
+- Suelta las fotos directamente aquí (sirven para cualquier publicación).
+- O crea subcarpetas por categoría: termos, tazas, plumas, dtf, vinil, mdf, general.
+  Ejemplo: nuevas/termos/foto1.jpg
+
+Guía para subir desde el celular: scripts/COMO_SUBIR_IMAGENES.md

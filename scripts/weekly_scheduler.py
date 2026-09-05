@@ -29,6 +29,7 @@ from pathlib import Path
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from facebook_automation import post_photo, post_carousel, post_video, is_duplicate_post
+from image_rotator import pick_image, mark_used, save_state
 
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -61,6 +62,21 @@ def _time_to_minutes(time_str):
     return hour * 60 + minute
 
 
+def _resolve_message(post_data):
+    """
+    Elige el texto de la publicación. Si el calendario tiene "messages"
+    (lista de variantes), alterna entre ellas semana a semana para que
+    el texto no se repita cada semana.
+    """
+    variants = post_data.get("messages")
+    if not variants:
+        return post_data["message"]
+
+    iso_week = get_mexico_now().isocalendar().week
+    index = iso_week % len(variants)
+    return variants[index]
+
+
 def publish_post(post_data, dry_run=False):
     """Publica una entrada del calendario."""
     post_type = post_data.get("type", "photo")
@@ -78,10 +94,19 @@ def publish_post(post_data, dry_run=False):
             print(f"  ⚠️ Video no encontrado: {video_path}")
             return False
     else:
-        image_path = IMAGES_BASE_DIR / post_data["image"]
-        if not image_path.exists():
-            print(f"  ⚠️ Imagen no encontrada: {image_path}")
-            return False
+        # Rotación automática: elegimos la imagen menos usada recientemente
+        # para esta categoría (respeta fotos nuevas subidas a 'nuevas/').
+        try:
+            image_path = pick_image(post_data.get("category", "general"))
+        except FileNotFoundError as e:
+            print(f"  ⚠️ {e}")
+            # Fallback: imagen fija del calendario
+            image_path = IMAGES_BASE_DIR / post_data["image"]
+            if not image_path.exists():
+                print(f"  ⚠️ Imagen no encontrada: {image_path}")
+                return False
+
+    message = _resolve_message(post_data)
 
     if dry_run:
         print(f"  🧪 [SIMULACIÓN] {post_data['day']} {post_data['time']} - {post_data['category']} ({post_type})")
@@ -92,10 +117,10 @@ def publish_post(post_data, dry_run=False):
             print(f"     Video: {video_path}")
         else:
             print(f"     Imagen: {image_path}")
-        print(f"     Texto: {post_data['message'][:80]}...\n")
+        print(f"     Texto: {message[:80]}...\n")
         return True
 
-    if not dry_run and is_duplicate_post(post_data["message"], hours_back=168):
+    if not dry_run and is_duplicate_post(message, hours_back=168):
         print(f"  ⚠️ Publicación duplicada detectada, no se publicará")
         return False
 
@@ -103,20 +128,22 @@ def publish_post(post_data, dry_run=False):
         if post_type == "carousel":
             photo_paths = [str(img_path) for img_path in image_paths]
             post_carousel(
-                message=post_data["message"],
+                message=message,
                 photo_paths=photo_paths,
             )
         elif post_type == "video":
             post_video(
-                message=post_data["message"],
+                message=message,
                 video_path=str(video_path),
                 title=post_data.get("title"),
             )
         else:
             post_photo(
-                message=post_data["message"],
+                message=message,
                 photo_path=str(image_path),
             )
+            mark_used(image_path)
+            save_state()
         print(f"  ✅ Publicado: {post_data['day']} {post_data['time']} - {post_data['category']}")
         return True
     except Exception as e:
