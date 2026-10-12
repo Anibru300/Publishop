@@ -1,6 +1,6 @@
 # 📋 Progreso del Proyecto PUBLI SHOP LEÓN GTO
 
-> Última actualización: 5 de septiembre de 2026
+> Última actualización: 11 de octubre de 2026
 
 ---
 
@@ -88,7 +88,12 @@ Se creó el workflow `.github/workflows/facebook-posts.yml` para publicar autom�
 
 ### Estado actual:
 
-- ⚠️ Workflow ejecutándose pero fallando por token de Facebook incorrecto (ver incidente 2026-08-23).
+- ⏸️ **PUBLICACIONES AUTOMÁTICAS DETENIDAS el 11 de octubre de 2026.**
+  - Motivo: las publicaciones no generaban interacción (vistas/likes).
+  - Se quitaron los disparadores programados (cron) del workflow.
+  - El workflow sigue disponible para ejecución manual (`workflow_dispatch`).
+  - Balance de la automatización: ~85 publicaciones automáticas del 24 ago al 11 oct 2026.
+- ⚠️ Incidente de token de Facebook incorrecto (ver incidente 2026-08-23).
 - ✅ Lógica de franjas horarias implementada para publicar 1 post por ejecución.
 - ✅ Día del calendario y franja horaria calculados con hora de México (`America/Mexico_City`).
 - ✅ Validación de token mejorada: ahora detecta tokens sin permisos de lectura/escritura.
@@ -147,12 +152,8 @@ Guía de configuración: `scripts/GITHUB_ACTIONS_SETUP.md`
 
 ## 📌 6. Próximos pasos pendientes
 
-1. **Verificar publicaciones automáticas de mañana:**
-   - Lunes 25 de agosto a las 10:00 a.m. México: post de termos.
-   - Lunes 25 de agosto a las 6:00 p.m. México: post de servicios.
-   - Si falla, revisar logs de GitHub Actions.
-
-2. **Renovar token de Facebook a principios de octubre de 2026:**
+1. **Renovar token de Facebook (si se retoma la automatización):**
+   - El token vence ~22 de octubre de 2026. Si no se renueva, caducará solo.
    - El token actual vence ~22 de octubre de 2026.
    - Repetir proceso: Graph API Explorer → ampliar User Token → `me/accounts` → copiar Page Token → actualizar GitHub Secrets.
    - Considerar App Review + Business Verification para obtener token permanente.
