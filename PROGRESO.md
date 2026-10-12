@@ -134,6 +134,22 @@ Guía de configuración: `scripts/GITHUB_ACTIONS_SETUP.md`
 
 ---
 
+## 📸 4.1 Nuevas fotos recaudadas de Internet (11 oct 2026)
+
+Con la automatización detenida, se recaudaron **21 fotos de licencia libre**
+para una futura estrategia de contenido (el usuario seleccionará las mejores).
+
+- 📁 Ubicación: `Imágenes para publicaciones nuevas/recaudadas_web/`
+  (fuera del repo, en el escritorio; carpeta por categoría: tazas, playeras,
+  plumas, grabado_laser, sublimacion, termos, vinil, lonas).
+- 🌐 Fuentes: **Wikimedia Commons** y **Openverse** (imágenes CC de Flickr/rawpixel).
+- ⚖️ Licencias: solo uso comercial permitido (CC0, dominio público, CC BY, CC BY-SA).
+- 📄 Documentación: `LEEME-RECAUDADAS.md` y `FUENTES.md` dentro de la carpeta.
+- 🛠️ Scripts reutilizables en la raíz del proyecto: `recaudar_fotos.py` (Commons),
+  `recaudar_fotos_openverse.py` (Openverse).
+- ⚠️ **Pendiente:** documentar fuente exacta (autor/licencia) de las fotos
+  seleccionadas antes de publicarlas en Facebook (las CC BY/BY-SA requieren crédito).
+
 ## ⚠️ 5. Limitaciones encontradas
 
 ### No se pudo automatizar respuestas de comentarios:
