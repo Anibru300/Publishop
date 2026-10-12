@@ -1,11 +1,9 @@
 name: Publicaciones automáticas en Facebook
 
+# ⚠️ PUBLICACIONES AUTOMÁTICAS DETENIDAS el 11-10-2026 (a petición del usuario:
+# las publicaciones no generaban interacción). Se quitaron los disparadores
+# programados (cron). El workflow sigue disponible para ejecución manual.
 on:
-  schedule:
-    # 16:00 UTC = 10:00 a.m. hora de México (aproximado)
-    - cron: '0 16 * * *'
-    # 00:00 UTC = 6:00 p.m. hora de México (aproximado)
-    - cron: '0 0 * * *'
   workflow_dispatch:
     # Permite ejecutar manualmente desde GitHub
     inputs:
