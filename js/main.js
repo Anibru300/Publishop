@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     navToggle.addEventListener('click', () => {
         navMenu.classList.toggle('active');
         navToggle.classList.toggle('active');
+        navToggle.setAttribute('aria-expanded', String(navMenu.classList.contains('active')));
     });
 
     // Mobile dropdowns
@@ -57,6 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Close mobile menu on link click
     document.querySelectorAll('.nav-menu a, .dropdown-menu a').forEach(link => {
         link.addEventListener('click', () => {
+            if (window.innerWidth <= 768 && link.classList.contains('nav-link') && link.closest('.nav-dropdown')) return;
+            navToggle.setAttribute('aria-expanded', 'false');
             navMenu.classList.remove('active');
             navToggle.classList.remove('active');
             navDropdowns.forEach(d => d.classList.remove('active'));
@@ -181,7 +184,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.style.opacity = '0';
                 item.style.transform = 'scale(0.8)';
                 setTimeout(() => {
-                    item.classList.add('hidden');
+                    const activeFilter = document.querySelector('.filter-btn.active');
+                    const current = activeFilter ? activeFilter.getAttribute('data-filter') : 'all';
+                    if (current !== 'all' && item.getAttribute('data-category') !== current) item.classList.add('hidden');
                 }, 300);
             }
         });
@@ -270,8 +275,6 @@ document.addEventListener('DOMContentLoaded', () => {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const btn = contactForm.querySelector('button[type="submit"]');
-            const originalText = btn.innerHTML;
             const formMessage = document.getElementById('formMessage');
             
             // Get form values
@@ -291,24 +294,21 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const whatsappUrl = `https://wa.me/524778411655?text=${whatsappMessage}`;
             
-            // Show success message
+            // Keep the draft on the page until the customer chooses to send it.
             if (formMessage) {
-                formMessage.innerHTML = '<i class="fas fa-check-circle"></i> Tu mensaje está listo. Te llevamos a WhatsApp para enviarlo.';
+                formMessage.replaceChildren();
+                const notice = document.createElement('p');
+                notice.textContent = 'Tu mensaje estú preparado. Ábrelo en WhatsApp y pulsa Enviar para completar la solicitud.';
+                const link = document.createElement('a');
+                link.href = whatsappUrl;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.textContent = 'Abrir mi mensaje en WhatsApp';
+                formMessage.append(notice, link);
                 formMessage.className = 'form-message form-message-success';
                 formMessage.style.display = 'block';
             }
-            
-            // Update button
-            btn.innerHTML = '<i class="fab fa-whatsapp"></i> Abriendo WhatsApp...';
-            btn.disabled = true;
-            
-            // Open WhatsApp in new tab
-            window.open(whatsappUrl, '_blank');
-            
-            // Redirect to thanks page after a short delay
-            setTimeout(() => {
-                window.location.href = 'gracias.html';
-            }, 2000);
+            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
         });
     }
 
