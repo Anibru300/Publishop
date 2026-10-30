@@ -1,11 +1,13 @@
 import * as THREE from './vendor/three/three.module.min.js';
 
 export const thermosModels = {
-    '20': {label:'20 oz · Alto',height:3.1,profile:[[.55,-1.55],[.57,-1.3],[.70,.6],[.74,1.55]],printHeight:2.85,printCenter:0,reference:'assets/images/productos/termos/termo-01.jpg'},
-    '30': {label:'30 oz · Vaso ancho',height:3.1,profile:[[.58,-1.55],[.60,-.95],[.88,-.25],[.96,1.55]],printHeight:2.85,printCenter:0,reference:'assets/images/productos/termos/termo-laser-04.jpg'},
-    '40': {label:'40 oz · Con asa y popote',height:3.8,profile:[[.55,-1.9],[.60,-1.05],[.98,-.5],[.98,1.9]],printHeight:3.5,printCenter:0,handle:true,reference:'assets/images/productos/termos/termo-laser-02.jpg'},
-    short: {label:'Chaparrito ancho',height:1.9,profile:[[.86,-.95],[1.02,-.72],[1.08,.6],[1.04,.95]],printHeight:1.68,printCenter:0,reference:null},
-    bottle: {label:'Botella cilíndrica',height:3.4,profile:[[.58,-1.7],[.65,-1.5],[.65,1.08],[.4,1.48],[.4,1.7]],printHeight:2.6,printCenter:-.2,reference:'assets/images/productos/termos/termo-laser-01.jpg'}
+    '10': {label:'10 oz · Chaparrito redondeado',height:1.9,profile:[[.65,-.95],[.79,-.89],[.94,-.70],[1.01,-.38],[1.02,-.08],[.99,.25],[.91,.60],[.82,.95]],printHeight:1.68,printCenter:0,clearLid:true,reference:'assets/images/modelos/termos/termo-10-oz.jpg'},
+    '20': {label:'20 oz · Sin asa',height:3.15,profile:[[.59,-1.575],[.61,-1.45],[.69,-.1],[.79,1.575]],printHeight:2.9,printCenter:0,clearLid:true,reference:'assets/images/modelos/termos/termo-20-oz.jpg'},
+    '20-handle': {label:'20 oz · Con asa',height:3.15,profile:[[.69,-1.575],[.71,-1.38],[.76,1.575]],printHeight:2.9,printCenter:0,handle:true,handleWidth:.43,handleThickness:.055,clearLid:true,reference:'assets/images/modelos/termos/termo-20-oz-con-asa.jpg'},
+    '30': {label:'30 oz · Sin asa',height:3.45,profile:[[.59,-1.725],[.61,-1.0],[.65,-.8],[.93,-.15],[1.0,1.725]],printHeight:3.2,printCenter:0,clearLid:true,reference:'assets/images/modelos/termos/termo-30-oz.jpg'},
+    '30-handle': {label:'30 oz · Con asa',height:3.45,profile:[[.59,-1.725],[.61,-1.0],[.65,-.8],[.93,-.15],[1.0,1.725]],printHeight:3.2,printCenter:0,handle:true,handleWidth:.48,handleThickness:.065,clearLid:true,reference:'assets/images/modelos/termos/termo-30-oz-con-asa.jpg'},
+    '40': {label:'40 oz · Con asa y tapa',height:4.0,profile:[[.58,-2],[.6,-1.12],[.64,-.92],[.96,-.45],[1.0,2]],printHeight:3.72,printCenter:0,handle:true,handleWidth:.5,handleThickness:.08,strawHeight:.22,reference:'assets/images/modelos/termos/termo-40-oz.jpg'},
+    skinny20: {label:'20 oz · Skinny recto',height:3.55,profile:[[.57,-1.775],[.59,-1.67],[.59,1.775]],printHeight:3.32,printCenter:0,clearLid:true,reference:'assets/images/modelos/termos/termo-skinny-20-oz.webp'}
 };
 function radiusAt(model,y) {
     const points = model.profile;
@@ -81,13 +83,15 @@ export class ProductViewer {
             this.add(new THREE.Mesh(new THREE.LatheGeometry(profile.map(([r,y]) => new THREE.Vector2(r,y)),96),material(o.color)));
             const top = m.profile.at(-1), bottom = m.profile[0];
             const lid = this.add(new THREE.Mesh(new THREE.CylinderGeometry(top[0] + .025,top[0] + .025,.1,64),steel())); lid.position.y = m.height / 2 + .025;
-            const cap = this.add(new THREE.Mesh(new THREE.CylinderGeometry(top[0] * .92,top[0] * .92,.05,64),material('#272b30'))); cap.position.y = m.height / 2 + .1;
+            const capMaterial = m.clearLid ? new THREE.MeshStandardMaterial({color:'#cbd3d8',transparent:true,opacity:.6,roughness:.2}) : material('#272b30');
+            const cap = this.add(new THREE.Mesh(new THREE.CylinderGeometry(top[0] * .92,top[0] * .92,.05,64),capMaterial)); cap.position.y = m.height / 2 + .1;
             const rim = this.add(new THREE.Mesh(new THREE.CylinderGeometry(bottom[0] + .01,bottom[0] + .01,.08,64),steel())); rim.position.y = -m.height / 2 + .035;
             if (m.handle) {
-                const points = [[.91,1.27,0],[1.6,1.2,0],[1.63,.1,0],[1.32,-.5,0],[.94,-.5,0]].map(p => new THREE.Vector3(...p));
-                this.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points),64,.105,16,false),material(o.color)));
-                const straw = this.add(new THREE.Mesh(new THREE.CylinderGeometry(.045,.045,.9,20),material('#d6e5e3'))); straw.position.set(.22,m.height / 2 + .5,0);
+                const yTop = m.height * .31, yBottom = -m.height * .12, edge = radiusAt(m,(yTop + yBottom) / 2), width = m.handleWidth;
+                const points = [[edge - .025,yTop,0],[edge + width - .06,yTop,0],[edge + width,yTop - .07,0],[edge + width,yBottom + .07,0],[edge + width - .06,yBottom,0],[edge - .025,yBottom,0]].map(p => new THREE.Vector3(...p));
+                this.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points),80,m.handleThickness,16,false),material(o.color)));
             }
+            if (m.strawHeight) { const straw = this.add(new THREE.Mesh(new THREE.CylinderGeometry(.045,.045,m.strawHeight,20),material('#272b30'))); straw.position.set(.2,m.height / 2 + .12 + m.strawHeight / 2,0); }
         } else if (this.type === 'pen') {
             const barrel = this.add(new THREE.Mesh(new THREE.CylinderGeometry(.174,.174,3.7,64),material(o.color))); barrel.rotation.z = Math.PI / 2;
             const tip = this.add(new THREE.Mesh(new THREE.ConeGeometry(.174,.43,40),steel())); tip.rotation.z = -Math.PI / 2; tip.position.x = 2.065;

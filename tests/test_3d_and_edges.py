@@ -84,18 +84,18 @@ def run():
             page.locator('#customText').fill('MI TERMO')
             page.locator('#addText').click()
             images = set()
-            for model in ['20', '30', '40', 'short', 'bottle']:
+            for model in ['10', '20', '20-handle', '30', '30-handle', '40', 'skinny20']:
                 page.locator('#thermosModel').select_option(model)
                 assert page.locator('[data-layer]').count() == 1
                 images.add(page.locator('#productViewport canvas').evaluate('(c) => c.toDataURL()'))
-                assert page.locator('#thermosReference').is_hidden() == (model == 'short')
+                assert page.locator('#thermosReference').is_visible()
                 with page.expect_download() as download:
                     page.locator('#downloadPreview').click()
                 file = Path(temp) / f'{model}.png'
                 download.value.save_as(file)
                 with Image.open(file) as image:
                     assert image.size == (1600, 1810)
-            assert len(images) == 5
+            assert len(images) == 7
             page.locator('#thermosModel').select_option('40')
             with page.expect_download():
                 with page.expect_popup() as result:
@@ -108,7 +108,7 @@ def run():
             page.set_viewport_size({'width': 390, 'height': 844})
             assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
             assert not errors, errors
-            print('PASS five distinct thermos geometries, references, four-view exports, retained text, quote and mobile')
+            print('PASS seven distinct thermos geometries, user references, four-view exports, retained text, quote and mobile')
             browser.close()
     finally:
         server.shutdown()
