@@ -9,7 +9,7 @@
     const closeDialog = document.getElementById('closeDialog');
     const normalize = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
     const escapeHTML = value => String(value || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    const swatches = {negro:'#171717',blanco:'#f4f3ef',marino:'#182b49',azul:'#155eef',rey:'#1755c7',rojo:'#d42c37',vino:'#722f45',rosa:'#e983bb',morado:'#7337a8',lila:'#b8a0d7',gris:'#85858a',carbon:'#42444a',jaspe:'#8f8f92',aqua:'#36aeb0',turquesa:'#16a1a3',verde:'#27905b',olivo:'#77834b',limon:'#c4cf37',amarillo:'#f5d548',naranja:'#ed812f',cafe:'#704a3c',canario:'#f2d928',arena:'#c9b99c',cielo:'#8cc9e8',hueso:'#ece6d8',menta:'#95cdb1',khaki:'#b4a582',oxford:'#646b72',petroleo:'#16777c',salmón:'#ed9b8a',salmon:'#ed9b8a'};
+    const swatches = {negro:'#171717',blanco:'#f4f3ef',marino:'#182b49',azul:'#155eef',rey:'#1755c7',rojo:'#d42c37',vino:'#722f45',rosa:'#e983bb',morado:'#7337a8',lila:'#b8a0d7',gris:'#85858a',carbon:'#42444a',jaspe:'#8f8f92',aqua:'#36aeb0',turquesa:'#16a1a3',verde:'#27905b',olivo:'#77834b',limon:'#c4cf37',amarillo:'#f5d548',naranja:'#ed812f',cafe:'#704a3c',canario:'#f2d928',arena:'#c9b99c',cielo:'#8cc9e8',hueso:'#ece6d8',menta:'#95cdb1',kaki:'#b4a582',khaki:'#b4a582',oxford:'#646b72',petroleo:'#16777c',salmón:'#ed9b8a',salmon:'#ed9b8a'};
     const colorHex = color => {
         const name = normalize(color);
         if (name.includes('marino')) return swatches.marino;
@@ -28,9 +28,10 @@
     const hoodieColors = [
         ['Negro','#171717'],['Blanco','#f4f3ef'],['Gris','#85858a'],['Marino','#182b49'],['Azul rey','#1755c7'],['Rojo','#d42c37'],['Verde','#27905b'],['Rosa','#e983bb'],['Beige','#c9b99c']
     ];
-    let models = [], step = 'audience', gender = '', kind = '', selectedModel = null, hoodieType = 'hoodie', activeButton = null;
+    let models = [], sweatshirts = [], step = 'audience', gender = '', kind = '', selectedModel = null, selectedHoodieModel = null, hoodieType = 'hoodie', activeButton = null;
 
     function photo(model, extra='') {
+        if (model.image && /^assets\/images\/sudaderas\/referencias\/sudadera-[\w-]+\.webp$/.test(model.image)) return `<img class="playera-photo ${extra}" src="${model.image}" alt="${escapeHTML(model.title)}" loading="lazy">`;
         return `<div class="playera-photo ${extra}" style="background-image:url('${sheetURL(model)}');background-position:${position(model)}" role="img" aria-label="${escapeHTML(model.title)}"></div>`;
     }
     function hoodieSVG(color) {
@@ -92,8 +93,9 @@
     function drawProduct() {
         heading.textContent = `Modelos disponibles para ${audienceLabel(gender).toLowerCase()}`;
         const shirt = models.find(m=>m.gender===gender) || models[0];
+        const hoodie=sweatshirts[0];
         return card({title:'Playeras y camisetas',subtitle:'Manga corta, manga larga, polos y más',image:photo(shirt,'wizard-card__photo'),action:'product:shirt'}) +
-            card({title:'Sudaderas',subtitle:'Con capucha o cierre · Personalizables',image:`<div class="wizard-card__art">${hoodieSVG('#6b5b83')}</div>`,action:'product:hoodie'});
+            card({title:'Sudaderas',subtitle:hoodie?`${sweatshirts.length} modelos y colores`:'Modelos y colores personalizables',image:hoodie?photo(hoodie,'wizard-card__photo'):`<div class="wizard-card__art">${hoodieSVG('#6b5b83')}</div>`,action:'product:hoodie'});
     }
     function drawKinds() {
         heading.textContent = 'Elige el estilo de playera';
@@ -119,10 +121,16 @@
     }
     function drawHoodieType() {
         heading.textContent = 'Elige el modelo de sudadera';
-        return [['hoodie','Con capucha'],['zip','Con cierre']].map(([value,label])=>card({title:label,subtitle:'Sudadera personalizable',image:`<div class="wizard-card__art">${hoodieSVG('#6b5b83')}</div>`,action:`hoodie-type:${value}`})).join('');
+        if (sweatshirts.length) {
+            const groups=new Map();
+            for(const model of sweatshirts){if(!groups.has(model.kind))groups.set(model.kind,[]);groups.get(model.kind).push(model);}
+            return [...groups].map(([style,items])=>card({title:style,subtitle:`${new Set(items.map(modelColor).filter(Boolean)).size} colores disponibles`,image:photo(items[0],'wizard-card__photo'),action:`hoodie-type:${encodeURIComponent(style)}`})).join('');
+        }
+        return [['crew','Cuello redondo'],['hoodie','Con capucha y cangurera']].map(([value,label])=>card({title:label,subtitle:'Sudadera personalizable',image:`<div class="wizard-card__art">${hoodieSVG('#6b5b83')}</div>`,action:`hoodie-type:${value}`})).join('');
     }
     function drawHoodieColors() {
-        heading.textContent = `Colores de sudadera ${hoodieType==='zip'?'con cierre':'con capucha'}`;
+        heading.textContent = `Colores · ${selectedHoodieModel?.title || (hoodieType==='zip'?'Sudadera con cierre':'Sudadera con capucha')}`;
+        if (selectedHoodieModel?.items?.length) return selectedHoodieModel.items.map((model,index)=>card({title:modelColor(model)||'Por confirmar',subtitle:'Ver referencia y personalizar',image:photo(model,'wizard-card__photo'),action:`hoodie-model-color:${index}`})).join('');
         return hoodieColors.map(([name,hex])=>card({title:name,subtitle:'Ver modelo y personalizar',tag:'Color',image:`<div class="wizard-card__art">${hoodieSVG(hex)}</div>`,action:`hoodie-color:${encodeURIComponent(name)}`})).join('');
     }
     function render() {
@@ -136,6 +144,7 @@
             else if (['product','kind','hoodieType'].includes(step)) html = html.split('</button>').filter(part=>tokens.every(t=>normalize(part).includes(t))).map(part=>part+'</button>').join('');
             else if (step==='model') html = groupedModels().filter(g=>tokens.every(t=>normalize([g.title,kind,gender,g.items.map(modelColor).join(' ')].join(' ')).includes(t))).map(g=>{const m=g.items[0];return card({title:g.title,subtitle:`${new Set(g.items.map(modelColor).filter(Boolean)).size} colores disponibles`,tag:audienceLabel(gender),image:photo(m,'wizard-card__photo'),action:`model:${normalize(modelBase(m))}`});}).join('');
             else if (step==='color') html = selectedModel.items.filter(m=>tokens.every(t=>normalize([m.title,modelColor(m),m.kind,m.composition].join(' ')).includes(t))).map(m=>card({title:modelColor(m)||'Color por confirmar',subtitle:'Ver detalle y personalizar',image:photo(m,'wizard-card__photo'),action:`color:${selectedModel.items.indexOf(m)}`})).join('');
+            else if (step==='hoodieColor' && selectedHoodieModel?.items?.length) html = selectedHoodieModel.items.filter(m=>tokens.every(t=>normalize([m.title,modelColor(m),m.kind,m.composition].join(' ')).includes(t))).map(m=>card({title:modelColor(m)||'Por confirmar',subtitle:'Ver referencia y personalizar',image:photo(m,'wizard-card__photo'),action:`hoodie-model-color:${selectedHoodieModel.items.indexOf(m)}`})).join('');
             else if (step==='hoodieColor') html = hoodieColors.filter(([name])=>tokens.every(t=>normalize([name,hoodieType,gender].join(' ')).includes(t))).map(([name,hex])=>card({title:name,subtitle:'Ver modelo y personalizar',tag:'Color',image:`<div class="wizard-card__art">${hoodieSVG(hex)}</div>`,action:`hoodie-color:${encodeURIComponent(name)}`})).join('');
         }
         grid.innerHTML = html;
@@ -160,7 +169,7 @@
         document.getElementById('dialogQuote').href=`https://wa.me/524778411655?text=${encodeURIComponent(msg)}`;
         const target=new URL(hoodie?'personaliza-sudadera.html':'personaliza-playera.html',location.href);
         for(const key of ['title','gender','kind','color','composition']) target.searchParams.set(key,model[key]||'');
-        if(hoodie) target.searchParams.set('type',model.type||hoodieType);
+        if(hoodie) target.searchParams.set('type',model.type||(normalize(model.kind).includes('capucha')?'hoodie':'crew'));
         document.getElementById('dialogDesign').href=target.href;
         document.getElementById('dialogDesign').textContent=hoodie?'Personaliza esta sudadera':'Diseña esta playera';
         dialog.showModal(); document.body.style.overflow='hidden'; closeDialog.focus();
@@ -172,7 +181,16 @@
         if(action==='kind'){kind=value;setStep('model');return;}
         if(action==='model'){selectedModel=groupFromKey(value);setStep('color');return;}
         if(action==='color'){openModel(selectedModel.items[Number(value)]||selectedModel.items[0],button);return;}
-        if(action==='hoodie-type'){hoodieType=value;setStep('hoodieColor');return;}
+        if(action==='hoodie-type'){
+            const style=decodeURIComponent(value);
+            if(sweatshirts.length){const items=sweatshirts.filter(model=>model.kind===style);selectedHoodieModel={title:style,items};hoodieType=normalize(style).includes('capucha')?'hoodie':'crew';}
+            else {hoodieType=value;selectedHoodieModel=null;}
+            setStep('hoodieColor');return;
+        }
+        if(action==='hoodie-model-color'){
+            const model=selectedHoodieModel.items[Number(value)];
+            openModel({...model,type:hoodieType},button,true);return;
+        }
         if(action==='hoodie-color'){
             const name=decodeURIComponent(value), color=hoodieColors.find(([n])=>n===name)?.[1]||'#81818a';
             openModel({title:`Sudadera ${hoodieType==='zip'?'con cierre':'con capucha'} ${audienceLabel(gender)}`,gender,kind:hoodieType==='zip'?'Con cierre':'Con capucha',color:name,composition:'Material por confirmar',type:hoodieType},button,true);
@@ -186,8 +204,12 @@
     dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close();});
     dialog.addEventListener('close',()=>{document.body.style.overflow='';activeButton?.focus();});
 
-    fetch('data/playeras.json').then(response=>{if(!response.ok)throw new Error('No se pudo cargar el catálogo');return response.json();}).then(data=>{
-        models=data;
+    Promise.all([
+        fetch('data/playeras.json').then(response=>{if(!response.ok)throw new Error('No se pudo cargar el catálogo');return response.json();}),
+        fetch('data/sudaderas.json').then(response=>response.ok?response.json():[]).catch(()=>[]),
+    ]).then(([shirtData,hoodieData])=>{
+        models=shirtData;
+        sweatshirts=hoodieData;
         document.getElementById('heroModelCount').textContent=models.length;
         render();
     }).catch(()=>{

@@ -30,7 +30,7 @@ function loadSelectedGarmentModel() {
     if (model.color) {
         const colorName = clean(model.color);
         const key = colorName.includes('marino') ? 'marino' : colorName.includes('rey') ? 'rey' : colorName.includes('cielo') ? 'cielo' : colorName.split(/\s+/)[0];
-        const colorMap = {blanco:'#ffffff',hueso:'#ece6d8',negro:'#171717',marino:'#14284c',azul:'#2457c5',rey:'#2457c5',cielo:'#8cc9e8',celeste:'#7ec8e3',rojo:'#c8202c',vino:'#722f45',rosa:'#ee91ba',fucsia:'#df3c91',morado:'#7337a8',lila:'#b8a0d7',gris:'#858585',carbon:'#44464b',carbono:'#44464b',jaspe:'#88898b',aqua:'#36aeb0',turquesa:'#16a1a3',verde:'#21834a',olivo:'#77834b',menta:'#95cdb1',limon:'#c4cf37',amarillo:'#edc72c',canario:'#f2d928',naranja:'#ed812f',cafe:'#704a3c',arena:'#c9b99c',beige:'#c9b99c',khaki:'#b4a582',oxford:'#646b72',petroleo:'#16777c',salmón:'#ed9b8a',salmon:'#ed9b8a'};
+        const colorMap = {blanco:'#ffffff',hueso:'#ece6d8',negro:'#171717',marino:'#14284c',azul:'#2457c5',rey:'#2457c5',cielo:'#8cc9e8',celeste:'#7ec8e3',rojo:'#c8202c',vino:'#722f45',rosa:'#ee91ba',fucsia:'#df3c91',morado:'#7337a8',lila:'#b8a0d7',gris:'#858585',carbon:'#44464b',carbono:'#44464b',jaspe:'#88898b',aqua:'#36aeb0',turquesa:'#16a1a3',verde:'#21834a',olivo:'#77834b',menta:'#95cdb1',limon:'#c4cf37',amarillo:'#edc72c',canario:'#f2d928',naranja:'#ed812f',cafe:'#704a3c',arena:'#c9b99c',beige:'#c9b99c',kaki:'#b4a582',khaki:'#b4a582',oxford:'#646b72',petroleo:'#16777c',salmón:'#ed9b8a',salmon:'#ed9b8a'};
         const hex = colorMap[key] || '#81818a';
         let option = [...$('shirtColor').options].find(item => item.value.toLowerCase() === hex);
         if (!option) { option = new Option(model.color,hex); $('shirtColor').add(option); }
@@ -142,10 +142,12 @@ function buildProduct() {
         const geometry = new THREE.ExtrudeGeometry(shape,{depth:.22,bevelEnabled:true,bevelSize:.045,bevelThickness:.04,bevelSegments:3,curveSegments:24});
         geometry.translate(0,0,-.11); product.add(new THREE.Mesh(geometry,fabric));
         if (isHoodie) {
-            const hoodShape = new THREE.Shape(); hoodShape.moveTo(-.39,1.31); hoodShape.quadraticCurveTo(-.52,1.85,0,1.94); hoodShape.quadraticCurveTo(.52,1.85,.39,1.31); hoodShape.lineTo(.22,1.14); hoodShape.quadraticCurveTo(0,1.29,-.22,1.14); hoodShape.closePath();
-            const hood = new THREE.Mesh(new THREE.ExtrudeGeometry(hoodShape,{depth:.12,bevelEnabled:true,bevelSize:.025,bevelThickness:.02,bevelSegments:2}),fabric.clone()); hood.position.z = -.06; product.add(hood);
-            const pocket = new THREE.Mesh(new THREE.BoxGeometry(.76,.38,.025),fabric.clone()); pocket.position.set(0,-.91,.13); product.add(pocket);
-            for (const x of [-.11,.11]) { const cord = new THREE.Mesh(new THREE.CylinderGeometry(.012,.012,.35,8),new THREE.MeshStandardMaterial({color:$('shirtColor').value})); cord.position.set(x,1.0,.22); product.add(cord); }
+            if (style !== 'crew') {
+                const hoodShape = new THREE.Shape(); hoodShape.moveTo(-.39,1.31); hoodShape.quadraticCurveTo(-.52,1.85,0,1.94); hoodShape.quadraticCurveTo(.52,1.85,.39,1.31); hoodShape.lineTo(.22,1.14); hoodShape.quadraticCurveTo(0,1.29,-.22,1.14); hoodShape.closePath();
+                const hood = new THREE.Mesh(new THREE.ExtrudeGeometry(hoodShape,{depth:.12,bevelEnabled:true,bevelSize:.025,bevelThickness:.02,bevelSegments:2}),fabric.clone()); hood.position.z = -.06; product.add(hood);
+                const pocket = new THREE.Mesh(new THREE.BoxGeometry(.76,.38,.025),fabric.clone()); pocket.position.set(0,-.91,.13); product.add(pocket);
+                for (const x of [-.11,.11]) { const cord = new THREE.Mesh(new THREE.CylinderGeometry(.012,.012,.35,8),new THREE.MeshStandardMaterial({color:$('shirtColor').value})); cord.position.set(x,1.0,.22); product.add(cord); }
+            }
             if (style === 'zip') { const zip = new THREE.Mesh(new THREE.BoxGeometry(.025,1.9,.025),new THREE.MeshStandardMaterial({color:'#d1d5db'})); zip.position.set(0,-.13,.17); product.add(zip); }
         }
         if (style === 'polo') {
