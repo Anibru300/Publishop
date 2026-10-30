@@ -82,63 +82,31 @@
                     <div>
                         <span class="section-tag">Colección</span>
                         <h2 id="catalogTitle">Explora los modelos</h2>
-                        <p>Filtra por corte o público, busca un color y abre cualquier modelo para conocerlo mejor.</p>
+                    <p>Elige una persona, explora los modelos con imágenes y selecciona el color que prefieras.</p>
                     </div>
                     <a class="playeras-design-link" href="personaliza-playera.html"><i class="fas fa-pen-ruler" aria-hidden="true"></i> Abre el diseñador</a>
                 </header>
 
-                <div class="playeras-filters" aria-label="Filtros del catálogo">
-                    <div class="playeras-filter-row playeras-filter-row--types">
-                        <label class="playeras-color-filter" for="familyFilter"><span>1. Tipo de prenda</span>
-                            <select id="familyFilter"><option value="">Selecciona una categoría</option></select>
-                        </label>
-                        <label class="playeras-color-filter" for="kindFilter"><span>2. Estilo</span>
-                            <select id="kindFilter" disabled><option value="Todos">Todos los estilos</option></select>
-                        </label>
-                    </div>
-                    <div class="playeras-filter-row">
-                        <span class="playeras-filter-label">Público</span>
-                        <div class="playeras-filter-group" id="genderFilters" role="group" aria-label="Filtrar por público">
-                            <button class="playeras-chip is-active" type="button" data-gender="Todos" aria-pressed="true">Todos</button>
-                            <button class="playeras-chip" type="button" data-gender="Hombre" aria-pressed="false">Hombre</button>
-                            <button class="playeras-chip" type="button" data-gender="Mujer" aria-pressed="false">Mujer</button>
-                            <button class="playeras-chip" type="button" data-gender="Unisex" aria-pressed="false">Unisex</button>
-                            <button class="playeras-chip" type="button" data-gender="Por confirmar" aria-pressed="false">Otros modelos</button>
-                        </div>
-                    </div>
-                    <div class="playeras-filter-tools">
+                <div class="playeras-filters catalog-wizard" aria-label="Explorador visual del catálogo">
+                    <div class="catalog-wizard__toolbar">
+                        <div id="wizardCrumbs" class="catalog-wizard__crumbs" aria-label="Pasos del catálogo"></div>
                         <label class="playeras-search" for="modelSearch">
                             <i class="fas fa-search" aria-hidden="true"></i>
-                            <span class="sr-only">Buscar playeras</span>
-                            <input id="modelSearch" type="search" placeholder="Buscar color o estilo…" autocomplete="off">
+                            <span class="sr-only">Buscar modelos</span>
+                            <input id="modelSearch" type="search" placeholder="Buscar modelo, estilo o color" autocomplete="off">
                             <kbd>/</kbd>
                         </label>
-                        <label class="playeras-color-filter" for="colorFilter">
-                            <span>3. Color</span>
-                            <select id="colorFilter"><option value="Todos">Todos</option></select>
-                        </label>
-                        <label class="playeras-sort" for="sortModels">
-                            <span>Ordenar</span>
-                            <select id="sortModels">
-                                <option value="featured">Recomendados</option>
-                                <option value="az">Nombre A–Z</option>
-                                <option value="za">Nombre Z–A</option>
-                            </select>
-                        </label>
+                    </div>
+                    <p id="wizardHeading" class="catalog-wizard__heading" aria-live="polite">¿Para quién buscas una prenda?</p>
+                    <div id="modelsGrid" class="catalog-wizard__grid" aria-live="polite"></div>
+                    <div id="wizardEmpty" class="playeras-empty" hidden>
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                        <h3>No encontramos coincidencias</h3>
+                        <p>Prueba otro nombre, estilo o color.</p>
                     </div>
                 </div>
 
-                <div class="playeras-results-bar">
-                    <p id="resultCount" aria-live="polite">Cargando modelos…</p>
-                    <button id="clearFilters" class="playeras-clear" type="button" hidden>Limpiar filtros</button>
-                </div>
-                <div id="modelsGrid" class="playeras-grid" aria-live="polite"></div>
-                <div id="emptyState" class="playeras-empty" hidden>
-                    <i class="fas fa-shirt" aria-hidden="true"></i>
-                    <h3>No encontramos ese modelo</h3>
-                    <p>Prueba con otro color o estilo, o limpia los filtros.</p>
-                    <button class="btn btn-outline" type="button" id="emptyClear">Ver todos los modelos</button>
-                </div>
+                <p id="resultCount" class="catalog-wizard__count" aria-live="polite">Cargando modelos…</p>
                 <noscript><p class="playeras-empty">Activa JavaScript para explorar los filtros y los modelos del catálogo.</p></noscript>
             </div>
         </section>

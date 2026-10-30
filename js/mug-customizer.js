@@ -17,20 +17,20 @@ const magic = () => !isApparel && $('mugType').value === 'magic';
 const cold = () => magic() && !$('magicHot').checked;
 const currentLayers = () => layers.filter(l => !isApparel || l.face === face);
 function loadSelectedGarmentModel() {
-    if (!isShirt) return;
+    if (!isApparel) return;
     const params = new URLSearchParams(location.search), title = params.get('title');
     if (!title) return;
     const model = Object.fromEntries(['title','gender','kind','color','composition'].map(key => [key, params.get(key) || '']));
     window.selectedGarmentModel = model;
     const clean = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
     const titleText = clean(model.title), kindText = clean(model.kind);
-    const style = /cuello\s*v/.test(titleText) ? 'v' : /polo/.test(titleText + ' ' + kindText) ? 'polo' : 'round';
+    const style = isHoodie ? (params.get('type') || 'hoodie') : /cuello\s*v/.test(titleText) ? 'v' : /polo/.test(titleText + ' ' + kindText) ? 'polo' : 'round';
     $('shirtStyle').value = style;
-    $('shirtSleeve').value = /sin mangas|sin manga/.test(titleText + ' ' + kindText) ? 'none' : /manga larga/.test(titleText + ' ' + kindText) ? 'long' : 'short';
+    $('shirtSleeve').value = isHoodie ? 'long' : /sin mangas|sin manga/.test(titleText + ' ' + kindText) ? 'none' : /manga larga/.test(titleText + ' ' + kindText) ? 'long' : 'short';
     if (model.color) {
         const colorName = clean(model.color);
         const key = colorName.includes('marino') ? 'marino' : colorName.includes('rey') ? 'rey' : colorName.includes('cielo') ? 'cielo' : colorName.split(/\s+/)[0];
-        const colorMap = {blanco:'#ffffff',hueso:'#ece6d8',negro:'#171717',marino:'#14284c',azul:'#2457c5',rey:'#2457c5',cielo:'#8cc9e8',celeste:'#7ec8e3',rojo:'#c8202c',vino:'#722f45',rosa:'#ee91ba',fucsia:'#df3c91',morado:'#7337a8',lila:'#b8a0d7',gris:'#858585',carbon:'#44464b',carbono:'#44464b',jaspe:'#88898b',aqua:'#36aeb0',turquesa:'#16a1a3',verde:'#21834a',olivo:'#77834b',menta:'#95cdb1',limon:'#c4cf37',amarillo:'#edc72c',canario:'#f2d928',naranja:'#ed812f',cafe:'#704a3c',arena:'#c9b99c',khaki:'#b4a582',oxford:'#646b72',petroleo:'#16777c',salmón:'#ed9b8a',salmon:'#ed9b8a'};
+        const colorMap = {blanco:'#ffffff',hueso:'#ece6d8',negro:'#171717',marino:'#14284c',azul:'#2457c5',rey:'#2457c5',cielo:'#8cc9e8',celeste:'#7ec8e3',rojo:'#c8202c',vino:'#722f45',rosa:'#ee91ba',fucsia:'#df3c91',morado:'#7337a8',lila:'#b8a0d7',gris:'#858585',carbon:'#44464b',carbono:'#44464b',jaspe:'#88898b',aqua:'#36aeb0',turquesa:'#16a1a3',verde:'#21834a',olivo:'#77834b',menta:'#95cdb1',limon:'#c4cf37',amarillo:'#edc72c',canario:'#f2d928',naranja:'#ed812f',cafe:'#704a3c',arena:'#c9b99c',beige:'#c9b99c',khaki:'#b4a582',oxford:'#646b72',petroleo:'#16777c',salmón:'#ed9b8a',salmon:'#ed9b8a'};
         const hex = colorMap[key] || '#81818a';
         let option = [...$('shirtColor').options].find(item => item.value.toLowerCase() === hex);
         if (!option) { option = new Option(model.color,hex); $('shirtColor').add(option); }
