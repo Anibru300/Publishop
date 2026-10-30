@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personaliza tu producto | PUBLI SHOP LEÓN GTO</title>
+    <meta name="description" content="Diseña tu playera, taza, pluma, termo, lona, figura MDF o rompecabezas y solicita tu cotización por WhatsApp.">
+    <link rel="canonical" href="https://anibru300.github.io/Publishop/personaliza.html">
+    <link rel="icon" href="assets/images/logo.jpg"><link rel="stylesheet" href="css/styles.css"><link rel="stylesheet" href="css/customizer.css">
+</head>
+<body>
+    <header class="studio-header"><a class="studio-brand" href="index.html"><img src="assets/images/logo.jpg" alt="">PUBLI SHOP LEÓN GTO</a><a href="catalogo.html">Volver al catálogo</a></header>
+    <main class="studio">
+        <div class="studio-heading"><span class="section-tag">Tu espacio creativo</span><h1>Personaliza tu <span class="gradient-text">producto</span></h1><p>Elige un artículo, crea tu diseño y pulsa Terminé para pedir una cotización.</p></div>
+        <div class="designer-grid">
+            <a class="designer-card" data-product="shirt" href="personaliza-playera.html"><img src="assets/images/productos/dtf/playera-dtf-01.jpg" alt="Playera personalizada"><h2>Playera</h2><p>Frente y espalda · DTF textil, DTF reflejante o vinil.</p><span>Elegir y diseñar →</span></a>
+            <a class="designer-card" data-product="mug" href="personaliza-taza.html"><img src="assets/images/productos/tazas/taza-01.jpg" alt="Taza personalizada"><h2>Taza</h2><p>Mediana, grande o mágica · Hasta cinco diseños.</p><span>Elegir y diseñar →</span></a>
+            <a class="designer-card" data-product="pen" href="disena-producto.html?producto=pen"><img src="assets/images/productos/plumas/pluma-01.jpg" alt="Pluma grabada"><h2>Pluma</h2><p>Grabado láser únicamente · Nombre o logotipo.</p><span>Elegir y diseñar →</span></a>
+            <a class="designer-card" data-product="banner" href="disena-producto.html?producto=banner"><img src="assets/images/productos/lonas/lona-01.jpg" alt="Lona publicitaria"><h2>Lona</h2><p>Tu anuncio con imágenes, logotipo y texto.</p><span>Elegir y diseñar →</span></a>
+            <a class="designer-card" data-product="thermos" href="disena-producto.html?producto=thermos"><img src="assets/images/productos/termos/termo-01.jpg" alt="Termo grabado"><h2>Termo</h2><p>Grabado láser · Texto y logotipos en un solo tono.</p><span>Elegir y diseñar →</span></a>
+            <a class="designer-card" data-product="mdf" href="disena-producto.html?producto=mdf"><img src="assets/images/productos/mdf/figura-mdf-01.jpg" alt="Figura de MDF"><h2>Corte y figuras MDF</h2><p>Figuras, nombres y referencias para corte o grabado.</p><span>Elegir y diseñar →</span></a>
+            <a class="designer-card" data-product="puzzle" href="disena-producto.html?producto=puzzle"><img src="assets/images/productos/mdf/rompecabezas-01.jpg" alt="Rompecabezas personalizado"><h2>Rompecabezas</h2><p>Tu foto o diseño en un rompecabezas de muestra.</p><span>Elegir y diseñar →</span></a>
+        </div>
+        <p class="studio-help">Los modelos son orientativos. Confirmamos medidas, materiales, acabados, precio y disponibilidad al cotizar.</p>
+    </main>
+    <script>const choice = new URLSearchParams(location.search).get('producto'); if (choice) { const card = [...document.querySelectorAll('[data-product]')].find(c => c.dataset.product === choice); if (card) { card.classList.add('recommended-product'); card.focus(); } }</script>
+</body>
+</html>

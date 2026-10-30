@@ -13,7 +13,7 @@
 <body data-product="shirt">
     <header class="studio-header">
         <a href="index.html" class="studio-brand"><img src="assets/images/logo.jpg" alt="">PUBLI SHOP LEÓN GTO</a>
-        <a href="catalogo.html#dtf">Volver al catálogo</a>
+        <a href="personaliza.html">Cambiar producto</a>
     </header>
     <main class="studio">
         <div class="studio-heading">
@@ -36,6 +36,8 @@
             <section class="design-panel" aria-labelledby="designTitle">
                 <h2 id="designTitle">Personaliza tu playera</h2>
                 <div class="product-options">
+                    <label for="shirtTechnique">Material / técnica de personalización</label>
+                    <select id="shirtTechnique" disabled><option value="dtf">DTF textil</option><option value="reflective">DTF reflejante</option><option value="vinyl">Vinil textil</option></select>
                     <label for="shirtColor">Color de la playera</label>
                     <select id="shirtColor" disabled>
                         <option value="#ffffff">Blanco</option><option value="#171717">Negro</option>
@@ -73,7 +75,7 @@
                 </fieldset>
                 <div class="studio-actions">
                     <button type="button" id="downloadPreview" class="btn btn-primary" disabled>Descargar frente y espalda</button>
-                    <a id="quoteMug" class="btn studio-whatsapp" href="https://wa.me/524778411655?text=Hola%2C%20quiero%20cotizar%20una%20playera%20personalizada." target="_blank" rel="noopener noreferrer">Cotizar por WhatsApp</a>
+                    <a id="quoteMug" hidden href="https://wa.me/524778411655" target="_blank" rel="noopener noreferrer">Cotizar por WhatsApp</a>
                 </div>
                 <p class="studio-help">Descarga el frente y la espalda y adjúntalos junto con tus diseños originales en WhatsApp. Las imágenes no se adjuntan automáticamente.</p>
                 <noscript><p>Activa JavaScript para usar la vista 3D. También puedes enviarnos tu diseño directamente por WhatsApp.</p></noscript>

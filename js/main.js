@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function isProductCategory(id) {
-        return ['lonas', 'dtf', 'vinil', 'plumas', 'tazas', 'termos', 'mdf'].includes(id);
+        return ['lonas', 'dtf', 'vinil', 'plumas', 'tazas', 'termos', 'mdf', 'playeras', 'rompecabezas'].includes(id);
     }
 
     // Generate particles
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle URL hash for product categories
     function handleHashFilter() {
         const hash = window.location.hash.replace('#', '');
-        const validCategories = ['lonas', 'dtf', 'vinil', 'plumas', 'tazas', 'termos', 'mdf'];
+        const validCategories = ['lonas', 'dtf', 'vinil', 'plumas', 'tazas', 'termos', 'mdf', 'playeras', 'rompecabezas'];
         if (hash === 'productos' && !document.getElementById('productos')) {
             window.location.replace('catalogo.html');
             return;
@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
         anchor.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
             const targetId = href.replace('#', '');
-            const validCategories = ['lonas', 'dtf', 'vinil', 'plumas', 'tazas', 'termos', 'mdf'];
+            const validCategories = ['lonas', 'dtf', 'vinil', 'plumas', 'tazas', 'termos', 'mdf', 'playeras', 'rompecabezas'];
             
             if (validCategories.includes(targetId)) {
                 e.preventDefault();

@@ -1,3 +1,5 @@
+import { setupCompletion, downloadCanvas } from './finish-order.js';
+import { setupTextTools } from './text-tools.js';
 const $ = id => document.getElementById(id);
 const isShirt = document.body.dataset.product === 'shirt';
 const viewport = $('mugViewport'), background = '#8c99af';
@@ -46,7 +48,7 @@ function paintTextures() {
 }
 function description() {
     if (!isShirt) return $('mugType').selectedOptions[0].text + (magic() ? ($('magicHot').checked ? ' · caliente (diseño visible)' : ' · fría (negra)') : '');
-    return [$('shirtStyle'),$('shirtSleeve'),$('shirtColor')].map(s => s.selectedOptions[0].text).join(' · ');
+    return [$('shirtStyle'),$('shirtSleeve'),$('shirtColor'),$('shirtTechnique')].map(s => s.selectedOptions[0].text).join(' · ');
 }
 function updateQuote() {
     const sides = isShirt ? ': ' + layers.filter(l => l.face === 'front').length + ' delante y ' + layers.filter(l => l.face === 'back').length + ' detrás' : '';
@@ -197,7 +199,7 @@ viewport.addEventListener('keydown',e => {
 $('rotateLeft')?.addEventListener('click',() => { if (ready) { product.rotation.y -= .3; render(); } });
 $('rotateRight')?.addEventListener('click',() => { if (ready) { product.rotation.y += .3; render(); } });
 $('zoomIn').addEventListener('click',() => zoom(-.4)); $('zoomOut').addEventListener('click',() => zoom(.4)); $('resetView').addEventListener('click',resetView);
-$('downloadPreview').addEventListener('click',() => {
+function previewCanvas() {
     if (!ready) return;
     const rotation = product.rotation.clone(), position = camera.position.clone(), aspect = camera.aspect, size = renderer.getSize(new THREE.Vector2());
     const canvas = document.createElement('canvas'); canvas.width = 1600; canvas.height = isShirt ? 990 : 1790;
@@ -216,10 +218,15 @@ $('downloadPreview').addEventListener('click',() => {
         product.rotation.copy(rotation); camera.position.copy(position); camera.aspect = aspect; camera.lookAt(0,0,0); camera.updateProjectionMatrix(); renderer.setSize(size.x,size.y,false); render();
     }
     ctx.font = '22px sans-serif'; ctx.fillText('Vista aproximada · Sujeta a confirmación antes de producir',800,canvas.height - 24);
-    canvas.toBlob(blob => {
-        if (!blob) return;
-        const url = URL.createObjectURL(blob), link = document.createElement('a'); link.download = isShirt ? 'mi-playera-frente-espalda-publishop.png' : 'mi-taza-4-vistas-publishop.png';
-        link.href = url; link.click(); setTimeout(() => URL.revokeObjectURL(url),10000); $('fileStatus').textContent = 'Vista lista para descargar. Adjúntala en WhatsApp junto con tus archivos originales.';
-    },'image/png');
+    return canvas;
+}
+const filename = isShirt ? 'mi-playera-frente-espalda-publishop.png' : 'mi-taza-4-vistas-publishop.png';
+$('downloadPreview').addEventListener('click',() => downloadCanvas(previewCanvas(),filename));
+setupTextTools((image,name) => {
+    if (layers.length >= 5) { $('fileStatus').textContent = 'Máximo cinco diseños por producto. Elimina uno para añadir otro.'; return false; }
+    const id = nextId++;
+    layers.push({id,name,image,face,scale:100,x:0,y:0,rotation:0}); selectedId = id;
+    refreshControls(); paintTextures(); return true;
 });
+setupCompletion({previewCanvas,summary:description,count:() => layers.length,filename});
 refreshControls(); init();

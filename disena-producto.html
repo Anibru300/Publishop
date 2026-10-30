@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diseña tu producto | PUBLI SHOP LEÓN GTO</title><meta name="description" content="Crea una propuesta de pluma, termo, lona, MDF o rompecabezas y solicita tu cotización con las vistas de tu diseño.">
+    <link rel="canonical" href="https://anibru300.github.io/Publishop/disena-producto.html">
+    <link rel="icon" href="assets/images/logo.jpg"><link rel="stylesheet" href="css/styles.css"><link rel="stylesheet" href="css/customizer.css">
+</head>
+<body>
+    <header class="studio-header"><a class="studio-brand" href="index.html"><img src="assets/images/logo.jpg" alt="">PUBLI SHOP LEÓN GTO</a><a href="personaliza.html">Cambiar producto</a></header>
+    <main class="studio">
+        <div class="studio-heading"><span class="section-tag">Tu espacio creativo</span><h1>Diseña tu <span id="productTitle" class="gradient-text">producto</span></h1><p id="productIntro"></p></div>
+        <div class="studio-layout">
+            <section class="preview-panel" aria-label="Vista de tu propuesta">
+                <canvas id="flatPreview" class="flat-preview" width="1200" height="900" aria-label="Vista previa de tu diseño"></canvas>
+                <div id="faceSelector" class="face-selector" hidden><button type="button" data-face="front" aria-pressed="true">Frente</button><button type="button" data-face="back" aria-pressed="false">Reverso</button></div>
+                <p class="preview-disclaimer">Modelo de muestra. Las medidas, materiales, detalles de corte y acabados se confirman al cotizar.</p>
+            </section>
+            <section class="design-panel" aria-labelledby="designTitle">
+                <h2 id="designTitle">Crea tu propuesta</h2>
+                <div id="productOptions" class="product-options"></div>
+                <label class="upload-label" for="designFile">Añadir fotos, logotipos o referencias</label>
+                <input id="designFile" type="file" multiple accept="image/png,image/jpeg,image/webp" aria-describedby="uploadHelp">
+                <p id="uploadHelp" class="studio-help">Hasta 5 diseños por producto · JPG/PNG/WebP · Hasta 10 MB por imagen. Tus imágenes se procesan en tu dispositivo.</p>
+                <p id="designCount" class="studio-help" aria-live="polite">0 de 5 diseños</p>
+                <div id="layerList" class="layer-list" role="group" aria-label="Seleccionar diseño"></div>
+                <p id="fileStatus" class="studio-help" role="status" aria-live="polite">Añade imágenes o texto para empezar.</p>
+                <fieldset id="designControls" disabled>
+                    <legend id="selectedDesign">Selecciona un diseño</legend>
+                    <label for="designScale">Tamaño <output id="scaleValue">100%</output></label><input id="designScale" type="range" min="10" max="180" value="100">
+                    <label for="designX">Posición horizontal</label><input id="designX" type="range" min="-45" max="45" value="0">
+                    <label for="designY">Posición vertical</label><input id="designY" type="range" min="-45" max="45" value="0">
+                    <label for="designRotation">Girar diseño</label><input id="designRotation" type="range" min="-180" max="180" value="0">
+                    <button id="clearDesign" type="button" class="studio-secondary">Eliminar diseño seleccionado</button>
+                </fieldset>
+                <div class="studio-actions"><button id="downloadPreview" type="button" class="btn studio-secondary">Descargar mis vistas</button></div>
+            </section>
+        </div>
+        <noscript>Activa JavaScript para diseñar o escríbenos al WhatsApp 477 841 1655.</noscript>
+    </main>
+    <script type="module" src="js/flat-customizer.js"></script>
+</body>
+</html>

@@ -43,6 +43,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/catalog.css">
 </head>
 <body>
     <!-- Navbar -->
@@ -90,64 +91,66 @@
             <div class="products-filter" data-aos="fade-up">
                 <button class="filter-btn active" data-filter="all">Todos</button>
                 <button class="filter-btn" data-filter="lonas">Lonas</button>
+                <button class="filter-btn" data-filter="playeras">Playeras</button>
                 <button class="filter-btn" data-filter="dtf">DTF</button>
                 <button class="filter-btn" data-filter="vinil">Vinil</button>
                 <button class="filter-btn" data-filter="plumas">Plumas</button>
                 <button class="filter-btn" data-filter="tazas">Tazas</button>
                 <button class="filter-btn" data-filter="termos">Termos</button>
                 <button class="filter-btn" data-filter="mdf">MDF</button>
+                <button class="filter-btn" data-filter="rompecabezas">Rompecabezas</button>
             </div>
-            <a class="mug-catalog-cta" href="personaliza-taza.html">✨ Personaliza tu taza en 3D: sube tu foto y prueba cómo se vería →</a>
-            <a class="mug-catalog-cta" href="personaliza-playera.html">Personaliza tu playera en 3D: diseña el frente y la espalda →</a>
             <div class="products-grid" data-aos="fade-up">
                 <!-- Lonas -->
                 <div class="product-item" id="lonas" data-category="lonas">
                     <img loading="lazy" src="assets/images/productos/lonas/lona-01.jpg" alt="Lona publicitaria">
                     <div class="product-overlay">
-                        <h4>Lona publicitaria</h4>
+                        <h4>Lona publicitaria</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Impresión gran formato para negocios</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="lonas">
                     <img loading="lazy" src="assets/images/productos/lonas/lona-02.jpg" alt="Lona publicitaria">
                     <div class="product-overlay">
-                        <h4>Lona impresa</h4>
+                        <h4>Lona impresa</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Publicidad de alto impacto</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="lonas">
                     <img loading="lazy" src="assets/images/productos/lonas/lona-negocio.jpg" alt="Lona en negocio">
                     <div class="product-overlay">
-                        <h4>Lona en fachada</h4>
+                        <h4>Lona en fachada</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Dale presencia a tu negocio</p>
                     </div>
                 </div>
+<div class="product-item" data-category="playeras"><img loading="lazy" src="assets/images/productos/general/playera-sublimada-01.jpg" alt="Playera personalizada"><div class="product-overlay"><h4>Playera personalizada</h4><span class="product-detail-hint">Ver foto y especificaciones</span><p>Diseña frente y espalda con tus imágenes.</p></div></div>
+<div class="product-item" data-category="playeras"><img loading="lazy" src="assets/images/productos/general/playera-sublimada-02.jpg" alt="Playera para regalo"><div class="product-overlay"><h4>Playera para regalo</h4><span class="product-detail-hint">Ver foto y especificaciones</span><p>Elige color, cuello, mangas y técnica al cotizar.</p></div></div>
                 <!-- DTF -->
                 <div class="product-item" id="dtf" data-category="dtf">
                     <img loading="lazy" src="assets/images/productos/dtf/dtf-01.jpg" alt="Impresión DTF">
                     <div class="product-overlay">
-                        <h4>Impresión DTF</h4>
+                        <h4>Impresión DTF</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Colores intensos sobre cualquier tela</p>
                     </div>
                 </div>
-                <div class="product-item" data-category="dtf">
+                <div class="product-item" id="playeras" data-category="playeras">
                     <img loading="lazy" src="assets/images/productos/dtf/playera-dtf-01.jpg" alt="Playeras DTF">
                     <div class="product-overlay">
-                        <h4>Playeras DTF</h4><a class="mug-preview-link" href="personaliza-playera.html">Diseñar frente y espalda →</a>
+                        <h4>Playeras DTF</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Acabado profesional y duradero</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="dtf">
                     <img loading="lazy" src="assets/images/productos/dtf/dtf-reflejante-01.jpg" alt="DTF reflejante">
                     <div class="product-overlay">
-                        <h4>DTF reflejante</h4>
+                        <h4>DTF reflejante</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Ideal para seguridad y diseño nocturno</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="dtf">
                     <img loading="lazy" src="assets/images/productos/dtf/dtf-reflejante-02.jpg" alt="DTF reflejante">
                     <div class="product-overlay">
-                        <h4>Textil DTF</h4><a class="mug-preview-link" href="personaliza-playera.html">Diseñar frente y espalda →</a>
+                        <h4>Textil DTF</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Calidad premium en playeras</p>
                     </div>
                 </div>
@@ -155,42 +158,42 @@
                 <div class="product-item" id="vinil" data-category="vinil">
                     <img loading="lazy" src="assets/images/productos/vinil/calcomania-01.jpg" alt="Calcomanías vinil">
                     <div class="product-overlay">
-                        <h4>Calcomanías vinil</h4>
+                        <h4>Calcomanías vinil</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Stickers personalizados de alta resistencia</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="vinil">
                     <img loading="lazy" src="assets/images/productos/vinil/calcomania-02.jpg" alt="Calcomanías">
                     <div class="product-overlay">
-                        <h4>Calcomanías decorativas</h4>
+                        <h4>Calcomanías decorativas</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Personaliza cualquier superficie</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="vinil">
                     <img loading="lazy" src="assets/images/productos/vinil/vaso-vinil-01.jpg" alt="Vasos con vinil">
                     <div class="product-overlay">
-                        <h4>Vasos con vinil</h4>
+                        <h4>Vasos con vinil</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Personalización adherible y resistente</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="vinil">
                     <img loading="lazy" src="assets/images/productos/vinil/termo-vinil-01.jpg" alt="Termos con vinil">
                     <div class="product-overlay">
-                        <h4>Termos con vinil</h4>
+                        <h4>Termos con vinil</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Diseños resistentes al uso diario</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="vinil">
                     <img loading="lazy" src="assets/images/productos/vinil/etiqueta-01.jpg" alt="Etiquetas escolares">
                     <div class="product-overlay">
-                        <h4>Etiquetas escolares</h4>
+                        <h4>Etiquetas escolares</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Perfectas para útiles y libros</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="vinil">
                     <img loading="lazy" src="assets/images/productos/vinil/sticker-tarjeta-01.jpg" alt="Stickers para tarjetas">
                     <div class="product-overlay">
-                        <h4>Stickers para tarjetas</h4>
+                        <h4>Stickers para tarjetas</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Detalles personalizados</p>
                     </div>
                 </div>
@@ -198,28 +201,28 @@
                 <div class="product-item" id="plumas" data-category="plumas">
                     <img loading="lazy" src="assets/images/productos/plumas/pluma-01.jpg" alt="Plumas personalizadas">
                     <div class="product-overlay">
-                        <h4>Plumas grabadas láser</h4>
+                        <h4>Plumas grabadas láser</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Detalle elegante para empresas y eventos</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="plumas">
                     <img loading="lazy" src="assets/images/productos/plumas/pluma-02.jpg" alt="Plumas personalizadas">
                     <div class="product-overlay">
-                        <h4>Plumas profesionales</h4>
+                        <h4>Plumas profesionales</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Grabado permanente sobre metal</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="plumas">
                     <img loading="lazy" src="assets/images/productos/plumas/pluma-laser-01.jpg" alt="Plumas láser">
                     <div class="product-overlay">
-                        <h4>Plumas con nombre</h4>
+                        <h4>Plumas con nombre</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Ideales para regalos corporativos</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="plumas">
                     <img loading="lazy" src="assets/images/productos/plumas/pluma-entrega.jpg" alt="Entrega de plumas">
                     <div class="product-overlay">
-                        <h4>Plumas personalizadas</h4>
+                        <h4>Plumas personalizadas</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>El detalle perfecto para clientes</p>
                     </div>
                 </div>
@@ -227,32 +230,32 @@
                 <div class="product-item" id="tazas" data-category="tazas">
                     <img loading="lazy" src="assets/images/productos/tazas/taza-01.jpg" alt="Taza personalizada">
                     <div class="product-overlay">
-                        <h4>Tazas sublimadas</h4>
-                        <a class="mug-preview-link" href="personaliza-taza.html">Ver en 3D y probar mi diseño →</a>
+                        <h4>Tazas sublimadas</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
+
                         <p>El regalo perfecto para cualquier ocasión</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="tazas">
                     <img loading="lazy" src="assets/images/productos/tazas/taza-02.jpg" alt="Taza personalizada">
                     <div class="product-overlay">
-                        <h4>Tazas con foto</h4>
-                        <a class="mug-preview-link" href="personaliza-taza.html">Ver en 3D y probar mi diseño →</a>
+                        <h4>Tazas con foto</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
+
                         <p>Recuerdos únicos y coloridos</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="tazas">
                     <img loading="lazy" src="assets/images/productos/tazas/taza-padrinos.jpg" alt="Tazas de padrinos">
                     <div class="product-overlay">
-                        <h4>Tazas de padrinos</h4>
-                        <a class="mug-preview-link" href="personaliza-taza.html">Ver en 3D y probar mi diseño →</a>
+                        <h4>Tazas de padrinos</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
+
                         <p>Detalles para eventos especiales</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="tazas">
                     <img loading="lazy" src="assets/images/productos/tazas/taza-sublimada.jpg" alt="Taza sublimada grande">
                     <div class="product-overlay">
-                        <h4>Taza grande sublimada</h4>
-                        <a class="mug-preview-link" href="personaliza-taza.html">Ver en 3D y probar mi diseño →</a>
+                        <h4>Taza grande sublimada</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
+
                         <p>Tamaño ideal para los amantes del café</p>
                     </div>
                 </div>
@@ -260,28 +263,28 @@
                 <div class="product-item" id="termos" data-category="termos">
                     <img loading="lazy" src="assets/images/productos/termos/termo-01.jpg" alt="Termos grabados">
                     <div class="product-overlay">
-                        <h4>Termos grabados láser</h4>
+                        <h4>Termos grabados láser</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Personalización permanente y elegante</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="termos">
                     <img loading="lazy" src="assets/images/productos/termos/termo-laser-01.jpg" alt="Termo grabado láser">
                     <div class="product-overlay">
-                        <h4>Termo grabado láser</h4>
+                        <h4>Termo grabado láser</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Texto, logos y fechas especiales</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="termos">
                     <img loading="lazy" src="assets/images/productos/termos/termo-laser-360.jpg" alt="Termo grabado 360">
                     <div class="product-overlay">
-                        <h4>Termo grabado 360°</h4>
+                        <h4>Termo grabado 360°</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Grabado completo alrededor del termo</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="termos">
                     <img loading="lazy" src="assets/images/productos/termos/termo-laser-02.jpg" alt="Termos láser">
                     <div class="product-overlay">
-                        <h4>Termos personalizados</h4>
+                        <h4>Termos personalizados</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Ideales para equipos de trabajo</p>
                     </div>
                 </div>
@@ -289,35 +292,35 @@
                 <div class="product-item" id="mdf" data-category="mdf">
                     <img loading="lazy" src="assets/images/productos/mdf/grabado-mdf-02.jpg" alt="Grabado láser MDF">
                     <div class="product-overlay">
-                        <h4>Grabado láser en MDF</h4>
+                        <h4>Grabado láser en MDF</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Detalles únicos en madera</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="mdf">
                     <img loading="lazy" src="assets/images/productos/mdf/figura-mdf-01.jpg" alt="Figuras MDF">
                     <div class="product-overlay">
-                        <h4>Figuras en MDF</h4>
+                        <h4>Figuras en MDF</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Recortes personalizados para decoración</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="mdf">
                     <img loading="lazy" src="assets/images/productos/mdf/corte-mdf-01.jpg" alt="Corte MDF">
                     <div class="product-overlay">
-                        <h4>Corte MDF</h4>
+                        <h4>Corte MDF</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Precision en cada detalle</p>
                     </div>
                 </div>
                 <div class="product-item" data-category="mdf">
                     <img loading="lazy" src="assets/images/productos/mdf/invitacion-mdf.jpg" alt="Invitaciones MDF">
                     <div class="product-overlay">
-                        <h4>Invitaciones en MDF</h4>
+                        <h4>Invitaciones en MDF</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Souvenirs y detalles para eventos</p>
                     </div>
                 </div>
-                <div class="product-item" data-category="mdf">
+                <div class="product-item" data-category="rompecabezas">
                     <img loading="lazy" src="assets/images/productos/mdf/rompecabezas-01.jpg" alt="Rompecabezas sublimado">
                     <div class="product-overlay">
-                        <h4>Rompecabezas sublimado</h4>
+                        <h4>Rompecabezas sublimado</h4><span class="product-detail-hint">Ver foto y especificaciones</span>
                         <p>Diviértete con tus fotos favoritas</p>
                     </div>
                 </div>
@@ -368,6 +371,19 @@
         <i class="fab fa-whatsapp"></i>
     </a>
 
+    <a href="personaliza.html" class="personalize-float">Personaliza tu producto ✨</a>
+    <dialog id="productDialog" class="product-dialog" aria-labelledby="detailTitle">
+        <button id="closeProduct" class="product-dialog-close" type="button" autofocus>Cerrar ×</button>
+        <div class="product-dialog-layout">
+            <img id="detailImage" class="product-dialog-image" alt="">
+            <div class="product-dialog-content"><h2 id="detailTitle"></h2><p id="detailDescription"></p>
+                <dl id="detailSpecs" class="product-specs"></dl>
+                <p>Las medidas, materiales, disponibilidad y precio de esta referencia se confirman en tu cotización.</p>
+                <div class="product-dialog-actions"><a id="detailDesign" class="btn btn-primary">Personaliza tu producto</a><a id="detailQuote" class="btn btn-outline" target="_blank" rel="noopener noreferrer">Cotizar esta referencia</a></div>
+            </div>
+        </div>
+    </dialog>
     <script src="js/main.js"></script>
+    <script src="js/catalog.js"></script>
 </body>
 </html>
