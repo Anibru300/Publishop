@@ -37,19 +37,30 @@
             </section>
             <section class="design-panel" aria-labelledby="designTitle">
                 <h2 id="designTitle">Personaliza tu taza</h2>
-                <label class="upload-label" for="designFile">1. Elige tu foto o diseño</label>
-                <input type="file" id="designFile" accept="image/png,image/jpeg,image/webp" aria-describedby="uploadHelp">
-                <p id="uploadHelp" class="studio-help">JPG, PNG o WebP · Máximo 10 MB. Tu imagen se procesa en este dispositivo; no se sube al sitio.</p>
+                <div class="product-options">
+                    <label for="mugType">Tipo de taza</label>
+                    <select id="mugType" disabled><option value="medium">Taza mediana</option><option value="large">Taza grande</option><option value="magic">Taza mágica</option></select>
+                    <div id="magicOptions" hidden>
+                        <label class="heat-toggle"><input id="magicHot" type="checkbox" disabled> Simular agua caliente</label>
+                        <p class="studio-help">Fría: negra. Con agua caliente: aparece el sublimado. Esta es una simulación del efecto.</p>
+                    </div>
+                </div>
+                <label class="upload-label" for="designFile">Añadir fotos o diseños</label>
+                <input type="file" id="designFile" multiple accept="image/png,image/jpeg,image/webp" aria-describedby="uploadHelp">
+                <p id="uploadHelp" class="studio-help">Hasta 5 diseños · JPG, PNG o WebP · Máximo 10 MB por imagen. Se procesan en tu dispositivo; no se suben al sitio.</p>
+                <p id="designCount" class="studio-help" aria-live="polite">0 de 5 diseños</p>
+                <div id="layerList" class="layer-list" role="group" aria-label="Seleccionar diseño"></div>
                 <p id="fileStatus" class="studio-help" role="status" aria-live="polite">Estás viendo un diseño de ejemplo.</p>
                 <fieldset id="designControls" disabled>
-                    <legend>2. Ajusta tu diseño</legend>
+                    <legend id="selectedDesign">Selecciona un diseño para ajustarlo</legend>
                     <label for="designScale">Tamaño <output id="scaleValue" for="designScale">100%</output></label>
                     <input type="range" id="designScale" min="30" max="160" value="100">
                     <label for="designX">Posición horizontal</label>
-                    <input type="range" id="designX" min="-25" max="25" value="0">
+                    <input type="range" id="designX" min="-50" max="50" value="0">
                     <label for="designY">Posición vertical</label>
                     <input type="range" id="designY" min="-30" max="30" value="0">
-                    <button type="button" id="clearDesign" class="studio-secondary">Quitar mi imagen</button>
+                    <label for="designRotation">Girar diseño</label><input type="range" id="designRotation" min="-180" max="180" value="0">
+                    <button type="button" id="clearDesign" class="studio-secondary">Eliminar diseño seleccionado</button>
                 </fieldset>
                 <div class="studio-actions">
                     <button type="button" id="downloadPreview" class="btn btn-primary" disabled>Descargar las 4 vistas</button>

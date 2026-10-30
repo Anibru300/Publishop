@@ -8,13 +8,13 @@
 .studio-heading p, .preview-hint { color: var(--text-muted); }
 .studio-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr); gap: 28px; align-items: start; }
 .preview-panel, .design-panel { border: 1px solid var(--card-border); border-radius: 24px; overflow: hidden; background: var(--card-bg); }
-.preview-panel { background: #f0edf6; color: #393349; }
+.preview-panel { background: #8c99af; color: #111827; }
 .mug-viewport { height: 470px; width: 100%; touch-action: none; cursor: grab; }
 .mug-viewport:active { cursor: grabbing; }
 .mug-viewport canvas { width: 100%; height: 100%; display: block; }
 .viewer-status { text-align: center; padding: 0 20px; }
 .viewer-status:empty { display: none; }
-.preview-hint, .preview-disclaimer { padding: 12px 24px; text-align: center; font-size: .85rem; color: #51485f; }
+.preview-hint, .preview-disclaimer { padding: 12px 24px; text-align: center; font-size: .85rem; color: #111827; }
 .preview-disclaimer { border-top: 1px solid #d9d1e5; margin-top: 16px; }
 .view-controls { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; padding: 0 15px; }
 .view-controls button, .studio-secondary { padding: 10px 15px; border: 1px solid #c9bedb; border-radius: 10px; background: white; color: #49306f; cursor: pointer; font: inherit; }
@@ -33,6 +33,15 @@
 .face-selector { display: flex; gap: 10px; margin-bottom: 12px; }
 .face-selector button { flex: 1; padding: 12px; border: 1px solid #8554cf; border-radius: 10px; color: white; background: transparent; cursor: pointer; font: inherit; }
 .face-selector button[aria-pressed="true"] { background: #7c3aed; }
+.product-options { display: grid; gap: 10px; padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); }
+.product-options label { font-size: .9rem; font-weight: 600; }
+.product-options select { width: 100%; padding: 12px; border: 1px solid #8554cf; border-radius: 8px; color: white; background: #221c36; font: inherit; }
+.product-options .heat-toggle { display: flex; gap: 10px; align-items: center; margin-top: 12px; }
+.layer-list { display: grid; gap: 8px; margin: 12px 0; }
+.layer-list button { padding: 10px 12px; border: 1px solid #68527f; border-radius: 8px; color: white; background: transparent; font: inherit; font-size: .85rem; text-align: left; overflow-wrap: anywhere; cursor: pointer; }
+.layer-list button[aria-pressed="true"] { background: #59308d; border-color: #bc96ef; }
+body[data-product="shirt"] .mug-viewport { touch-action: pan-y; cursor: default; }
+@media (min-width: 851px) { .preview-panel { position: sticky; top: 20px; } }
 .studio-actions .btn { justify-content: center; text-align: center; white-space: normal; }
 .studio-whatsapp { background: #167a43; color: white; }
 .studio button:disabled { opacity: .5; cursor: not-allowed; }
