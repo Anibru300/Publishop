@@ -208,8 +208,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleHashFilter() {
         const hash = window.location.hash.replace('#', '');
         const validCategories = ['lonas', 'dtf', 'vinil', 'plumas', 'tazas', 'termos', 'mdf'];
+        if (hash === 'productos' && !document.getElementById('productos')) {
+            window.location.replace('catalogo.html');
+            return;
+        }
         
         if (validCategories.includes(hash)) {
+            if (!document.getElementById('productos')) {
+                window.location.replace(`catalogo.html#${hash}`);
+                return;
+            }
             setTimeout(() => {
                 filterProducts(hash);
                 const productsSection = document.getElementById('productos');

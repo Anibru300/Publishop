@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personaliza tu playera en 3D | PUBLI SHOP LEÓN GTO</title>
+    <meta name="description" content="Gira una playera en 3D y prueba tu foto o diseño antes de cotizar con PUBLI SHOP LEÓN GTO.">
+    <link rel="canonical" href="https://anibru300.github.io/Publishop/personaliza-playera.html">
+    <link rel="icon" href="assets/images/logo.jpg" type="image/jpeg">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/customizer.css">
+</head>
+<body data-product="shirt">
+    <header class="studio-header">
+        <a href="index.html" class="studio-brand"><img src="assets/images/logo.jpg" alt="">PUBLI SHOP LEÓN GTO</a>
+        <a href="catalogo.html#dtf">Volver al catálogo</a>
+    </header>
+    <main class="studio">
+        <div class="studio-heading">
+            <span class="section-tag">Crea algo tuyo</span>
+            <h1>Tu idea, en una <span class="gradient-text">playera</span></h1>
+            <p>Prueba tu foto o diseño y mira la playera desde todos los ángulos.</p>
+        </div>
+        <div class="studio-layout">
+            <section class="preview-panel" aria-label="Vista previa de la playera">
+                <div id="mugViewport" class="mug-viewport" aria-label="Playera 3D. Arrastra para girar; usa la rueda o los botones para acercar." tabindex="0"></div>
+                <p id="viewerStatus" class="viewer-status" role="status">Cargando la playera 3D…</p>
+                <p class="preview-hint">Arrastra con el dedo o el ratón para girar. Usa + y − para acercar.</p>
+                <div class="view-controls" aria-label="Controles de la vista">
+                    <button type="button" id="rotateLeft" aria-label="Girar playera a la izquierda">↶</button>
+                    <button type="button" id="rotateRight" aria-label="Girar playera a la derecha">↷</button>
+                    <button type="button" id="zoomIn" aria-label="Acercar playera">+</button>
+                    <button type="button" id="zoomOut" aria-label="Alejar playera">−</button>
+                    <button type="button" id="resetView">Restablecer vista</button>
+                </div>
+                <p class="preview-disclaimer">Modelo de muestra. La forma, los colores y el área de impresión son aproximados; confirmaremos los detalles antes de producir.</p>
+            </section>
+            <section class="design-panel" aria-labelledby="designTitle">
+                <h2 id="designTitle">Personaliza tu playera</h2>
+                <div class="face-selector" aria-label="Cara de la playera">
+                    <button type="button" data-face="front" aria-pressed="true" disabled>Frente</button>
+                    <button type="button" data-face="back" aria-pressed="false" disabled>Espalda</button>
+                </div>
+                <p class="studio-help">Cada cara conserva su propia imagen y sus ajustes. Cambia de cara para diseñar el otro lado.</p>
+                <label class="upload-label" for="designFile">1. Elige tu foto o diseño</label>
+                <input type="file" id="designFile" accept="image/png,image/jpeg,image/webp" aria-describedby="uploadHelp">
+                <p id="uploadHelp" class="studio-help">JPG, PNG o WebP · Máximo 10 MB. Tu imagen se procesa en este dispositivo; no se sube al sitio.</p>
+                <p id="fileStatus" class="studio-help" role="status" aria-live="polite">Frente sin diseño. Elige una imagen para comenzar.</p>
+                <fieldset id="designControls" disabled>
+                    <legend>2. Ajusta tu diseño</legend>
+                    <label for="designScale">Tamaño <output id="scaleValue" for="designScale">100%</output></label>
+                    <input type="range" id="designScale" min="30" max="160" value="100">
+                    <label for="designX">Posición horizontal</label>
+                    <input type="range" id="designX" min="-25" max="25" value="0">
+                    <label for="designY">Posición vertical</label>
+                    <input type="range" id="designY" min="-30" max="30" value="0">
+                    <button type="button" id="clearDesign" class="studio-secondary">Quitar mi imagen</button>
+                </fieldset>
+                <div class="studio-actions">
+                    <button type="button" id="downloadPreview" class="btn btn-primary" disabled>Descargar las 4 vistas</button>
+                    <a id="quoteMug" class="btn studio-whatsapp" href="https://wa.me/524778411655?text=Hola%2C%20quiero%20cotizar%20una%20playera%20personalizada." target="_blank" rel="noopener noreferrer">Cotizar por WhatsApp</a>
+                </div>
+                <p class="studio-help">Descarga la lámina con el frente, atrás y los dos lados y adjúntala junto con tu diseño original en WhatsApp. Las imágenes no se adjuntan automáticamente.</p>
+                <noscript><p>Activa JavaScript para usar la vista 3D. También puedes enviarnos tu diseño directamente por WhatsApp.</p></noscript>
+            </section>
+        </div>
+    </main>
+    <script type="module" src="js/mug-customizer.js"></script>
+</body>
+</html>

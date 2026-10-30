@@ -30,6 +30,9 @@
 .design-panel input[type=range] { width: 100%; accent-color: #a78bfa; min-height: 32px; }
 .studio-secondary { margin-top: 14px; background: transparent; color: #dfd1f4; }
 .studio-actions { display: grid; gap: 12px; }
+.face-selector { display: flex; gap: 10px; margin-bottom: 12px; }
+.face-selector button { flex: 1; padding: 12px; border: 1px solid #8554cf; border-radius: 10px; color: white; background: transparent; cursor: pointer; font: inherit; }
+.face-selector button[aria-pressed="true"] { background: #7c3aed; }
 .studio-actions .btn { justify-content: center; text-align: center; white-space: normal; }
 .studio-whatsapp { background: #167a43; color: white; }
 .studio button:disabled { opacity: .5; cursor: not-allowed; }
