@@ -12,7 +12,11 @@
         <div class="studio-heading"><span class="section-tag">Tu espacio creativo</span><h1>Diseña tu <span id="productTitle" class="gradient-text">producto</span></h1><p id="productIntro"></p></div>
         <div class="studio-layout">
             <section class="preview-panel" aria-label="Vista de tu propuesta">
-                <canvas id="flatPreview" class="flat-preview" width="1200" height="900" aria-label="Vista previa de tu diseño"></canvas>
+                <div id="productViewport" class="mug-viewport" tabindex="0" aria-label="Vista 3D. Arrastra el fondo para girar; usa las flechas o los botones para cambiar la vista."></div>
+                <canvas id="flatPreview" width="1200" height="900" hidden aria-hidden="true"></canvas>
+                <p id="viewerStatus" class="viewer-status" role="status">Cargando modelo 3D…</p>
+                <p class="preview-hint">Arrastra el fondo para girar el producto. Toca el diseño para moverlo.</p>
+                <div class="view-controls"><button id="rotateLeft" type="button" aria-label="Girar a la izquierda">↶</button><button id="rotateRight" type="button" aria-label="Girar a la derecha">↷</button><button id="zoomIn" type="button" aria-label="Acercar">+</button><button id="zoomOut" type="button" aria-label="Alejar">−</button><button id="resetView" type="button">Restablecer vista</button></div>
                 <div id="faceSelector" class="face-selector" hidden><button type="button" data-face="front" aria-pressed="true">Frente</button><button type="button" data-face="back" aria-pressed="false">Reverso</button></div>
                 <p class="preview-disclaimer">Modelo de muestra. Las medidas, materiales, detalles de corte y acabados se confirman al cotizar.</p>
             </section>
@@ -28,12 +32,12 @@
                 <fieldset id="designControls" disabled>
                     <legend id="selectedDesign">Selecciona un diseño</legend>
                     <label for="designScale">Tamaño <output id="scaleValue">100%</output></label><input id="designScale" type="range" step="0.1" min="10" max="180" value="100">
-                    <label for="designX">Posición horizontal</label><input id="designX" type="range" step="0.1" min="-45" max="45" value="0">
-                    <label for="designY">Posición vertical</label><input id="designY" type="range" step="0.1" min="-45" max="45" value="0">
+                    <label for="designX">Posición horizontal</label><input id="designX" type="range" step="0.1" min="-50" max="50" value="0">
+                    <label for="designY">Posición vertical</label><input id="designY" type="range" step="0.1" min="-50" max="50" value="0">
                     <label for="designRotation">Girar diseño</label><input id="designRotation" type="range" min="-180" max="180" value="0">
                     <button id="clearDesign" type="button" class="studio-secondary">Eliminar diseño seleccionado</button>
                 </fieldset>
-                <div class="studio-actions"><button id="downloadPreview" type="button" class="btn studio-secondary">Descargar mis vistas</button></div>
+                <div class="studio-actions"><button id="downloadPreview" type="button" class="btn studio-secondary" disabled>Descargar mis vistas 3D</button></div>
             </section>
         </div>
         <noscript>Activa JavaScript para diseñar o escríbenos al WhatsApp 477 841 1655.</noscript>

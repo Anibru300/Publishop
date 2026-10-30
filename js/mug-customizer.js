@@ -1,3 +1,4 @@
+import { setupLayerDimensions } from './layer-dimensions.js';
 import { setupCompletion, downloadCanvas } from './finish-order.js';
 import { setupTextTools, describeTextLayers } from './text-tools.js';
 import { setupDirectEditing } from './direct-edit.js';
@@ -7,7 +8,7 @@ const viewport = $('mugViewport'), background = '#8c99af';
 const layers = [], textures = {};
 let selectedId = null, face = 'front', ready = false, uploading = false, nextId = 1;
 let THREE, renderer, scene, camera, product;
-let directEditor, textTools;
+let directEditor, textTools, dimensionTools;
 const selected = () => layers.find(l => l.id === selectedId);
 const magic = () => !isShirt && $('mugType').value === 'magic';
 const cold = () => magic() && !$('magicHot').checked;
@@ -32,7 +33,7 @@ function paintTextures() {
         if (!cold()) {
             for (const l of visible) {
                 const fit = Math.min(w * (isShirt ? .85 : .40) / l.image.width,h * .78 / l.image.height);
-                const width = l.image.width * fit * l.scale / 100, height = l.image.height * fit * l.scale / 100;
+                const width = l.image.width * fit * l.scale / 100 * (l.stretchX ?? 1), height = l.image.height * fit * l.scale / 100 * (l.stretchY ?? 1);
                 const x = w * (isShirt ? .5 : .75) + l.x / 100 * w, y = h / 2 + l.y / 100 * h;
                 // Repeat across the mug's UV seam to keep designs continuous.
                 for (const wrap of isShirt ? [0] : [-w,0,w]) {
@@ -76,7 +77,7 @@ function refreshControls() {
         $('selectedDesign').textContent = 'Ajustar: ' + l.name; $('scaleValue').textContent = Math.round(l.scale) + '%';
     } else $('selectedDesign').textContent = 'Selecciona un diseño para ajustarlo';
     document.querySelectorAll('[data-face]').forEach(b => b.setAttribute('aria-pressed',String(b.dataset.face === face)));
-    textTools?.sync(); directEditor?.update();
+    textTools?.sync(); dimensionTools?.sync(); directEditor?.update();
     updateQuote();
 }
 function buildProduct() {
@@ -120,7 +121,7 @@ function buildProduct() {
         product.add(new THREE.Mesh(new THREE.LatheGeometry(profile.map(([x,y]) => new THREE.Vector2(x,y)),96),ceramic));
         const handle = new THREE.Mesh(new THREE.TorusGeometry(.78,.13,20,64,Math.PI),new THREE.MeshStandardMaterial({color:magic() ? '#111111' : '#ffffff',roughness:.26}));
         handle.rotation.z = -Math.PI / 2; handle.scale.y = .85; handle.position.x = .94; product.add(handle);
-        product.add(new THREE.Mesh(new THREE.CylinderGeometry(1.003,1.003,2.5,128,1,true,Math.PI / 2 + .22,Math.PI * 2 - .44),new THREE.MeshStandardMaterial({map:textures.mug,roughness:.3})));
+        product.add(new THREE.Mesh(new THREE.CylinderGeometry(1.003,1.003,2.7,128,1,true,Math.PI / 2 + .22,Math.PI * 2 - .44),new THREE.MeshStandardMaterial({map:textures.mug,roughness:.3})));
         if ($('mugType').value === 'large') product.scale.set(1.12,1.16,1.12);
     }
     scene.add(product); paintTextures(); resetView(); updateQuote();
@@ -182,7 +183,7 @@ $('clearDesign').addEventListener('click',() => {
 document.querySelectorAll('[data-face]').forEach(b => b.addEventListener('click',() => { face = b.dataset.face; selectedId = currentLayers().at(-1)?.id ?? null; refreshControls(); resetView(); }));
 document.querySelectorAll('.product-options select, #magicHot').forEach(c => c.addEventListener('change',() => { if (!isShirt) $('magicOptions').hidden = !magic(); buildProduct(); }));
 let drag = null;
-viewport.addEventListener('pointerdown',e => { if (!ready || isShirt) return; drag = {id:e.pointerId,x:e.clientX,y:e.clientY}; viewport.setPointerCapture(e.pointerId); });
+viewport.addEventListener('pointerdown',e => { if (!ready) return; drag = {id:e.pointerId,x:e.clientX,y:e.clientY}; viewport.setPointerCapture(e.pointerId); });
 viewport.addEventListener('pointermove',e => {
     if (!ready || !drag || drag.id !== e.pointerId) return;
     product.rotation.y += (e.clientX - drag.x) * .01; product.rotation.x = Math.max(-.65,Math.min(.65,product.rotation.x + (e.clientY - drag.y) * .007));
@@ -242,19 +243,23 @@ function designProjection(layer) {
     const point = (pu,pv) => {
         let position;
         if (isShirt) position = new THREE.Vector3((pu - .5) * 1.32 * (layer.face === 'back' ? -1 : 1),-.18 + (.5 - pv) * 1.8,layer.face === 'back' ? -.156 : .156);
-        else { const theta = Math.PI / 2 + .22 + pu * (Math.PI * 2 - .44); position = new THREE.Vector3(Math.sin(theta) * 1.004,(.5 - pv) * 2.5,Math.cos(theta) * 1.004); }
+        else { const theta = Math.PI / 2 + .22 + pu * (Math.PI * 2 - .44); position = new THREE.Vector3(Math.sin(theta) * 1.004,(.5 - pv) * 2.7,Math.cos(theta) * 1.004); }
         position.applyMatrix4(product.matrixWorld).project(camera);
         return {x:(position.x + 1) / 2 * rect.width,y:(1 - position.y) / 2 * rect.height};
     };
+    if (isShirt) {
+        const normal = new THREE.Vector3(0,0,layer.face === 'back' ? -1 : 1).transformDirection(product.matrixWorld);
+        if (normal.dot(camera.position.clone().normalize()) < .08) return null;
+    }
     if (!isShirt) {
         const theta = Math.PI / 2 + .22 + u * (Math.PI * 2 - .44);
-        const world = new THREE.Vector3(Math.sin(theta),(.5 - v) * 2.5,Math.cos(theta)).applyMatrix4(product.matrixWorld);
+        const world = new THREE.Vector3(Math.sin(theta),(.5 - v) * 2.7,Math.cos(theta)).applyMatrix4(product.matrixWorld);
         const normal = new THREE.Vector3(Math.sin(theta),0,Math.cos(theta)).transformDirection(product.matrixWorld);
         if (normal.dot(camera.position.clone().sub(world).normalize()) < .08) return null;
     }
     const center = point(u,v), ux = point(u + .01,v), vy = point(u,v + .01);
-    const left = point(u - layer.image.width * fit / w / 2,v), right = point(u + layer.image.width * fit / w / 2,v);
-    const top = point(u,v - layer.image.height * fit / h / 2), bottom = point(u,v + layer.image.height * fit / h / 2);
+    const left = point(u - layer.image.width * fit * (layer.stretchX ?? 1) / w / 2,v), right = point(u + layer.image.width * fit * (layer.stretchX ?? 1) / w / 2,v);
+    const top = point(u,v - layer.image.height * fit * (layer.stretchY ?? 1) / h / 2), bottom = point(u,v + layer.image.height * fit * (layer.stretchY ?? 1) / h / 2);
     return {cx:center.x,cy:center.y,width:Math.max(20,Math.hypot(right.x - left.x,right.y - left.y)),height:Math.max(20,Math.hypot(bottom.x - top.x,bottom.y - top.y)),angle:layer.rotation,
         ux:ux.x - center.x,uy:ux.y - center.y,vx:vy.x - center.x,vy:vy.y - center.y};
 }
@@ -264,7 +269,13 @@ directEditor = setupDirectEditing({surface:viewport,items:() => ready && !cold()
         const g = designProjection(layer); if (!g) return; const det = g.ux * g.vy - g.uy * g.vx; if (Math.abs(det) < .001) return;
         layer.x = Math.max(Number($('designX').min),Math.min(Number($('designX').max),layer.x + (dx * g.vy - dy * g.vx) / det));
         layer.y = Math.max(Number($('designY').min),Math.min(Number($('designY').max),layer.y + (g.ux * dy - g.uy * dx) / det));
-    },resize(layer,value) { layer.scale = Math.max(30,Math.min(160,value)); },
+    },resize(layer,value) { layer.scale = Math.max(10,Math.min(250,value)); },
+    stretch(layer,x,y) { layer.stretchX = Math.max(.05,Math.min(5,x)); layer.stretchY = Math.max(.05,Math.min(5,y)); },
     changed() { refreshControls(); paintTextures(); viewport.dispatchEvent(new Event('designchange',{bubbles:true})); }
 });
+dimensionTools = setupLayerDimensions({selected,changed() { refreshControls(); paintTextures(); },dimensions(layer) {
+    const t = textures[isShirt ? layer.face : 'mug']; const w = t?.image.width || (isShirt ? 1024 : 2048), h = t?.image.height || (isShirt ? 1024 : 820);
+    const fit = Math.min(w * (isShirt ? .85 : .40) / layer.image.width,h * .78 / layer.image.height) * layer.scale / 100;
+    return {width:layer.image.width * fit * (layer.stretchX ?? 1),height:layer.image.height * fit * (layer.stretchY ?? 1),canvasWidth:w,canvasHeight:h,centerU:isShirt ? .5 : .75};
+}});
 refreshControls(); init();

@@ -9,7 +9,7 @@ export function setupDirectEditing(api) {
     const overlay = document.createElement('div'); overlay.className = 'direct-overlay';
     stage.appendChild(overlay);
     const hint = document.createElement('p'); hint.className = 'preview-hint direct-hint';
-    hint.textContent = '✋ Toca un diseño y arrástralo. Usa los círculos de las esquinas para agrandarlo o hacerlo más pequeño.';
+    hint.textContent = '✋ Arrastra tu diseño. Las esquinas cambian el tamaño completo; los tiradores de los lados cambian solo el ancho o el alto.';
     stage.after(hint);
     const nodes = new Map(); let drag = null;
     const update = () => {
@@ -20,13 +20,15 @@ export function setupDirectEditing(api) {
             if (!node) {
                 node = document.createElement('div'); node.className = 'direct-item'; node.dataset.designId = item.id;
                 node.setAttribute('role','button'); node.tabIndex = 0;
-                for (const corner of ['nw','ne','sw','se']) {
+                for (const corner of ['nw','ne','sw','se','n','s','e','w']) {
                     const handle = document.createElement('button'); handle.type = 'button'; handle.className = 'resize-handle handle-' + corner;
                     handle.dataset.corner = corner; handle.setAttribute('aria-label','Cambiar tamaño de ' + item.name); node.appendChild(handle);
                     handle.addEventListener('keydown',e => {
                         if (!['ArrowUp','ArrowRight','ArrowDown','ArrowLeft','+','-'].includes(e.key)) return;
                         e.preventDefault(); e.stopPropagation(); api.select(item);
-                        api.resize(item,item.scale * (['ArrowUp','ArrowRight','+'].includes(e.key) ? 1.05 : .95)); api.changed(); update();
+                        const factor = ['ArrowUp','ArrowRight','+'].includes(e.key) ? 1.05 : .95;
+                        if (corner.length === 1 && api.stretch) api.stretch(item,(item.stretchX ?? 1) * (['e','w'].includes(corner) ? factor : 1),(item.stretchY ?? 1) * (['n','s'].includes(corner) ? factor : 1));
+                        else api.resize(item,item.scale * factor); api.changed(); update();
                     });
                 }
                 node.addEventListener('keydown',e => {
@@ -43,14 +45,24 @@ export function setupDirectEditing(api) {
                     const geometry = api.geometry(item); if (!geometry) return;
                     const rect = overlay.getBoundingClientRect();
                     const cx = rect.left + geometry.cx, cy = rect.top + geometry.cy;
-                    drag = {item,node,pointer:e.pointerId,x:e.clientX,y:e.clientY,cx,cy,startScale:item.scale,
-                        distance:Math.max(10,Math.hypot(e.clientX - cx,e.clientY - cy)),resize:!!e.target.closest('[data-corner]')};
+                    const handle = e.target.closest('[data-corner]')?.dataset.corner;
+                    drag = {item,node,pointer:e.pointerId,x:e.clientX,y:e.clientY,sx:e.clientX,sy:e.clientY,cx,cy,startScale:item.scale,
+                        startWidth:geometry.width,startHeight:geometry.height,startX:item.stretchX ?? 1,startY:item.stretchY ?? 1,shiftX:0,shiftY:0,angle:(geometry.angle || 0) * Math.PI / 180,
+                        distance:Math.max(10,Math.hypot(e.clientX - cx,e.clientY - cy)),handle};
                     node.setPointerCapture(e.pointerId); node.classList.add('dragging'); update();
                 });
                 node.addEventListener('pointermove',e => {
                     if (!drag || drag.node !== node || drag.pointer !== e.pointerId) return;
                     e.preventDefault(); e.stopPropagation();
-                    if (drag.resize) api.resize(item,drag.startScale * Math.hypot(e.clientX - drag.cx,e.clientY - drag.cy) / drag.distance);
+                    if (drag.handle?.length === 1 && api.stretch) {
+                        const dx = e.clientX - drag.sx, dy = e.clientY - drag.sy, c = Math.cos(drag.angle), s = Math.sin(drag.angle);
+                        const horizontal = ['e','w'].includes(drag.handle), sign = ['e','s'].includes(drag.handle) ? 1 : -1;
+                        const amount = horizontal ? dx * c + dy * s : -dx * s + dy * c;
+                        api.stretch(item,horizontal ? drag.startX * Math.max(.02,1 + sign * amount / drag.startWidth) : drag.startX,horizontal ? drag.startY : drag.startY * Math.max(.02,1 + sign * amount / drag.startHeight));
+                        const shift = sign * (horizontal ? drag.startWidth * ((item.stretchX ?? 1) / drag.startX - 1) : drag.startHeight * ((item.stretchY ?? 1) / drag.startY - 1)) / 2;
+                        const shiftX = horizontal ? shift * c : -shift * s, shiftY = horizontal ? shift * s : shift * c;
+                        api.move(item,shiftX - drag.shiftX,shiftY - drag.shiftY); drag.shiftX = shiftX; drag.shiftY = shiftY;
+                    } else if (drag.handle) api.resize(item,drag.startScale * Math.hypot(e.clientX - drag.cx,e.clientY - drag.cy) / drag.distance);
                     else api.move(item,e.clientX - drag.x,e.clientY - drag.y);
                     drag.x = e.clientX; drag.y = e.clientY; api.changed(); update();
                 });

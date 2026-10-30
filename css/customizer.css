@@ -58,6 +58,13 @@
 .handle-ne { right: -12px; top: -12px; cursor: nesw-resize; }
 .handle-sw { left: -12px; bottom: -12px; cursor: nesw-resize; }
 .handle-se { right: -12px; bottom: -12px; cursor: nwse-resize; }
+.handle-n { left: calc(50% - 11px); top: -12px; cursor: ns-resize; }
+.handle-s { left: calc(50% - 11px); bottom: -12px; cursor: ns-resize; }
+.handle-e { right: -12px; top: calc(50% - 11px); cursor: ew-resize; }
+.handle-w { left: -12px; top: calc(50% - 11px); cursor: ew-resize; }
+.align-tools { display: flex; gap: 7px; flex-wrap: wrap; margin: 10px 0; }
+.align-tools button { padding: 8px 10px; border: 1px solid #8d6bad; background: #332044; color: white; border-radius: 7px; cursor: pointer; }
+#thermosReferenceImage { display: block; width: 100%; height: 180px; object-fit: contain; border-radius: 10px; background: #161121; }
 .text-tools select { width: 100%; padding: 10px; border: 1px solid #705781; border-radius: 8px; background: #221a30; color: white; font: inherit; }
 .text-style-options, .text-action-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
 .text-style-options label { display: flex; align-items: center; gap: 8px; }
@@ -74,7 +81,7 @@
 .layer-list { display: grid; gap: 8px; margin: 12px 0; }
 .layer-list button { padding: 10px 12px; border: 1px solid #68527f; border-radius: 8px; color: white; background: transparent; font: inherit; font-size: .85rem; text-align: left; overflow-wrap: anywhere; cursor: pointer; }
 .layer-list button[aria-pressed="true"] { background: #59308d; border-color: #bc96ef; }
-body[data-product="shirt"] .mug-viewport { touch-action: pan-y; cursor: default; }
+body[data-product="shirt"] .mug-viewport { touch-action: none; cursor: grab; }
 @media (min-width: 851px) { .preview-panel { position: sticky; top: 20px; } }
 .studio-actions .btn { justify-content: center; text-align: center; white-space: normal; }
 .studio-whatsapp { background: #167a43; color: white; }

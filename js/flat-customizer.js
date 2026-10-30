@@ -1,3 +1,5 @@
+import { ProductViewer, thermosModels } from './product-viewer.js';
+import { setupLayerDimensions } from './layer-dimensions.js';
 import { setupCompletion, downloadCanvas } from './finish-order.js';
 import { setupTextTools, describeTextLayers } from './text-tools.js';
 import { setupDirectEditing } from './direct-edit.js';
@@ -12,7 +14,7 @@ const types = {
 const requested = new URLSearchParams(location.search).get('producto');
 const type = Object.hasOwn(types,requested) ? requested : 'banner', config = types[type];
 const layers = []; let face = 'front', selectedId = null, nextId = 1, uploading = false;
-let directEditor, textTools;
+let directEditor, textTools, viewer, dimensionTools;
 $('productTitle').textContent = config.name; $('productIntro').textContent = config.intro;
 document.title = 'Diseña tu ' + config.name.toLowerCase() + ' | PUBLI SHOP LEÓN GTO';
 $('faceSelector').hidden = !config.two;
@@ -26,6 +28,13 @@ else {
     if (type === 'mdf') options.innerHTML += '<label for="mdfMode">Trabajo solicitado</label><select id="mdfMode"><option value="cut">Corte de figura según referencia</option><option value="engrave">Grabado láser</option></select><label for="boardShape">Forma de muestra</label><select id="boardShape"><option value="rectangle">Rectangular</option><option value="circle">Circular</option><option value="heart">Corazón</option><option value="star">Estrella</option></select><p class="studio-help">Para una silueta distinta, sube tu referencia e indica las medidas. Revisaremos el contorno, el espesor y la viabilidad del corte antes de producir.</p>';
 }
 if (type === 'banner') options.innerHTML += '<label class="heat-toggle"><input id="hasEyelets" type="checkbox" checked> Con ojillos</label><div id="eyeletOptions"><label for="eyeletPosition">¿Dónde van los ojillos?</label><select id="eyeletPosition"><option value="corners">Solo en las cuatro esquinas</option><option value="perimeter">Todo el perímetro</option><option value="top-bottom">Arriba y abajo</option><option value="top">Solo arriba</option><option value="sides">Laterales izquierdo y derecho</option></select><label for="eyeletSpacing">Separación aproximada solicitada (cm)</label><input id="eyeletSpacing" type="number" min="5" max="500" value="50"><p class="studio-help">Los puntos muestran dónde irían. La cantidad y separación finales se confirman al cotizar. Para otra distribución, indícala en las notas.</p></div>';
+if (type === 'thermos') options.insertAdjacentHTML('afterbegin','<label for="thermosModel">Modelo de termo</label><select id="thermosModel">' + Object.entries(thermosModels).map(([key,m]) => '<option value="' + key + '">' + m.label + '</option>').join('') + '</select><div id="thermosReference"><img id="thermosReferenceImage" alt="Referencia del modelo de termo del catálogo"><p class="studio-help">Referencia del catálogo. La capacidad solicitada y las medidas exactas se confirman al cotizar.</p></div>');
+function refreshReference() {
+    if (type !== 'thermos') return;
+    const m = thermosModels[$('thermosModel').value]; $('thermosReference').hidden = !m.reference;
+    if (m.reference) $('thermosReferenceImage').src = m.reference;
+}
+refreshReference();
 const monochrome = source => {
     const canvas = document.createElement('canvas'); canvas.width = source.width; canvas.height = source.height;
     const ctx = canvas.getContext('2d'); ctx.drawImage(source,0,0);
@@ -43,13 +52,15 @@ function summary() {
     let text = config.name + ' · ' + config.technique;
     if (config.laser) text += ' · ' + $('baseColor').selectedOptions[0].text;
     else text += ' · ' + $('boardWidth').value + ' × ' + $('boardHeight').value + ' cm solicitados';
+    if (type === 'thermos') text += ' · ' + thermosModels[$('thermosModel').value].label;
     if (type === 'mdf') text += ' · ' + $('mdfMode').selectedOptions[0].text + ' · ' + $('boardShape').selectedOptions[0].text;
     if (type === 'banner') text += $('hasEyelets').checked ? ' · Con ojillos: ' + $('eyeletPosition').selectedOptions[0].text + ($('eyeletPosition').value !== 'corners' ? ' · separación solicitada ' + $('eyeletSpacing').value + ' cm' : '') : ' · Sin ojillos';
     return text;
 }
 function boardMetrics() {
     let w, h;
-    if (config.laser) { w = type === 'pen' ? 900 : 300; h = type === 'pen' ? 85 : 580; }
+    if (type === 'thermos') { const m = thermosModels[$('thermosModel').value], r = m.profile[Math.floor(m.profile.length / 2)][0]; h = 580; w = h * Math.PI * r / m.printHeight; }
+    else if (config.laser) { w = 900; h = 85; }
     else { const ratio = Math.max(.15,Math.min(6,Number($('boardWidth').value || 1) / Number($('boardHeight').value || 1))); w = Math.min(870,570 * ratio); h = w / ratio; }
     return {x:(1200 - w) / 2,y:(900 - h) / 2,w,h};
 }
@@ -77,17 +88,18 @@ function boardPath(ctx,x,y,w,h) {
         ctx.closePath();
     } else ctx.roundRect(x,y,w,h,type === 'thermos' ? 28 : type === 'pen' ? 12 : 2);
 }
-function draw(ctx,W,H,side) {
+function draw(ctx,W,H,side,for3D = false) {
     ctx.fillStyle = '#8c99af'; ctx.fillRect(0,0,W,H); ctx.save();
     const scale = Math.min(W / 1200,H / 900); ctx.translate((W - 1200 * scale) / 2,(H - 900 * scale) / 2); ctx.scale(scale,scale);
     const {x,y,w,h} = boardMetrics();
-    boardPath(ctx,x,y,w,h); ctx.fillStyle = type === 'mdf' ? '#c89c64' : config.laser ? $('baseColor').value : '#ffffff'; ctx.fill();
-    ctx.save(); boardPath(ctx,x,y,w,h); ctx.clip();
+    const outline = () => { if (for3D && config.laser) { ctx.beginPath(); ctx.rect(x,y,w,h); } else boardPath(ctx,x,y,w,h); };
+    outline(); ctx.fillStyle = type === 'mdf' ? '#c89c64' : config.laser ? $('baseColor').value : '#ffffff'; ctx.fill();
+    ctx.save(); outline(); ctx.clip();
     if (type === 'mdf') {
         ctx.strokeStyle = '#9b6f3c33'; ctx.lineWidth = 2;
         for (let iy = y; iy < y + h; iy += 14) { ctx.beginPath(); ctx.moveTo(x,iy); ctx.bezierCurveTo(x + w * .3,iy - 8,x + w * .7,iy + 9,x + w,iy); ctx.stroke(); }
     }
-    for (const l of layers.filter(l => !config.two || l.face === side)) {
+    for (const l of layers.filter(l => (config.two ? l.face === side : !(for3D && side === 'back')))) {
         let image = config.laser || (type === 'mdf' && $('mdfMode').value === 'engrave') ? l.engraving : l.image;
         if (config.laser && ['#ffffff','#9ca3af'].includes($('baseColor').value)) {
             if (!l.darkEngraving) {
@@ -98,20 +110,21 @@ function draw(ctx,W,H,side) {
         }
         const fit = Math.min(w * .85 / image.width,h * .85 / image.height) * l.scale / 100;
         ctx.save(); ctx.translate(x + w * (.5 + l.x / 100),y + h * (.5 + l.y / 100)); ctx.rotate(l.rotation * Math.PI / 180);
-        ctx.drawImage(image,-image.width * fit / 2,-image.height * fit / 2,image.width * fit,image.height * fit); ctx.restore();
+        const iw = image.width * fit * (l.stretchX ?? 1), ih = image.height * fit * (l.stretchY ?? 1);
+        ctx.drawImage(image,-iw / 2,-ih / 2,iw,ih); ctx.restore();
     }
-    if (config.laser) {
+    if (config.laser && !for3D) {
         const gradient = ctx.createLinearGradient(type === 'pen' ? x : x,y,type === 'pen' ? x : x + w,type === 'pen' ? y + h : y);
         gradient.addColorStop(0,'#00000066'); gradient.addColorStop(.4,'#ffffff22'); gradient.addColorStop(.7,'#ffffff00'); gradient.addColorStop(1,'#00000066'); ctx.fillStyle = gradient; ctx.fillRect(x,y,w,h);
     }
     ctx.restore();
-    ctx.strokeStyle = '#3d302f'; ctx.lineWidth = 3; boardPath(ctx,x,y,w,h); ctx.stroke();
-    if (type === 'pen') {
+    if (!for3D) { ctx.strokeStyle = '#3d302f'; ctx.lineWidth = 3; boardPath(ctx,x,y,w,h); ctx.stroke(); }
+    if (type === 'pen' && !for3D) {
         ctx.fillStyle = '#c5c9cf'; ctx.beginPath(); ctx.moveTo(x + w,y); ctx.lineTo(x + w + 65,y + h / 2); ctx.lineTo(x + w,y + h); ctx.fill();
         ctx.fillRect(x + 35,y - 8,170,12);
     }
-    if (type === 'thermos') { ctx.fillStyle = '#363b43'; ctx.fillRect(x + 4,y - 22,w - 8,28); ctx.fillStyle = '#b0b6c0'; ctx.fillRect(x + 5,y + h - 14,w - 10,14); }
-    if (type === 'banner') {
+    if (type === 'thermos' && !for3D) { ctx.fillStyle = '#363b43'; ctx.fillRect(x + 4,y - 22,w - 8,28); ctx.fillStyle = '#b0b6c0'; ctx.fillRect(x + 5,y + h - 14,w - 10,14); }
+    if (type === 'banner' && !for3D) {
         for (const [px,py] of eyeletPoints(x,y,w,h)) { ctx.fillStyle = '#d7dce2'; ctx.beginPath(); ctx.arc(px,py,7,0,Math.PI * 2); ctx.fill(); ctx.strokeStyle = '#59616b'; ctx.lineWidth = 2; ctx.stroke(); ctx.fillStyle = '#8c99af'; ctx.beginPath(); ctx.arc(px,py,3,0,Math.PI * 2); ctx.fill(); }
     }
     if (type === 'puzzle') {
@@ -121,7 +134,7 @@ function draw(ctx,W,H,side) {
     }
     ctx.restore();
 }
-function render() { const c = $('flatPreview'); draw(c.getContext('2d'),c.width,c.height,face); directEditor?.update(); }
+function render() { const c = $('flatPreview'); draw(c.getContext('2d'),c.width,c.height,face); refreshReference(); viewer?.refresh(); directEditor?.update(); }
 function refresh() {
     const layer = layers.find(l => l.id === selectedId);
     $('designControls').disabled = !layer; $('designFile').disabled = uploading || layers.length >= 5; $('designCount').textContent = layers.length + ' de 5 diseños';
@@ -133,7 +146,7 @@ function refresh() {
     $('selectedDesign').textContent = layer ? 'Ajustar: ' + layer.name : 'Selecciona un diseño';
     if (layer) for (const [id,key] of [['designScale','scale'],['designX','x'],['designY','y'],['designRotation','rotation']]) $(id).value = layer[key];
     $('scaleValue').textContent = Math.round(layer?.scale || 100) + '%';
-    document.querySelectorAll('[data-face]').forEach(b => b.setAttribute('aria-pressed',String(b.dataset.face === face))); textTools?.sync(); render();
+    document.querySelectorAll('[data-face]').forEach(b => b.setAttribute('aria-pressed',String(b.dataset.face === face))); textTools?.sync(); dimensionTools?.sync(); render();
 }
 function addLayer(image,name,textStyle = null) {
     if (layers.length >= 5) { $('fileStatus').textContent = 'Máximo cinco diseños por producto. Elimina uno para añadir otro.'; return false; }
@@ -155,35 +168,58 @@ $('designFile').addEventListener('change',async e => {
 });
 for (const [id,key] of [['designScale','scale'],['designX','x'],['designY','y'],['designRotation','rotation']]) $(id).addEventListener('input',() => { const l = layers.find(l => l.id === selectedId); if (l) l[key] = Number($(id).value); $('scaleValue').textContent = $('designScale').value + '%'; render(); });
 $('clearDesign').addEventListener('click',() => { const i = layers.findIndex(l => l.id === selectedId); if (i >= 0) layers.splice(i,1); selectedId = layers.filter(l => l.face === face).at(-1)?.id ?? null; refresh(); });
-document.querySelectorAll('[data-face]').forEach(b => b.addEventListener('click',() => { face = b.dataset.face; selectedId = layers.filter(l => l.face === face).at(-1)?.id ?? null; refresh(); }));
+document.querySelectorAll('[data-face]').forEach(b => b.addEventListener('click',() => { face = b.dataset.face; selectedId = layers.filter(l => l.face === face).at(-1)?.id ?? null; viewer?.reset(face); refresh(); }));
 options.addEventListener('input',render); options.addEventListener('change',() => {
     if (type === 'banner') { const enabled = $('hasEyelets').checked; $('eyeletOptions').hidden = !enabled; $('eyeletPosition').disabled = !enabled; $('eyeletSpacing').disabled = !enabled || $('eyeletPosition').value === 'corners'; }
     render();
 });
 function previewCanvas() {
+    if (!viewer || viewer.lost) return null;
     for (const input of options.querySelectorAll('input')) if (!input.reportValidity()) return null;
-    const canvas = document.createElement('canvas'); canvas.width = config.two ? 1800 : 1400; canvas.height = 1150;
+    const canvas = document.createElement('canvas'); canvas.width = 1600; canvas.height = 1810;
     const ctx = canvas.getContext('2d'); ctx.fillStyle = '#8c99af'; ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle = '#111827'; ctx.textAlign = 'center'; ctx.font = 'bold 30px sans-serif'; ctx.fillText('PUBLI SHOP · ' + config.name,canvas.width / 2,45);
-    ctx.font = '21px sans-serif'; ctx.fillText(summary(),canvas.width / 2,85,canvas.width - 50);
-    const sides = config.two ? ['front','back'] : ['front'];
-    sides.forEach((side,i) => { const part = document.createElement('canvas'); part.width = config.two ? 900 : 1400; part.height = 900; draw(part.getContext('2d'),part.width,part.height,side); ctx.drawImage(part,i * 900,130); ctx.fillStyle = '#111827'; ctx.font = '26px sans-serif'; ctx.fillText(config.two ? (side === 'front' ? 'Frente' : 'Reverso') : 'Diseño propuesto',config.two ? i * 900 + 450 : 700,1060); });
-    ctx.font = '20px sans-serif'; ctx.fillText('Vista aproximada · Confirmamos medidas, materiales y acabados al cotizar',canvas.width / 2,1115); return canvas;
+    ctx.fillStyle = '#111827'; ctx.textAlign = 'center'; ctx.font = 'bold 30px sans-serif'; ctx.fillText('PUBLI SHOP · ' + config.name + ' · Cuatro vistas 3D',800,45);
+    ctx.font = '20px sans-serif'; ctx.fillText(summary(),800,88,1530); viewer.views(ctx);
+    ctx.font = '20px sans-serif'; ctx.fillText('Modelo de muestra · Confirmamos medidas, materiales y acabados al cotizar',800,1780); return canvas;
 }
 const filename = 'mi-' + type + '-publishop.png';
 $('downloadPreview').addEventListener('click',() => downloadCanvas(previewCanvas(),filename));
 textTools = setupTextTools(addLayer,config.laser,{selected:() => layers.find(l => l.id === selectedId),update(layer,image,style) { layer.image = image; layer.engraving = monochrome(image); layer.darkEngraving = null; layer.textStyle = style; layer.name = 'Texto: ' + style.text; refresh(); }});
 setupCompletion({previewCanvas,summary:() => summary() + describeTextLayers(layers),count:() => layers.length,filename});
-function displayMetrics() {
-    const rect = $('flatPreview').getBoundingClientRect(), scale = Math.min(rect.width / 1200,rect.height / 900);
-    const board = boardMetrics(); return {...board,scale,ox:(rect.width - 1200 * scale) / 2,oy:(rect.height - 900 * scale) / 2};
+function layerDimensions(layer) {
+    const {w,h} = boardMetrics(), fit = Math.min(w * .85 / layer.image.width,h * .85 / layer.image.height) * layer.scale / 100;
+    return {width:layer.image.width * fit * (layer.stretchX ?? 1),height:layer.image.height * fit * (layer.stretchY ?? 1),canvasWidth:w,canvasHeight:h,centerU:.5};
 }
-directEditor = setupDirectEditing({surface:$('flatPreview'),items:() => layers.filter(l => !config.two || l.face === face),selected:() => layers.find(l => l.id === selectedId),
-    select(layer) { selectedId = layer.id; refresh(); },
-    geometry(layer) { const {x,y,w,h,scale,ox,oy} = displayMetrics(), fit = Math.min(w * .85 / layer.image.width,h * .85 / layer.image.height) * layer.scale / 100; return {cx:ox + (x + w * (.5 + layer.x / 100)) * scale,cy:oy + (y + h * (.5 + layer.y / 100)) * scale,width:layer.image.width * fit * scale,height:layer.image.height * fit * scale,angle:layer.rotation}; },
-    move(layer,dx,dy) { const m = displayMetrics(); layer.x = Math.max(-45,Math.min(45,layer.x + dx / (m.w * m.scale) * 100)); layer.y = Math.max(-45,Math.min(45,layer.y + dy / (m.h * m.scale) * 100)); },
-    resize(layer,value) { layer.scale = Math.max(10,Math.min(180,value)); },
-    changed() { refresh(); $('flatPreview').dispatchEvent(new Event('designchange',{bubbles:true})); }
+const source = document.createElement('canvas'); source.width = 1200; source.height = 900;
+try {
+    viewer = new ProductViewer({element:$('productViewport'),type,options() {
+        const m = boardMetrics();
+        return {model:$('thermosModel')?.value,color:$('baseColor')?.value,ratio:m.w / m.h,shape:$('boardShape')?.value,
+            eyelets:type === 'banner' ? eyeletPoints(m.x,m.y,m.w,m.h).map(([x,y]) => [(x - m.x) / m.w,(y - m.y) / m.h]) : []};
+    },paint(canvas,side) {
+        const m = boardMetrics(); draw(source.getContext('2d'),1200,900,side,true); const ctx = canvas.getContext('2d'); ctx.clearRect(0,0,1024,1024); ctx.drawImage(source,m.x,m.y,m.w,m.h,0,0,1024,1024);
+    },onRender() { directEditor?.update(); }});
+    $('downloadPreview').disabled = false; $('viewerStatus').textContent = '';
+} catch (error) { console.error(error); $('viewerStatus').textContent = 'No pudimos abrir el visor 3D. Prueba otro navegador.'; }
+function projection(layer) {
+    if (!viewer) return null;
+    const d = layerDimensions(layer), u = .5 + layer.x / 100, v = .5 + layer.y / 100, side = config.two ? layer.face : 'front';
+    const center = viewer.project(u,v,side); if (!center.visible) return null;
+    const ux = viewer.project(u + .01,v,side), vy = viewer.project(u,v + .01,side);
+    const left = viewer.project(u - d.width / d.canvasWidth / 2,v,side), right = viewer.project(u + d.width / d.canvasWidth / 2,v,side);
+    const top = viewer.project(u,v - d.height / d.canvasHeight / 2,side), bottom = viewer.project(u,v + d.height / d.canvasHeight / 2,side);
+    return {cx:center.x,cy:center.y,width:Math.max(20,Math.hypot(right.x - left.x,right.y - left.y)),height:Math.max(20,Math.hypot(bottom.x - top.x,bottom.y - top.y)),angle:layer.rotation + Math.atan2(ux.y - center.y,ux.x - center.x) * 180 / Math.PI,
+        ux:ux.x - center.x,uy:ux.y - center.y,vx:vy.x - center.x,vy:vy.y - center.y};
+}
+directEditor = setupDirectEditing({surface:$('productViewport'),items:() => layers.filter(l => !config.two || l.face === face),selected:() => layers.find(l => l.id === selectedId),
+    select(layer) { selectedId = layer.id; refresh(); },geometry:projection,
+    move(layer,dx,dy) { const g = projection(layer); if (!g) return; const det = g.ux * g.vy - g.uy * g.vx; if (Math.abs(det) < .001) return; layer.x = Math.max(-50,Math.min(50,layer.x + (dx * g.vy - dy * g.vx) / det)); layer.y = Math.max(-50,Math.min(50,layer.y + (g.ux * dy - g.uy * dx) / det)); },
+    resize(layer,value) { layer.scale = Math.max(10,Math.min(180,value)); },stretch(layer,x,y) { layer.stretchX = Math.max(.05,Math.min(5,x)); layer.stretchY = Math.max(.05,Math.min(5,y)); },
+    changed() { refresh(); $('productViewport').dispatchEvent(new Event('designchange',{bubbles:true})); }
 });
+dimensionTools = setupLayerDimensions({selected:() => layers.find(l => l.id === selectedId),changed:refresh,dimensions:layerDimensions});
+$('rotateLeft').addEventListener('click',() => { if (viewer) { viewer.product.rotation.y -= .3; viewer.render(); } });
+$('rotateRight').addEventListener('click',() => { if (viewer) { viewer.product.rotation.y += .3; viewer.render(); } });
+$('zoomIn').addEventListener('click',() => viewer?.zoom(-.4)); $('zoomOut').addEventListener('click',() => viewer?.zoom(.4)); $('resetView').addEventListener('click',() => viewer?.reset(face));
 if (type === 'banner') $('eyeletSpacing').disabled = true;
 refresh();
