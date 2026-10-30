@@ -728,6 +728,39 @@ ul {
     display: none;
 }
 
+/* Make the mug preview discoverable with touch and keyboard. */
+.mug-catalog-cta {
+    display: block;
+    padding: 18px 24px;
+    margin-bottom: 24px;
+    border: 1px solid #8554cf;
+    border-radius: 14px;
+    background: rgba(124, 58, 237, .14);
+    color: white;
+    text-align: center;
+}
+
+.product-item[data-category="tazas"] .product-overlay {
+    opacity: 1;
+    transform: none;
+}
+
+.mug-preview-link {
+    display: inline-block;
+    padding: 10px 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+    background: #7c3aed;
+    color: #fff;
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+.mug-preview-link:focus-visible {
+    outline: 3px solid white;
+    outline-offset: 3px;
+}
+
 /* Process */
 .process {
     background: var(--dark);
