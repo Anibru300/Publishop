@@ -31,6 +31,7 @@ export function setupCompletion(api) {
     const invalidate = () => { revision++; panel.hidden = true; document.getElementById('completionActions').hidden = true; file = null; if (url) URL.revokeObjectURL(url); url = null; };
     document.querySelector('.design-panel').addEventListener('input',invalidate);
     document.querySelector('.design-panel').addEventListener('change',invalidate);
+    document.addEventListener('designchange',invalidate);
     // Layer deletion and insertion also invalidate an earlier quote.
     document.getElementById('clearDesign')?.addEventListener('click',invalidate);
     document.getElementById('addText')?.addEventListener('click',invalidate);

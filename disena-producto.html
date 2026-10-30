@@ -27,9 +27,9 @@
                 <p id="fileStatus" class="studio-help" role="status" aria-live="polite">Añade imágenes o texto para empezar.</p>
                 <fieldset id="designControls" disabled>
                     <legend id="selectedDesign">Selecciona un diseño</legend>
-                    <label for="designScale">Tamaño <output id="scaleValue">100%</output></label><input id="designScale" type="range" min="10" max="180" value="100">
-                    <label for="designX">Posición horizontal</label><input id="designX" type="range" min="-45" max="45" value="0">
-                    <label for="designY">Posición vertical</label><input id="designY" type="range" min="-45" max="45" value="0">
+                    <label for="designScale">Tamaño <output id="scaleValue">100%</output></label><input id="designScale" type="range" step="0.1" min="10" max="180" value="100">
+                    <label for="designX">Posición horizontal</label><input id="designX" type="range" step="0.1" min="-45" max="45" value="0">
+                    <label for="designY">Posición vertical</label><input id="designY" type="range" step="0.1" min="-45" max="45" value="0">
                     <label for="designRotation">Girar diseño</label><input id="designRotation" type="range" min="-180" max="180" value="0">
                     <button id="clearDesign" type="button" class="studio-secondary">Eliminar diseño seleccionado</button>
                 </fieldset>

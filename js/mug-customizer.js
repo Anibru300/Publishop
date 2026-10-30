@@ -1,16 +1,18 @@
 import { setupCompletion, downloadCanvas } from './finish-order.js';
-import { setupTextTools } from './text-tools.js';
+import { setupTextTools, describeTextLayers } from './text-tools.js';
+import { setupDirectEditing } from './direct-edit.js';
 const $ = id => document.getElementById(id);
 const isShirt = document.body.dataset.product === 'shirt';
 const viewport = $('mugViewport'), background = '#8c99af';
 const layers = [], textures = {};
 let selectedId = null, face = 'front', ready = false, uploading = false, nextId = 1;
 let THREE, renderer, scene, camera, product;
+let directEditor, textTools;
 const selected = () => layers.find(l => l.id === selectedId);
 const magic = () => !isShirt && $('mugType').value === 'magic';
 const cold = () => magic() && !$('magicHot').checked;
 const currentLayers = () => layers.filter(l => !isShirt || l.face === face);
-function render() { if (ready && !document.hidden) renderer.render(scene,camera); }
+function render() { if (ready && !document.hidden) { renderer.render(scene,camera); directEditor?.update(); } }
 function resetView() {
     if (!ready) return;
     product.rotation.set(isShirt ? 0 : .06,isShirt ? (face === 'back' ? Math.PI : 0) : .15,0);
@@ -71,9 +73,10 @@ function refreshControls() {
     }
     if (l) {
         $('designScale').value = l.scale; $('designX').value = l.x; $('designY').value = l.y; $('designRotation').value = l.rotation;
-        $('selectedDesign').textContent = 'Ajustar: ' + l.name; $('scaleValue').textContent = l.scale + '%';
+        $('selectedDesign').textContent = 'Ajustar: ' + l.name; $('scaleValue').textContent = Math.round(l.scale) + '%';
     } else $('selectedDesign').textContent = 'Selecciona un diseño para ajustarlo';
     document.querySelectorAll('[data-face]').forEach(b => b.setAttribute('aria-pressed',String(b.dataset.face === face)));
+    textTools?.sync(); directEditor?.update();
     updateQuote();
 }
 function buildProduct() {
@@ -170,7 +173,7 @@ $('designFile').addEventListener('change',async event => {
     $('fileStatus').textContent = added + ' diseño(s) añadido(s).' + (rejected ? ' Algunos archivos no se añadieron: máximo 5 por producto, JPG/PNG/WebP de hasta 10 MB e imágenes de hasta 40 megapíxeles.' : ' Selecciona uno en la lista para ajustarlo.');
 });
 for (const [id,property] of [['designScale','scale'],['designX','x'],['designY','y'],['designRotation','rotation']]) {
-    $(id).addEventListener('input',() => { const l = selected(); if (!l) return; l[property] = Number($(id).value); $('scaleValue').textContent = l.scale + '%'; paintTextures(); });
+    $(id).addEventListener('input',() => { const l = selected(); if (!l) return; l[property] = Number($(id).value); $('scaleValue').textContent = Math.round(l.scale) + '%'; paintTextures(); });
 }
 $('clearDesign').addEventListener('click',() => {
     const index = layers.findIndex(l => l.id === selectedId); if (index < 0) return;
@@ -222,11 +225,46 @@ function previewCanvas() {
 }
 const filename = isShirt ? 'mi-playera-frente-espalda-publishop.png' : 'mi-taza-4-vistas-publishop.png';
 $('downloadPreview').addEventListener('click',() => downloadCanvas(previewCanvas(),filename));
-setupTextTools((image,name) => {
+textTools = setupTextTools((image,name,textStyle) => {
     if (layers.length >= 5) { $('fileStatus').textContent = 'Máximo cinco diseños por producto. Elimina uno para añadir otro.'; return false; }
     const id = nextId++;
-    layers.push({id,name,image,face,scale:100,x:0,y:0,rotation:0}); selectedId = id;
+    layers.push({id,name,image,face,scale:100,x:0,y:0,rotation:0,textStyle}); selectedId = id;
     refreshControls(); paintTextures(); return true;
+},false,{selected,update(layer,image,style) { layer.image = image; layer.textStyle = style; layer.name = 'Texto: ' + style.text; refreshControls(); paintTextures(); }});
+setupCompletion({previewCanvas,summary:() => description() + describeTextLayers(layers),count:() => layers.length,filename});
+function designProjection(layer) {
+    if (!ready || !product || cold()) return null;
+    const texture = textures[isShirt ? layer.face : 'mug']; if (!texture) return null;
+    const w = texture.image.width, h = texture.image.height;
+    const fit = Math.min(w * (isShirt ? .85 : .40) / layer.image.width,h * .78 / layer.image.height) * layer.scale / 100;
+    const u = ((isShirt ? .5 : .75) + layer.x / 100 + 1) % 1, v = .5 + layer.y / 100;
+    const rect = viewport.getBoundingClientRect();
+    const point = (pu,pv) => {
+        let position;
+        if (isShirt) position = new THREE.Vector3((pu - .5) * 1.32 * (layer.face === 'back' ? -1 : 1),-.18 + (.5 - pv) * 1.8,layer.face === 'back' ? -.156 : .156);
+        else { const theta = Math.PI / 2 + .22 + pu * (Math.PI * 2 - .44); position = new THREE.Vector3(Math.sin(theta) * 1.004,(.5 - pv) * 2.5,Math.cos(theta) * 1.004); }
+        position.applyMatrix4(product.matrixWorld).project(camera);
+        return {x:(position.x + 1) / 2 * rect.width,y:(1 - position.y) / 2 * rect.height};
+    };
+    if (!isShirt) {
+        const theta = Math.PI / 2 + .22 + u * (Math.PI * 2 - .44);
+        const world = new THREE.Vector3(Math.sin(theta),(.5 - v) * 2.5,Math.cos(theta)).applyMatrix4(product.matrixWorld);
+        const normal = new THREE.Vector3(Math.sin(theta),0,Math.cos(theta)).transformDirection(product.matrixWorld);
+        if (normal.dot(camera.position.clone().sub(world).normalize()) < .08) return null;
+    }
+    const center = point(u,v), ux = point(u + .01,v), vy = point(u,v + .01);
+    const left = point(u - layer.image.width * fit / w / 2,v), right = point(u + layer.image.width * fit / w / 2,v);
+    const top = point(u,v - layer.image.height * fit / h / 2), bottom = point(u,v + layer.image.height * fit / h / 2);
+    return {cx:center.x,cy:center.y,width:Math.max(20,Math.hypot(right.x - left.x,right.y - left.y)),height:Math.max(20,Math.hypot(bottom.x - top.x,bottom.y - top.y)),angle:layer.rotation,
+        ux:ux.x - center.x,uy:ux.y - center.y,vx:vy.x - center.x,vy:vy.y - center.y};
+}
+directEditor = setupDirectEditing({surface:viewport,items:() => ready && !cold() ? currentLayers() : [],selected,
+    select(layer) { selectedId = layer.id; refreshControls(); },geometry:designProjection,
+    move(layer,dx,dy) {
+        const g = designProjection(layer); if (!g) return; const det = g.ux * g.vy - g.uy * g.vx; if (Math.abs(det) < .001) return;
+        layer.x = Math.max(Number($('designX').min),Math.min(Number($('designX').max),layer.x + (dx * g.vy - dy * g.vx) / det));
+        layer.y = Math.max(Number($('designY').min),Math.min(Number($('designY').max),layer.y + (g.ux * dy - g.uy * dx) / det));
+    },resize(layer,value) { layer.scale = Math.max(30,Math.min(160,value)); },
+    changed() { refreshControls(); paintTextures(); viewport.dispatchEvent(new Event('designchange',{bubbles:true})); }
 });
-setupCompletion({previewCanvas,summary:description,count:() => layers.length,filename});
 refreshControls(); init();

@@ -47,6 +47,22 @@
 .completion-panel .btn { width: 100%; margin-top: 10px; white-space: normal; text-align: center; }
 .text-tools { margin: 18px 0; padding-top: 8px; border-top: 1px solid var(--card-border); }
 .flat-preview { width: 100%; height: 470px; display: block; object-fit: contain; touch-action: pan-y; }
+.direct-stage { position: relative; overflow: hidden; }
+.direct-overlay { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.direct-item { position: absolute; border: 1px solid transparent; cursor: grab; pointer-events: auto; touch-action: none; outline-offset: 3px; }
+.direct-item[aria-pressed="true"] { border: 2px dashed #fff; outline: 1px solid #55257c; background: #b879ef0a; }
+.direct-item.dragging { cursor: grabbing; }
+.resize-handle { position: absolute; width: 22px; height: 22px; padding: 0; border: 2px solid white; border-radius: 50%; background: #7c3aed; touch-action: none; box-shadow: 0 0 0 1px #48216c; }
+.direct-item:not([aria-pressed="true"]) .resize-handle { visibility: hidden; }
+.handle-nw { left: -12px; top: -12px; cursor: nwse-resize; }
+.handle-ne { right: -12px; top: -12px; cursor: nesw-resize; }
+.handle-sw { left: -12px; bottom: -12px; cursor: nesw-resize; }
+.handle-se { right: -12px; bottom: -12px; cursor: nwse-resize; }
+.text-tools select { width: 100%; padding: 10px; border: 1px solid #705781; border-radius: 8px; background: #221a30; color: white; font: inherit; }
+.text-style-options, .text-action-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
+.text-style-options label { display: flex; align-items: center; gap: 8px; }
+.text-style-options input { width: auto !important; }
+.direct-hint { margin: 0; }
 .face-selector { display: flex; gap: 10px; margin-bottom: 12px; }
 .face-selector button { flex: 1; padding: 12px; border: 1px solid #8554cf; border-radius: 10px; color: white; background: transparent; cursor: pointer; font: inherit; }
 .face-selector button[aria-pressed="true"] { background: #7c3aed; }
@@ -54,6 +70,7 @@
 .product-options label { font-size: .9rem; font-weight: 600; }
 .product-options select { width: 100%; padding: 12px; border: 1px solid #8554cf; border-radius: 8px; color: white; background: #221c36; font: inherit; }
 .product-options .heat-toggle { display: flex; gap: 10px; align-items: center; margin-top: 12px; }
+.product-options input[type=checkbox] { width: auto; padding: 0; }
 .layer-list { display: grid; gap: 8px; margin: 12px 0; }
 .layer-list button { padding: 10px 12px; border: 1px solid #68527f; border-radius: 8px; color: white; background: transparent; font: inherit; font-size: .85rem; text-align: left; overflow-wrap: anywhere; cursor: pointer; }
 .layer-list button[aria-pressed="true"] { background: #59308d; border-color: #bc96ef; }

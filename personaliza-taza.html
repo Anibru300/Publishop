@@ -25,7 +25,7 @@
             <section class="preview-panel" aria-label="Vista previa de la taza">
                 <div id="mugViewport" class="mug-viewport" aria-label="Taza 3D. Arrastra para girar; usa la rueda o los botones para acercar." tabindex="0"></div>
                 <p id="viewerStatus" class="viewer-status" role="status">Cargando la taza 3D…</p>
-                <p class="preview-hint">Arrastra con el dedo o el ratón para girar. Usa + y − para acercar.</p>
+                <p class="preview-hint">Arrastra el fondo para girar la taza. Usa + y − para acercar.</p>
                 <div class="view-controls" aria-label="Controles de la vista">
                     <button type="button" id="rotateLeft" aria-label="Girar taza a la izquierda">↶</button>
                     <button type="button" id="rotateRight" aria-label="Girar taza a la derecha">↷</button>
@@ -54,11 +54,11 @@
                 <fieldset id="designControls" disabled>
                     <legend id="selectedDesign">Selecciona un diseño para ajustarlo</legend>
                     <label for="designScale">Tamaño <output id="scaleValue" for="designScale">100%</output></label>
-                    <input type="range" id="designScale" min="30" max="160" value="100">
+                    <input type="range" step="0.1" id="designScale" min="30" max="160" value="100">
                     <label for="designX">Posición horizontal</label>
-                    <input type="range" id="designX" min="-50" max="50" value="0">
+                    <input type="range" step="0.1" id="designX" min="-50" max="50" value="0">
                     <label for="designY">Posición vertical</label>
-                    <input type="range" id="designY" min="-30" max="30" value="0">
+                    <input type="range" step="0.1" id="designY" min="-30" max="30" value="0">
                     <label for="designRotation">Girar diseño</label><input type="range" id="designRotation" min="-180" max="180" value="0">
                     <button type="button" id="clearDesign" class="studio-secondary">Eliminar diseño seleccionado</button>
                 </fieldset>
