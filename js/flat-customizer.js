@@ -14,7 +14,7 @@ const types = {
 const requested = new URLSearchParams(location.search).get('producto');
 const type = Object.hasOwn(types,requested) ? requested : 'banner', config = types[type];
 const layers = []; let face = 'front', selectedId = null, nextId = 1, uploading = false;
-let directEditor, textTools, viewer, dimensionTools;
+let directEditor, textTools, viewer, dimensionTools, drawFrame = 0;
 $('productTitle').textContent = config.name; $('productIntro').textContent = config.intro;
 document.title = 'Diseña tu ' + config.name.toLowerCase() + ' | PUBLI SHOP LEÓN GTO';
 $('faceSelector').hidden = !config.two;
@@ -135,6 +135,13 @@ function draw(ctx,W,H,side,for3D = false) {
     ctx.restore();
 }
 function render() { const c = $('flatPreview'); draw(c.getContext('2d'),c.width,c.height,face); refreshReference(); viewer?.refresh(); directEditor?.update(); }
+function scheduleRender() { if (drawFrame) return; drawFrame = requestAnimationFrame(() => { drawFrame = 0; render(); }); }
+function syncSelectedControls() {
+    const layer = layers.find(l => l.id === selectedId);
+    if (!layer) return;
+    for (const [id,key] of [['designScale','scale'],['designX','x'],['designY','y'],['designRotation','rotation']]) $(id).value = layer[key];
+    $('scaleValue').textContent = Math.round(layer.scale) + '%'; dimensionTools?.sync();
+}
 function refresh() {
     const layer = layers.find(l => l.id === selectedId);
     $('designControls').disabled = !layer; $('designFile').disabled = uploading || layers.length >= 5; $('designCount').textContent = layers.length + ' de 5 diseños';
@@ -166,10 +173,10 @@ $('designFile').addEventListener('change',async e => {
     }
     uploading = false; e.target.value = ''; refresh(); $('fileStatus').textContent = skipped ? 'Algunos archivos no se añadieron. Máximo cinco diseños, JPG/PNG/WebP de hasta 10 MB y 40 megapíxeles.' : 'Selecciona un diseño para ajustar su tamaño, posición o giro.';
 });
-for (const [id,key] of [['designScale','scale'],['designX','x'],['designY','y'],['designRotation','rotation']]) $(id).addEventListener('input',() => { const l = layers.find(l => l.id === selectedId); if (l) l[key] = Number($(id).value); $('scaleValue').textContent = $('designScale').value + '%'; render(); });
+for (const [id,key] of [['designScale','scale'],['designX','x'],['designY','y'],['designRotation','rotation']]) $(id).addEventListener('input',() => { const l = layers.find(l => l.id === selectedId); if (l) l[key] = Number($(id).value); $('scaleValue').textContent = $('designScale').value + '%'; scheduleRender(); });
 $('clearDesign').addEventListener('click',() => { const i = layers.findIndex(l => l.id === selectedId); if (i >= 0) layers.splice(i,1); selectedId = layers.filter(l => l.face === face).at(-1)?.id ?? null; refresh(); });
 document.querySelectorAll('[data-face]').forEach(b => b.addEventListener('click',() => { face = b.dataset.face; selectedId = layers.filter(l => l.face === face).at(-1)?.id ?? null; viewer?.reset(face); refresh(); }));
-options.addEventListener('input',render); options.addEventListener('change',() => {
+options.addEventListener('input',scheduleRender); options.addEventListener('change',() => {
     if (type === 'banner') { const enabled = $('hasEyelets').checked; $('eyeletOptions').hidden = !enabled; $('eyeletPosition').disabled = !enabled; $('eyeletSpacing').disabled = !enabled || $('eyeletPosition').value === 'corners'; }
     render();
 });
@@ -215,9 +222,9 @@ directEditor = setupDirectEditing({surface:$('productViewport'),items:() => laye
     select(layer) { selectedId = layer.id; refresh(); },geometry:projection,
     move(layer,dx,dy) { const g = projection(layer); if (!g) return; const det = g.ux * g.vy - g.uy * g.vx; if (Math.abs(det) < .001) return; layer.x = Math.max(-50,Math.min(50,layer.x + (dx * g.vy - dy * g.vx) / det)); layer.y = Math.max(-50,Math.min(50,layer.y + (g.ux * dy - g.uy * dx) / det)); },
     resize(layer,value) { layer.scale = Math.max(10,Math.min(180,value)); },stretch(layer,x,y) { layer.stretchX = Math.max(.05,Math.min(5,x)); layer.stretchY = Math.max(.05,Math.min(5,y)); },
-    changed() { refresh(); $('productViewport').dispatchEvent(new Event('designchange',{bubbles:true})); }
+    changed(dragging = false) { if (dragging) { syncSelectedControls(); render(); } else refresh(); }
 });
-dimensionTools = setupLayerDimensions({selected:() => layers.find(l => l.id === selectedId),changed:refresh,dimensions:layerDimensions});
+dimensionTools = setupLayerDimensions({selected:() => layers.find(l => l.id === selectedId),changed(dragging = false) { if (dragging) { syncSelectedControls(); render(); } else refresh(); },dimensions:layerDimensions});
 $('rotateLeft').addEventListener('click',() => { if (viewer) { viewer.product.rotation.y -= .3; viewer.render(); } });
 $('rotateRight').addEventListener('click',() => { if (viewer) { viewer.product.rotation.y += .3; viewer.render(); } });
 $('zoomIn').addEventListener('click',() => viewer?.zoom(-.4)); $('zoomOut').addEventListener('click',() => viewer?.zoom(.4)); $('resetView').addEventListener('click',() => viewer?.reset(face));

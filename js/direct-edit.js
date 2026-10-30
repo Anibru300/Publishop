@@ -11,7 +11,21 @@ export function setupDirectEditing(api) {
     const hint = document.createElement('p'); hint.className = 'preview-hint direct-hint';
     hint.textContent = '✋ Arrastra tu diseño. Las esquinas cambian el tamaño completo; los tiradores de los lados cambian solo el ancho o el alto.';
     stage.after(hint);
-    const nodes = new Map(); let drag = null;
+    const nodes = new Map(); let drag = null, dragFrame = 0;
+    const scheduleDragUpdate = () => {
+        if (dragFrame) return;
+        dragFrame = requestAnimationFrame(() => {
+            dragFrame = 0;
+            if (!drag) return;
+            if (api.changed) api.changed(true); else update();
+        });
+    };
+    const finishDrag = node => {
+        if (drag?.node !== node) return;
+        if (dragFrame) { cancelAnimationFrame(dragFrame); dragFrame = 0; }
+        drag = null; node.classList.remove('dragging');
+        if (api.changed) api.changed(false); else update();
+    };
     const update = () => {
         const items = api.items();
         for (const [id,node] of nodes) if (!items.some(item => item.id === id)) { node.remove(); nodes.delete(id); }
@@ -64,10 +78,9 @@ export function setupDirectEditing(api) {
                         api.move(item,shiftX - drag.shiftX,shiftY - drag.shiftY); drag.shiftX = shiftX; drag.shiftY = shiftY;
                     } else if (drag.handle) api.resize(item,drag.startScale * Math.hypot(e.clientX - drag.cx,e.clientY - drag.cy) / drag.distance);
                     else api.move(item,e.clientX - drag.x,e.clientY - drag.y);
-                    drag.x = e.clientX; drag.y = e.clientY; api.changed(); update();
+                    drag.x = e.clientX; drag.y = e.clientY; scheduleDragUpdate();
                 });
-                const end = () => { if (drag?.node === node) { drag = null; node.classList.remove('dragging'); } };
-                ['pointerup','pointercancel','lostpointercapture'].forEach(type => node.addEventListener(type,end));
+                ['pointerup','pointercancel','lostpointercapture'].forEach(type => node.addEventListener(type,() => finishDrag(node)));
                 overlay.appendChild(node); nodes.set(item.id,node);
             }
             const g = api.geometry(item);

@@ -7,6 +7,7 @@ const isShirt = document.body.dataset.product === 'shirt';
 const viewport = $('mugViewport'), background = '#8c99af';
 const layers = [], textures = {};
 let selectedId = null, face = 'front', ready = false, uploading = false, nextId = 1;
+let paintFrame = 0;
 let THREE, renderer, scene, camera, product;
 let directEditor, textTools, dimensionTools;
 const selected = () => layers.find(l => l.id === selectedId);
@@ -24,8 +25,9 @@ function zoom(amount) {
     if (!ready) return;
     camera.position.z = Math.max(4.8,Math.min(11,camera.position.z + amount)); camera.lookAt(0,0,0); render();
 }
-function paintTextures() {
+function paintTextures(onlySide = null) {
     for (const [side,texture] of Object.entries(textures)) {
+        if (onlySide && side !== onlySide) continue;
         const canvas = texture.image, ctx = canvas.getContext('2d'), w = canvas.width, h = canvas.height;
         ctx.clearRect(0,0,w,h);
         if (!isShirt) { ctx.fillStyle = cold() ? '#111111' : '#ffffff'; ctx.fillRect(0,0,w,h); }
@@ -49,6 +51,10 @@ function paintTextures() {
     }
     render();
 }
+function schedulePaintTextures() {
+    if (paintFrame) return;
+    paintFrame = requestAnimationFrame(() => { paintFrame = 0; paintTextures(isShirt ? face : null); });
+}
 function description() {
     if (!isShirt) return $('mugType').selectedOptions[0].text + (magic() ? ($('magicHot').checked ? ' · caliente (diseño visible)' : ' · fría (negra)') : '');
     return [$('shirtStyle'),$('shirtSleeve'),$('shirtColor'),$('shirtTechnique')].map(s => s.selectedOptions[0].text).join(' · ');
@@ -56,6 +62,13 @@ function description() {
 function updateQuote() {
     const sides = isShirt ? ': ' + layers.filter(l => l.face === 'front').length + ' delante y ' + layers.filter(l => l.face === 'back').length + ' detrás' : '';
     $('quoteMug').href = 'https://wa.me/524778411655?text=' + encodeURIComponent('Hola PUBLI SHOP, quiero cotizar ' + (isShirt ? 'una playera' : 'una taza') + ' personalizada.\n' + description() + '\n' + layers.length + ' diseño(s)' + sides + '. Adjunto la vista previa y mis archivos originales.');
+}
+function syncSelectedControls() {
+    const l = selected();
+    if (!l) return;
+    $('designScale').value = l.scale; $('designX').value = l.x; $('designY').value = l.y; $('designRotation').value = l.rotation;
+    $('scaleValue').textContent = Math.round(l.scale) + '%';
+    dimensionTools?.sync();
 }
 function refreshControls() {
     const l = selected();
@@ -73,8 +86,7 @@ function refreshControls() {
         $('layerList').appendChild(button);
     }
     if (l) {
-        $('designScale').value = l.scale; $('designX').value = l.x; $('designY').value = l.y; $('designRotation').value = l.rotation;
-        $('selectedDesign').textContent = 'Ajustar: ' + l.name; $('scaleValue').textContent = Math.round(l.scale) + '%';
+        syncSelectedControls(); $('selectedDesign').textContent = 'Ajustar: ' + l.name;
     } else $('selectedDesign').textContent = 'Selecciona un diseño para ajustarlo';
     document.querySelectorAll('[data-face]').forEach(b => b.setAttribute('aria-pressed',String(b.dataset.face === face)));
     textTools?.sync(); dimensionTools?.sync(); directEditor?.update();
@@ -174,7 +186,7 @@ $('designFile').addEventListener('change',async event => {
     $('fileStatus').textContent = added + ' diseño(s) añadido(s).' + (rejected ? ' Algunos archivos no se añadieron: máximo 5 por producto, JPG/PNG/WebP de hasta 10 MB e imágenes de hasta 40 megapíxeles.' : ' Selecciona uno en la lista para ajustarlo.');
 });
 for (const [id,property] of [['designScale','scale'],['designX','x'],['designY','y'],['designRotation','rotation']]) {
-    $(id).addEventListener('input',() => { const l = selected(); if (!l) return; l[property] = Number($(id).value); $('scaleValue').textContent = Math.round(l.scale) + '%'; paintTextures(); });
+    $(id).addEventListener('input',() => { const l = selected(); if (!l) return; l[property] = Number($(id).value); $('scaleValue').textContent = Math.round(l.scale) + '%'; schedulePaintTextures(); });
 }
 $('clearDesign').addEventListener('click',() => {
     const index = layers.findIndex(l => l.id === selectedId); if (index < 0) return;
@@ -271,9 +283,9 @@ directEditor = setupDirectEditing({surface:viewport,items:() => ready && !cold()
         layer.y = Math.max(Number($('designY').min),Math.min(Number($('designY').max),layer.y + (g.ux * dy - g.uy * dx) / det));
     },resize(layer,value) { layer.scale = Math.max(10,Math.min(250,value)); },
     stretch(layer,x,y) { layer.stretchX = Math.max(.05,Math.min(5,x)); layer.stretchY = Math.max(.05,Math.min(5,y)); },
-    changed() { refreshControls(); paintTextures(); viewport.dispatchEvent(new Event('designchange',{bubbles:true})); }
+    changed(dragging = false) { if (dragging) syncSelectedControls(); else refreshControls(); paintTextures(isShirt ? face : null); }
 });
-dimensionTools = setupLayerDimensions({selected,changed() { refreshControls(); paintTextures(); },dimensions(layer) {
+dimensionTools = setupLayerDimensions({selected,changed(dragging = false) { if (dragging) syncSelectedControls(); else refreshControls(); paintTextures(isShirt ? face : null); },dimensions(layer) {
     const t = textures[isShirt ? layer.face : 'mug']; const w = t?.image.width || (isShirt ? 1024 : 2048), h = t?.image.height || (isShirt ? 1024 : 820);
     const fit = Math.min(w * (isShirt ? .85 : .40) / layer.image.width,h * .78 / layer.image.height) * layer.scale / 100;
     return {width:layer.image.width * fit * (layer.stretchX ?? 1),height:layer.image.height * fit * (layer.stretchY ?? 1),canvasWidth:w,canvasHeight:h,centerU:isShirt ? .5 : .75};
