@@ -62,6 +62,7 @@
                     <div class="playeras-hero__actions">
                         <a class="btn btn-primary" href="#modelos">Explorar modelos <i class="fas fa-arrow-down" aria-hidden="true"></i></a>
                         <a class="btn btn-outline" href="personaliza-playera.html">Personalizar ahora</a>
+                        <a class="btn btn-outline" href="personaliza-sudadera.html">Personalizar sudadera</a>
                     </div>
                     <div class="playeras-hero__stats" aria-label="Catálogo">
                         <strong id="heroModelCount">240</strong><span>modelos para explorar</span>
@@ -87,6 +88,14 @@
                 </header>
 
                 <div class="playeras-filters" aria-label="Filtros del catálogo">
+                    <div class="playeras-filter-row playeras-filter-row--types">
+                        <label class="playeras-color-filter" for="familyFilter"><span>1. Tipo de prenda</span>
+                            <select id="familyFilter"><option value="">Selecciona una categoría</option></select>
+                        </label>
+                        <label class="playeras-color-filter" for="kindFilter"><span>2. Estilo</span>
+                            <select id="kindFilter" disabled><option value="Todos">Todos los estilos</option></select>
+                        </label>
+                    </div>
                     <div class="playeras-filter-row">
                         <span class="playeras-filter-label">Público</span>
                         <div class="playeras-filter-group" id="genderFilters" role="group" aria-label="Filtrar por público">
@@ -97,10 +106,6 @@
                             <button class="playeras-chip" type="button" data-gender="Por confirmar" aria-pressed="false">Otros modelos</button>
                         </div>
                     </div>
-                    <div class="playeras-filter-row playeras-filter-row--types">
-                        <span class="playeras-filter-label">Estilo</span>
-                        <div class="playeras-filter-group" id="kindFilters" role="group" aria-label="Filtrar por estilo"></div>
-                    </div>
                     <div class="playeras-filter-tools">
                         <label class="playeras-search" for="modelSearch">
                             <i class="fas fa-search" aria-hidden="true"></i>
@@ -109,7 +114,7 @@
                             <kbd>/</kbd>
                         </label>
                         <label class="playeras-color-filter" for="colorFilter">
-                            <span>Color</span>
+                            <span>3. Color</span>
                             <select id="colorFilter"><option value="Todos">Todos</option></select>
                         </label>
                         <label class="playeras-sort" for="sortModels">

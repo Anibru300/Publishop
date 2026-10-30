@@ -4,6 +4,8 @@ import { setupTextTools, describeTextLayers } from './text-tools.js';
 import { setupDirectEditing } from './direct-edit.js';
 const $ = id => document.getElementById(id);
 const isShirt = document.body.dataset.product === 'shirt';
+const isHoodie = document.body.dataset.product === 'hoodie';
+const isApparel = ['shirt','hoodie'].includes(document.body.dataset.product);
 const viewport = $('mugViewport'), background = '#8c99af';
 const layers = [], textures = {};
 let selectedId = null, face = 'front', ready = false, uploading = false, nextId = 1;
@@ -11,14 +13,40 @@ let paintFrame = 0;
 let THREE, renderer, scene, camera, product;
 let directEditor, textTools, dimensionTools;
 const selected = () => layers.find(l => l.id === selectedId);
-const magic = () => !isShirt && $('mugType').value === 'magic';
+const magic = () => !isApparel && $('mugType').value === 'magic';
 const cold = () => magic() && !$('magicHot').checked;
-const currentLayers = () => layers.filter(l => !isShirt || l.face === face);
+const currentLayers = () => layers.filter(l => !isApparel || l.face === face);
+function loadSelectedGarmentModel() {
+    if (!isShirt) return;
+    const params = new URLSearchParams(location.search), title = params.get('title');
+    if (!title) return;
+    const model = Object.fromEntries(['title','gender','kind','color','composition'].map(key => [key, params.get(key) || '']));
+    window.selectedGarmentModel = model;
+    const clean = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+    const titleText = clean(model.title), kindText = clean(model.kind);
+    const style = /cuello\s*v/.test(titleText) ? 'v' : /polo/.test(titleText + ' ' + kindText) ? 'polo' : 'round';
+    $('shirtStyle').value = style;
+    $('shirtSleeve').value = /sin mangas|sin manga/.test(titleText + ' ' + kindText) ? 'none' : /manga larga/.test(titleText + ' ' + kindText) ? 'long' : 'short';
+    if (model.color) {
+        const colorName = clean(model.color);
+        const key = colorName.includes('marino') ? 'marino' : colorName.includes('rey') ? 'rey' : colorName.includes('cielo') ? 'cielo' : colorName.split(/\s+/)[0];
+        const colorMap = {blanco:'#ffffff',hueso:'#ece6d8',negro:'#171717',marino:'#14284c',azul:'#2457c5',rey:'#2457c5',cielo:'#8cc9e8',celeste:'#7ec8e3',rojo:'#c8202c',vino:'#722f45',rosa:'#ee91ba',fucsia:'#df3c91',morado:'#7337a8',lila:'#b8a0d7',gris:'#858585',carbon:'#44464b',carbono:'#44464b',jaspe:'#88898b',aqua:'#36aeb0',turquesa:'#16a1a3',verde:'#21834a',olivo:'#77834b',menta:'#95cdb1',limon:'#c4cf37',amarillo:'#edc72c',canario:'#f2d928',naranja:'#ed812f',cafe:'#704a3c',arena:'#c9b99c',khaki:'#b4a582',oxford:'#646b72',petroleo:'#16777c',salmón:'#ed9b8a',salmon:'#ed9b8a'};
+        const hex = colorMap[key] || '#81818a';
+        let option = [...$('shirtColor').options].find(item => item.value.toLowerCase() === hex);
+        if (!option) { option = new Option(model.color,hex); $('shirtColor').add(option); }
+        else option.textContent = model.color;
+        $('shirtColor').value = hex;
+    }
+    const info = $('selectedModelInfo');
+    if (info) { info.hidden = false; info.innerHTML = ''; const strong = document.createElement('strong'); strong.textContent = 'Modelo seleccionado: ' + model.title; const detail = document.createElement('span'); detail.textContent = [model.gender,model.kind,model.color,model.composition].filter(Boolean).join(' · '); info.append(strong,detail); }
+    $('designTitle').textContent = 'Personaliza: ' + model.title;
+}
+loadSelectedGarmentModel();
 function render() { if (ready && !document.hidden) { renderer.render(scene,camera); directEditor?.update(); } }
 function resetView() {
     if (!ready) return;
-    product.rotation.set(isShirt ? 0 : .06,isShirt ? (face === 'back' ? Math.PI : 0) : .15,0);
-    camera.position.set(0,isShirt ? 0 : 1.2,isShirt ? 7.6 : 7.4);
+    product.rotation.set(isApparel ? 0 : .06,isApparel ? (face === 'back' ? Math.PI : 0) : .15,0);
+    camera.position.set(0,isApparel ? 0 : 1.2,isApparel ? 7.6 : 7.4);
     camera.lookAt(0,0,0); render();
 }
 function zoom(amount) {
@@ -30,20 +58,20 @@ function paintTextures(onlySide = null) {
         if (onlySide && side !== onlySide) continue;
         const canvas = texture.image, ctx = canvas.getContext('2d'), w = canvas.width, h = canvas.height;
         ctx.clearRect(0,0,w,h);
-        if (!isShirt) { ctx.fillStyle = cold() ? '#111111' : '#ffffff'; ctx.fillRect(0,0,w,h); }
-        const visible = layers.filter(l => !isShirt || l.face === side);
+        if (!isApparel) { ctx.fillStyle = cold() ? '#111111' : '#ffffff'; ctx.fillRect(0,0,w,h); }
+        const visible = layers.filter(l => !isApparel || l.face === side);
         if (!cold()) {
             for (const l of visible) {
-                const fit = Math.min(w * (isShirt ? .85 : .40) / l.image.width,h * .78 / l.image.height);
+                const fit = Math.min(w * (isApparel ? .85 : .40) / l.image.width,h * .78 / l.image.height);
                 const width = l.image.width * fit * l.scale / 100 * (l.stretchX ?? 1), height = l.image.height * fit * l.scale / 100 * (l.stretchY ?? 1);
-                const x = w * (isShirt ? .5 : .75) + l.x / 100 * w, y = h / 2 + l.y / 100 * h;
+                const x = w * (isApparel ? .5 : .75) + l.x / 100 * w, y = h / 2 + l.y / 100 * h;
                 // Repeat across the mug's UV seam to keep designs continuous.
-                for (const wrap of isShirt ? [0] : [-w,0,w]) {
+                for (const wrap of isApparel ? [0] : [-w,0,w]) {
                     ctx.save(); ctx.translate(x + wrap,y); ctx.rotate(l.rotation * Math.PI / 180);
                     ctx.drawImage(l.image,-width / 2,-height / 2,width,height); ctx.restore();
                 }
             }
-            if (!isShirt && !visible.length) {
+            if (!isApparel && !visible.length) {
                 ctx.fillStyle = '#7c3aed'; ctx.textAlign = 'center'; ctx.font = 'bold 84px sans-serif'; ctx.fillText('TU IDEA',w * .75,h / 2);
             }
         }
@@ -53,15 +81,16 @@ function paintTextures(onlySide = null) {
 }
 function schedulePaintTextures() {
     if (paintFrame) return;
-    paintFrame = requestAnimationFrame(() => { paintFrame = 0; paintTextures(isShirt ? face : null); });
+    paintFrame = requestAnimationFrame(() => { paintFrame = 0; paintTextures(isApparel ? face : null); });
 }
 function description() {
-    if (!isShirt) return $('mugType').selectedOptions[0].text + (magic() ? ($('magicHot').checked ? ' · caliente (diseño visible)' : ' · fría (negra)') : '');
-    return [$('shirtStyle'),$('shirtSleeve'),$('shirtColor'),$('shirtTechnique')].map(s => s.selectedOptions[0].text).join(' · ');
+    if (!isApparel) return $('mugType').selectedOptions[0].text + (magic() ? ($('magicHot').checked ? ' · caliente (diseño visible)' : ' · fría (negra)') : '');
+    return [isHoodie ? 'Sudadera' : 'Playera', $('shirtStyle'),$('shirtSleeve'),$('shirtColor'),$('shirtTechnique')].filter(s => typeof s === 'string' || s?.selectedOptions).map(s => typeof s === 'string' ? s : s.selectedOptions[0].text).join(' · ');
 }
 function updateQuote() {
-    const sides = isShirt ? ': ' + layers.filter(l => l.face === 'front').length + ' delante y ' + layers.filter(l => l.face === 'back').length + ' detrás' : '';
-    $('quoteMug').href = 'https://wa.me/524778411655?text=' + encodeURIComponent('Hola PUBLI SHOP, quiero cotizar ' + (isShirt ? 'una playera' : 'una taza') + ' personalizada.\n' + description() + '\n' + layers.length + ' diseño(s)' + sides + '. Adjunto la vista previa y mis archivos originales.');
+    const sides = isApparel ? ': ' + layers.filter(l => l.face === 'front').length + ' delante y ' + layers.filter(l => l.face === 'back').length + ' detrás' : '';
+    const model = window.selectedGarmentModel?.title ? `\nModelo: ${window.selectedGarmentModel.title}. ${window.selectedGarmentModel.gender}; ${window.selectedGarmentModel.composition}.` : '';
+    $('quoteMug').href = 'https://wa.me/524778411655?text=' + encodeURIComponent('Hola PUBLI SHOP, quiero cotizar ' + (isHoodie ? 'una sudadera' : isApparel ? 'una playera' : 'una taza') + ' personalizada.\n' + description() + model + '\n' + layers.length + ' diseño(s)' + sides + '. Adjunto la vista previa y mis archivos originales.');
 }
 function syncSelectedControls() {
     const l = selected();
@@ -77,10 +106,10 @@ function refreshControls() {
     for (const item of layers) {
         const button = document.createElement('button'); button.type = 'button'; button.dataset.layer = item.id;
         button.setAttribute('aria-pressed',String(item.id === selectedId));
-        button.textContent = item.name + (isShirt ? (item.face === 'front' ? ' · Frente' : ' · Espalda') : '');
+        button.textContent = item.name + (isApparel ? (item.face === 'front' ? ' · Frente' : ' · Espalda') : '');
         button.addEventListener('click',() => {
             selectedId = item.id;
-            if (isShirt && face !== item.face) { face = item.face; resetView(); }
+            if (isApparel && face !== item.face) { face = item.face; resetView(); }
             refreshControls();
         });
         $('layerList').appendChild(button);
@@ -98,11 +127,13 @@ function buildProduct() {
         scene.remove(product); product.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); });
     }
     product = new THREE.Group();
-    if (isShirt) {
-        const style = $('shirtStyle').value, long = $('shirtSleeve').value === 'long';
+    if (isApparel) {
+        const style = $('shirtStyle').value, long = isHoodie || $('shirtSleeve').value === 'long';
         const fabric = new THREE.MeshStandardMaterial({color:$('shirtColor').value,roughness:.9});
         const shape = new THREE.Shape(); shape.moveTo(-.38,1.4);
-        const outline = long
+        const outline = $('shirtSleeve').value === 'none' && !isHoodie
+            ? [[-.85,1.3],[-1.08,.65],[-.82,.4],[-.68,.65],[-.68,-1.35],[.68,-1.35],[.68,.65],[.82,.4],[1.08,.65],[.85,1.3],[.38,1.4]]
+            : long
             ? [[-.85,1.3],[-1.22,.83],[-1.48,-.9],[-1.12,-1],[-.8,.5],[-.8,-1.35],[.8,-1.35],[.8,.5],[1.12,-1],[1.48,-.9],[1.22,.83],[.85,1.3],[.38,1.4]]
             : [[-.85,1.3],[-1.5,.72],[-1.12,.25],[-.8,.55],[-.8,-1.35],[.8,-1.35],[.8,.55],[1.12,.25],[1.5,.72],[.85,1.3],[.38,1.4]];
         outline.forEach(([x,y]) => shape.lineTo(x,y));
@@ -110,6 +141,13 @@ function buildProduct() {
         else shape.quadraticCurveTo(0,style === 'polo' ? 1.1 : .95,-.38,1.4);
         const geometry = new THREE.ExtrudeGeometry(shape,{depth:.22,bevelEnabled:true,bevelSize:.045,bevelThickness:.04,bevelSegments:3,curveSegments:24});
         geometry.translate(0,0,-.11); product.add(new THREE.Mesh(geometry,fabric));
+        if (isHoodie) {
+            const hoodShape = new THREE.Shape(); hoodShape.moveTo(-.39,1.31); hoodShape.quadraticCurveTo(-.52,1.85,0,1.94); hoodShape.quadraticCurveTo(.52,1.85,.39,1.31); hoodShape.lineTo(.22,1.14); hoodShape.quadraticCurveTo(0,1.29,-.22,1.14); hoodShape.closePath();
+            const hood = new THREE.Mesh(new THREE.ExtrudeGeometry(hoodShape,{depth:.12,bevelEnabled:true,bevelSize:.025,bevelThickness:.02,bevelSegments:2}),fabric.clone()); hood.position.z = -.06; product.add(hood);
+            const pocket = new THREE.Mesh(new THREE.BoxGeometry(.76,.38,.025),fabric.clone()); pocket.position.set(0,-.91,.13); product.add(pocket);
+            for (const x of [-.11,.11]) { const cord = new THREE.Mesh(new THREE.CylinderGeometry(.012,.012,.35,8),new THREE.MeshStandardMaterial({color:$('shirtColor').value})); cord.position.set(x,1.0,.22); product.add(cord); }
+            if (style === 'zip') { const zip = new THREE.Mesh(new THREE.BoxGeometry(.025,1.9,.025),new THREE.MeshStandardMaterial({color:'#d1d5db'})); zip.position.set(0,-.13,.17); product.add(zip); }
+        }
         if (style === 'polo') {
             for (const sign of [-1,1]) {
                 const collar = new THREE.Shape(); collar.moveTo(sign * .05,1.13); collar.lineTo(sign * .38,1.43);
@@ -148,8 +186,8 @@ async function init() {
         for (const [position,intensity] of [[[-3,5,5],3.2],[[4,2,-3],1.5]]) {
             const light = new THREE.DirectionalLight(0xffffff,intensity); light.position.set(...position); scene.add(light);
         }
-        for (const side of isShirt ? ['front','back'] : ['mug']) {
-            const canvas = document.createElement('canvas'); canvas.width = isShirt ? 1024 : 2048; canvas.height = isShirt ? 1024 : 820;
+        for (const side of isApparel ? ['front','back'] : ['mug']) {
+            const canvas = document.createElement('canvas'); canvas.width = isApparel ? 1024 : 2048; canvas.height = isApparel ? 1024 : 820;
             const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace;
             texture.anisotropy = Math.min(8,renderer.capabilities.getMaxAnisotropy()); textures[side] = texture;
         }
@@ -177,11 +215,11 @@ $('designFile').addEventListener('change',async event => {
             const image = new Image(); image.src = url; await image.decode(); if (image.width * image.height > 40000000) throw new Error('Image too large');
             const copy = document.createElement('canvas'), ratio = Math.min(1,2048 / Math.max(image.width,image.height));
             copy.width = Math.max(1,Math.round(image.width * ratio)); copy.height = Math.max(1,Math.round(image.height * ratio)); copy.getContext('2d').drawImage(image,0,0,copy.width,copy.height);
-            const siblings = layers.filter(l => !isShirt || l.face === uploadFace).length, id = nextId++;
+            const siblings = layers.filter(l => !isApparel || l.face === uploadFace).length, id = nextId++;
             layers.push({id,name:file.name,image:copy,face:uploadFace,scale:siblings ? 60 : 100,x:siblings ? (siblings % 2 ? -18 : 18) : 0,y:siblings > 2 ? 18 : 0,rotation:0}); selectedId = id; added++;
         } catch { rejected++; } finally { URL.revokeObjectURL(url); }
     }
-    if (added && isShirt) face = uploadFace;
+    if (added && isApparel) face = uploadFace;
     uploading = false; event.target.value = ''; refreshControls(); paintTextures(); resetView();
     $('fileStatus').textContent = added + ' diseño(s) añadido(s).' + (rejected ? ' Algunos archivos no se añadieron: máximo 5 por producto, JPG/PNG/WebP de hasta 10 MB e imágenes de hasta 40 megapíxeles.' : ' Selecciona uno en la lista para ajustarlo.');
 });
@@ -193,7 +231,7 @@ $('clearDesign').addEventListener('click',() => {
     layers.splice(index,1); selectedId = currentLayers().at(-1)?.id ?? null; refreshControls(); paintTextures(); $('fileStatus').textContent = 'Diseño eliminado. Puedes añadir otro.';
 });
 document.querySelectorAll('[data-face]').forEach(b => b.addEventListener('click',() => { face = b.dataset.face; selectedId = currentLayers().at(-1)?.id ?? null; refreshControls(); resetView(); }));
-document.querySelectorAll('.product-options select, #magicHot').forEach(c => c.addEventListener('change',() => { if (!isShirt) $('magicOptions').hidden = !magic(); buildProduct(); }));
+document.querySelectorAll('.product-options select, #magicHot').forEach(c => c.addEventListener('change',() => { if (!isApparel) $('magicOptions').hidden = !magic(); buildProduct(); }));
 let drag = null;
 viewport.addEventListener('pointerdown',e => { if (!ready) return; drag = {id:e.pointerId,x:e.clientX,y:e.clientY}; viewport.setPointerCapture(e.pointerId); });
 viewport.addEventListener('pointermove',e => {
@@ -207,7 +245,7 @@ viewport.addEventListener('keydown',e => {
     if (!ready || !['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','-','Home'].includes(e.key)) return;
     e.preventDefault();
     if (['ArrowLeft','ArrowRight'].includes(e.key)) {
-        if (isShirt) document.querySelector('[data-face="' + (e.key === 'ArrowLeft' ? 'front' : 'back') + '"]').click();
+        if (isApparel) document.querySelector('[data-face="' + (e.key === 'ArrowLeft' ? 'front' : 'back') + '"]').click();
         else product.rotation.y += e.key === 'ArrowLeft' ? -.2 : .2;
     }
     if (['ArrowUp','+'].includes(e.key)) zoom(-.3); if (['ArrowDown','-'].includes(e.key)) zoom(.3); if (e.key === 'Home') resetView(); render();
@@ -218,13 +256,13 @@ $('zoomIn').addEventListener('click',() => zoom(-.4)); $('zoomOut').addEventList
 function previewCanvas() {
     if (!ready) return;
     const rotation = product.rotation.clone(), position = camera.position.clone(), aspect = camera.aspect, size = renderer.getSize(new THREE.Vector2());
-    const canvas = document.createElement('canvas'); canvas.width = 1600; canvas.height = isShirt ? 990 : 1790;
+    const canvas = document.createElement('canvas'); canvas.width = 1600; canvas.height = isApparel ? 990 : 1790;
     const ctx = canvas.getContext('2d'); ctx.fillStyle = background; ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle = '#111827'; ctx.textAlign = 'center'; ctx.font = 'bold 30px sans-serif'; ctx.fillText('PUBLI SHOP · ' + (isShirt ? 'Playera · Frente y espalda' : 'Taza · Cuatro vistas'),800,42);
+    ctx.fillStyle = '#111827'; ctx.textAlign = 'center'; ctx.font = 'bold 30px sans-serif'; ctx.fillText('PUBLI SHOP · ' + (isHoodie ? 'Sudadera · Frente y espalda' : isApparel ? 'Playera · Frente y espalda' : 'Taza · Cuatro vistas'),800,42);
     ctx.font = '23px sans-serif'; ctx.fillText(description(),800,78);
     try {
-        renderer.setSize(750,750,false); camera.aspect = 1; camera.position.set(0,isShirt ? 0 : .8,isShirt ? 6.8 : 7.2); camera.lookAt(0,0,0); camera.updateProjectionMatrix();
-        const views = isShirt ? [['Frente',0],['Espalda',Math.PI]] : [['Frente',0],['Atrás',Math.PI],['Lado izquierdo',Math.PI / 2],['Lado derecho',-Math.PI / 2]];
+        renderer.setSize(750,750,false); camera.aspect = 1; camera.position.set(0,isApparel ? 0 : .8,isApparel ? 6.8 : 7.2); camera.lookAt(0,0,0); camera.updateProjectionMatrix();
+        const views = isApparel ? [['Frente',0],['Espalda',Math.PI]] : [['Frente',0],['Atrás',Math.PI],['Lado izquierdo',Math.PI / 2],['Lado derecho',-Math.PI / 2]];
         views.forEach(([label,angle],index) => {
             const x = index % 2 * 800, y = Math.floor(index / 2) * 800 + 110;
             product.rotation.set(0,angle,0); renderer.render(scene,camera); ctx.drawImage(renderer.domElement,x + 25,y,750,750);
@@ -236,7 +274,7 @@ function previewCanvas() {
     ctx.font = '22px sans-serif'; ctx.fillText('Vista aproximada · Sujeta a confirmación antes de producir',800,canvas.height - 24);
     return canvas;
 }
-const filename = isShirt ? 'mi-playera-frente-espalda-publishop.png' : 'mi-taza-4-vistas-publishop.png';
+const filename = isHoodie ? 'mi-sudadera-frente-espalda-publishop.png' : isApparel ? 'mi-playera-frente-espalda-publishop.png' : 'mi-taza-4-vistas-publishop.png';
 $('downloadPreview').addEventListener('click',() => downloadCanvas(previewCanvas(),filename));
 textTools = setupTextTools((image,name,textStyle) => {
     if (layers.length >= 5) { $('fileStatus').textContent = 'Máximo cinco diseños por producto. Elimina uno para añadir otro.'; return false; }
@@ -247,23 +285,23 @@ textTools = setupTextTools((image,name,textStyle) => {
 setupCompletion({previewCanvas,summary:() => description() + describeTextLayers(layers),count:() => layers.length,filename});
 function designProjection(layer) {
     if (!ready || !product || cold()) return null;
-    const texture = textures[isShirt ? layer.face : 'mug']; if (!texture) return null;
+    const texture = textures[isApparel ? layer.face : 'mug']; if (!texture) return null;
     const w = texture.image.width, h = texture.image.height;
-    const fit = Math.min(w * (isShirt ? .85 : .40) / layer.image.width,h * .78 / layer.image.height) * layer.scale / 100;
-    const u = ((isShirt ? .5 : .75) + layer.x / 100 + 1) % 1, v = .5 + layer.y / 100;
+    const fit = Math.min(w * (isApparel ? .85 : .40) / layer.image.width,h * .78 / layer.image.height) * layer.scale / 100;
+    const u = ((isApparel ? .5 : .75) + layer.x / 100 + 1) % 1, v = .5 + layer.y / 100;
     const rect = viewport.getBoundingClientRect();
     const point = (pu,pv) => {
         let position;
-        if (isShirt) position = new THREE.Vector3((pu - .5) * 1.32 * (layer.face === 'back' ? -1 : 1),-.18 + (.5 - pv) * 1.8,layer.face === 'back' ? -.156 : .156);
+        if (isApparel) position = new THREE.Vector3((pu - .5) * 1.32 * (layer.face === 'back' ? -1 : 1),-.18 + (.5 - pv) * 1.8,layer.face === 'back' ? -.156 : .156);
         else { const theta = Math.PI / 2 + .22 + pu * (Math.PI * 2 - .44); position = new THREE.Vector3(Math.sin(theta) * 1.004,(.5 - pv) * 2.7,Math.cos(theta) * 1.004); }
         position.applyMatrix4(product.matrixWorld).project(camera);
         return {x:(position.x + 1) / 2 * rect.width,y:(1 - position.y) / 2 * rect.height};
     };
-    if (isShirt) {
+    if (isApparel) {
         const normal = new THREE.Vector3(0,0,layer.face === 'back' ? -1 : 1).transformDirection(product.matrixWorld);
         if (normal.dot(camera.position.clone().normalize()) < .08) return null;
     }
-    if (!isShirt) {
+    if (!isApparel) {
         const theta = Math.PI / 2 + .22 + u * (Math.PI * 2 - .44);
         const world = new THREE.Vector3(Math.sin(theta),(.5 - v) * 2.7,Math.cos(theta)).applyMatrix4(product.matrixWorld);
         const normal = new THREE.Vector3(Math.sin(theta),0,Math.cos(theta)).transformDirection(product.matrixWorld);
@@ -283,11 +321,11 @@ directEditor = setupDirectEditing({surface:viewport,items:() => ready && !cold()
         layer.y = Math.max(Number($('designY').min),Math.min(Number($('designY').max),layer.y + (g.ux * dy - g.uy * dx) / det));
     },resize(layer,value) { layer.scale = Math.max(10,Math.min(250,value)); },
     stretch(layer,x,y) { layer.stretchX = Math.max(.05,Math.min(5,x)); layer.stretchY = Math.max(.05,Math.min(5,y)); },
-    changed(dragging = false) { if (dragging) syncSelectedControls(); else refreshControls(); paintTextures(isShirt ? face : null); }
+    changed(dragging = false) { if (dragging) syncSelectedControls(); else refreshControls(); paintTextures(isApparel ? face : null); }
 });
-dimensionTools = setupLayerDimensions({selected,changed(dragging = false) { if (dragging) syncSelectedControls(); else refreshControls(); paintTextures(isShirt ? face : null); },dimensions(layer) {
-    const t = textures[isShirt ? layer.face : 'mug']; const w = t?.image.width || (isShirt ? 1024 : 2048), h = t?.image.height || (isShirt ? 1024 : 820);
-    const fit = Math.min(w * (isShirt ? .85 : .40) / layer.image.width,h * .78 / layer.image.height) * layer.scale / 100;
-    return {width:layer.image.width * fit * (layer.stretchX ?? 1),height:layer.image.height * fit * (layer.stretchY ?? 1),canvasWidth:w,canvasHeight:h,centerU:isShirt ? .5 : .75};
+dimensionTools = setupLayerDimensions({selected,changed(dragging = false) { if (dragging) syncSelectedControls(); else refreshControls(); paintTextures(isApparel ? face : null); },dimensions(layer) {
+    const t = textures[isApparel ? layer.face : 'mug']; const w = t?.image.width || (isApparel ? 1024 : 2048), h = t?.image.height || (isApparel ? 1024 : 820);
+    const fit = Math.min(w * (isApparel ? .85 : .40) / layer.image.width,h * .78 / layer.image.height) * layer.scale / 100;
+    return {width:layer.image.width * fit * (layer.stretchX ?? 1),height:layer.image.height * fit * (layer.stretchY ?? 1),canvasWidth:w,canvasHeight:h,centerU:isApparel ? .5 : .75};
 }});
 refreshControls(); init();

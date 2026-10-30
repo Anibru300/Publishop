@@ -1,7 +1,8 @@
 (() => {
     const grid = document.getElementById('modelsGrid');
     const resultCount = document.getElementById('resultCount');
-    const kindFilters = document.getElementById('kindFilters');
+    const familySelect = document.getElementById('familyFilter');
+    const kindSelect = document.getElementById('kindFilter');
     const genderFilters = document.getElementById('genderFilters');
     const searchInput = document.getElementById('modelSearch');
     const colorSelect = document.getElementById('colorFilter');
@@ -13,6 +14,7 @@
     let models = [];
     let gender = 'Todos';
     let kind = 'Todos';
+    let family = '';
     let activeButton = null;
     let observer;
 
@@ -29,16 +31,26 @@
     const sheetURL = model => `assets/images/playeras/galeria/${model.sheet}`;
     const position = model => `${model.column * 25}% ${model.row * (100 / 3)}%`;
     const genderLabel = value => value === 'Por confirmar' ? 'Otros modelos' : value;
+    const familyOf = model => {
+        if (model.kind === 'Camisetas') return 'Camisetas';
+        if (model.kind === 'Polos') return 'Polos';
+        if (/^camisa/i.test(model.title)) return 'Camisas';
+        if (model.kind === 'Deportivas') return 'Playeras deportivas';
+        if (model.kind === 'Para sublimación') return 'Playeras para sublimar';
+        return 'Playeras';
+    };
 
     function filteredModels() {
-        const query = normalize(searchInput.value.trim());
+        const tokens = normalize(searchInput.value.trim()).split(/\s+/).filter(Boolean);
         const selectedColor = colorSelect.value;
         const matches = models.filter(model => {
+            if (!family && !tokens.length) return false;
+            if (family && familyOf(model) !== family) return false;
             if (gender !== 'Todos' && model.gender !== gender) return false;
             if (kind !== 'Todos' && model.kind !== kind) return false;
             if (selectedColor !== 'Todos' && model.color !== selectedColor) return false;
             const haystack = normalize([model.title, model.gender, model.kind, model.color, model.composition].join(' '));
-            return !query || haystack.includes(query);
+            return tokens.every(token => haystack.includes(token));
         });
         const sort = sortSelect.value;
         if (sort === 'az') matches.sort((a,b) => a.title.localeCompare(b.title, 'es'));
@@ -46,24 +58,25 @@
         return matches;
     }
 
-    function drawKindFilters() {
-        const kinds = [...new Set(models.map(model => model.kind))];
-        kindFilters.replaceChildren();
-        ['Todos', ...kinds].forEach(value => {
-            const count = value === 'Todos' ? models.length : models.filter(model => model.kind === value).length;
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.className = `playeras-chip${value === kind ? ' is-active' : ''}`;
-            button.dataset.kind = value;
-            button.setAttribute('aria-pressed', String(value === kind));
-            button.textContent = `${value} · ${count}`;
-            kindFilters.append(button);
-        });
+    function drawFamilies() {
+        const priority = ['Playeras','Camisetas','Polos','Camisas','Playeras deportivas','Playeras para sublimar'];
+        const present = new Set(models.map(familyOf));
+        const families = priority.filter(value => present.has(value));
+        families.forEach(value => familySelect.add(new Option(`${value} · ${models.filter(model => familyOf(model) === value).length}`, value)));
+    }
+
+    function drawKinds() {
+        const kinds = [...new Set(models.filter(model => family && familyOf(model) === family).map(model => model.kind))];
+        kindSelect.replaceChildren(new Option('Todos los estilos', 'Todos'));
+        kinds.forEach(value => kindSelect.add(new Option(`${value} · ${models.filter(model => familyOf(model) === family && model.kind === value).length}`, value)));
+        kindSelect.disabled = !family;
     }
 
     function drawColors() {
-        const colors = [...new Set(models.map(model => model.color).filter(Boolean))]
+        const colors = [...new Set(models.filter(model => family && familyOf(model) === family && (kind === 'Todos' || model.kind === kind)).map(model => model.color).filter(Boolean))]
             .sort((a,b) => a.localeCompare(b, 'es'));
+        colorSelect.replaceChildren(new Option(family ? 'Todos los colores' : 'Elige primero el tipo', 'Todos'));
+        colorSelect.disabled = !family;
         colors.forEach(color => {
             const option = document.createElement('option');
             option.value = color;
@@ -102,11 +115,18 @@
 
     function render() {
         const results = filteredModels();
-        const hasFilters = gender !== 'Todos' || kind !== 'Todos' || colorSelect.value !== 'Todos' || searchInput.value.trim();
+        const hasFilters = !!family || gender !== 'Todos' || kind !== 'Todos' || colorSelect.value !== 'Todos' || searchInput.value.trim();
         resultCount.innerHTML = `<strong>${results.length}</strong> ${results.length === 1 ? 'modelo' : 'modelos'} ${hasFilters ? 'en esta selección' : 'disponibles para explorar'}`;
         clearButton.hidden = !hasFilters;
         emptyState.hidden = results.length > 0;
         grid.hidden = results.length === 0;
+        if (!family && !searchInput.value.trim()) {
+            emptyState.querySelector('h3').textContent = 'Elige una categoría para empezar';
+            emptyState.querySelector('p').textContent = 'Selecciona playeras, camisetas, polos u otra categoría. Después filtra por estilo y color.';
+        } else {
+            emptyState.querySelector('h3').textContent = 'No encontramos ese modelo';
+            emptyState.querySelector('p').textContent = 'Prueba con otras palabras o cambia el estilo, el color o el público.';
+        }
         grid.innerHTML = results.map(model => {
             const index = models.indexOf(model);
             const group = genderLabel(model.gender);
@@ -133,7 +153,7 @@
         photo.setAttribute('aria-label', model.title);
         document.getElementById('dialogGender').textContent = genderLabel(model.gender);
         document.getElementById('dialogTitle').textContent = model.title;
-        document.getElementById('dialogIntro').textContent = 'Elige este modelo como punto de partida para tu diseño personalizado.';
+        document.getElementById('dialogIntro').textContent = 'Al personalizarlo, cargaremos automáticamente el corte, color y composición de este modelo.';
         const specs = document.getElementById('dialogSpecs');
         specs.replaceChildren();
         [['Público',genderLabel(model.gender)],['Estilo',model.kind],['Color',model.color || 'Por confirmar'],['Composición',model.composition || 'Por confirmar']].forEach(([label,value]) => {
@@ -142,19 +162,23 @@
         });
         const message = `Hola PUBLI SHOP, quiero cotizar el modelo ${model.title}. Público: ${genderLabel(model.gender)}. Color: ${model.color || 'por confirmar'}. Cantidad y tallas: `;
         document.getElementById('dialogQuote').href = `https://wa.me/524778411655?text=${encodeURIComponent(message)}`;
+        const designURL = new URL('personaliza-playera.html', location.href);
+        for (const key of ['title','gender','kind','color','composition']) designURL.searchParams.set(key, model[key] || '');
+        document.getElementById('dialogDesign').href = designURL.href;
         dialog.showModal();
         document.body.style.overflow = 'hidden';
         closeDialog.focus();
     }
 
     function clearFilters() {
-        gender = 'Todos'; kind = 'Todos';
+        gender = 'Todos'; kind = 'Todos'; family = '';
+        familySelect.value = ''; kindSelect.replaceChildren(new Option('Todos los estilos', 'Todos')); kindSelect.disabled = true;
         searchInput.value = ''; colorSelect.value = 'Todos'; sortSelect.value = 'featured';
         genderFilters.querySelectorAll('[data-gender]').forEach(button => {
             const active = button.dataset.gender === 'Todos';
             button.classList.toggle('is-active', active); button.setAttribute('aria-pressed', String(active));
         });
-        drawKindFilters(); render();
+        drawColors(); render();
     }
 
     genderFilters.addEventListener('click', event => {
@@ -167,12 +191,8 @@
         });
         render();
     });
-    kindFilters.addEventListener('click', event => {
-        const button = event.target.closest('[data-kind]');
-        if (!button) return;
-        kind = button.dataset.kind;
-        drawKindFilters(); render();
-    });
+    familySelect.addEventListener('change', () => { family = familySelect.value; kind = 'Todos'; colorSelect.value = 'Todos'; drawKinds(); drawColors(); render(); });
+    kindSelect.addEventListener('change', () => { kind = kindSelect.value; colorSelect.value = 'Todos'; drawColors(); render(); });
     grid.addEventListener('click', event => {
         const button = event.target.closest('[data-model-index]');
         if (button) openModel(models[Number(button.dataset.modelIndex)], button);
@@ -197,7 +217,7 @@
         .then(data => {
             models = data;
             document.getElementById('heroModelCount').textContent = models.length;
-            drawKindFilters(); drawColors(); render();
+            drawFamilies(); drawKinds(); drawColors(); render();
         })
         .catch(() => {
             resultCount.textContent = 'No pudimos cargar los modelos en este momento.';

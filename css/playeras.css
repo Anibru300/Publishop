@@ -29,6 +29,11 @@
 .playeras-public-link a:hover { border-color: #c084fc; background: rgba(124,58,237,.20); transform: translateY(-2px); }
 .playeras-filters { position: sticky; z-index: 10; top: 76px; margin-bottom: 20px; padding: 17px 18px; border: 1px solid rgba(255,255,255,.09); border-radius: 18px; background: rgba(14,11,32,.92); box-shadow: 0 14px 38px rgba(0,0,0,.18); backdrop-filter: blur(18px); }
 .playeras-filter-row { display: flex; align-items: flex-start; gap: 15px; }
+.playeras-filter-row--types > .playeras-color-filter { flex: 1; flex-direction: column; align-items: stretch; gap: 4px; min-height: 66px; }
+.playeras-filter-row--types > .playeras-color-filter span { font-size: .74rem; font-weight: 700; }
+.playeras-filter-row--types select:disabled, .playeras-filter-tools select:disabled { opacity: .55; cursor: not-allowed; }
+.selected-model-info { display: grid; gap: 5px; margin: 0 0 18px; padding: 13px 15px; border: 1px solid rgba(192,132,252,.38); border-radius: 12px; background: rgba(124,58,237,.12); color: #e9d5ff; }
+.selected-model-info span { color: #c8c2d8; font-size: .88rem; }
 .playeras-filter-row + .playeras-filter-row { margin-top: 13px; padding-top: 13px; border-top: 1px solid rgba(255,255,255,.07); }
 .playeras-filter-label { flex: 0 0 65px; padding-top: 8px; color: #a5a0b6; font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
 .playeras-filter-group { display: flex; flex-wrap: wrap; gap: 7px; }

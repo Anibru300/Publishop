@@ -49,8 +49,9 @@
                     <label for="shirtStyle">Cuello / tipo de playera</label>
                     <select id="shirtStyle" disabled><option value="round">Cuello redondo</option><option value="v">Cuello en V</option><option value="polo">Tipo polo</option></select>
                     <label for="shirtSleeve">Manga</label>
-                    <select id="shirtSleeve" disabled><option value="short">Manga corta</option><option value="long">Manga larga</option></select>
+                    <select id="shirtSleeve" disabled><option value="short">Manga corta</option><option value="long">Manga larga</option><option value="none">Sin mangas</option></select>
                 </div>
+                <aside id="selectedModelInfo" class="selected-model-info" hidden aria-live="polite"></aside>
                 <div class="face-selector" aria-label="Cara de la playera">
                     <button type="button" data-face="front" aria-pressed="true" disabled>Frente</button>
                     <button type="button" data-face="back" aria-pressed="false" disabled>Espalda</button>
