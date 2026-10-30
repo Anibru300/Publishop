@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de playeras personalizables | PUBLI SHOP LEÓN GTO</title>
+    <meta name="description" content="Explora modelos de playeras para hombre, mujer y unisex. Filtra por estilo, color y corte; personaliza tu diseño y solicita una cotización.">
+    <link rel="canonical" href="https://anibru300.github.io/Publishop/playeras.html">
+    <meta property="og:url" content="https://anibru300.github.io/Publishop/playeras.html">
+    <meta property="og:title" content="Modelos de playeras | PUBLI SHOP LEÓN GTO">
+    <meta property="og:description" content="Encuentra el estilo, color y corte para tu próxima playera personalizada.">
+    <meta property="og:image" content="https://anibru300.github.io/Publishop/assets/images/logo.jpg">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="assets/images/logo.jpg" type="image/jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/playeras.css">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Catálogo de playeras personalizables",
+      "url": "https://anibru300.github.io/Publishop/playeras.html",
+      "isPartOf": {"@type": "WebSite", "name": "PUBLI SHOP LEÓN GTO", "url": "https://anibru300.github.io/Publishop/"}
+    }
+    </script>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html#inicio" class="logo">
+                <img src="assets/images/logo.jpg" alt="PUBLI SHOP LEÓN GTO">
+                <span>PUBLI SHOP LEÓN GTO</span>
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-controls="navMenu" aria-expanded="false" aria-label="Abrir menú">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html#inicio" class="nav-link">Inicio</a></li>
+                <li><a href="catalogo.html" class="nav-link">Catálogo</a></li>
+                <li><a href="playeras.html" class="nav-link active" aria-current="page">Playeras</a></li>
+                <li><a href="personaliza-playera.html" class="nav-link">Diseña tu playera</a></li>
+                <li><a href="index.html#contacto" class="nav-link">Contacto</a></li>
+            </ul>
+            <a href="https://wa.me/524778411655?text=Hola%20PUBLI%20SHOP,%20quiero%20cotizar%20playeras" class="btn btn-primary nav-cta" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-whatsapp" aria-hidden="true"></i> Cotizar
+            </a>
+        </div>
+    </nav>
+
+    <main class="playeras-page">
+        <section class="playeras-hero" id="inicio">
+            <div class="container playeras-hero__inner">
+                <div class="playeras-hero__copy">
+                    <a class="playeras-back" href="catalogo.html"><i class="fas fa-arrow-left" aria-hidden="true"></i> Volver al catálogo</a>
+                    <span class="section-tag">Encuentra tu estilo</span>
+                    <h1>Playeras para <span class="gradient-text">hacerlas tuyas</span></h1>
+                    <p>Explora modelos, colores y cortes. Elige uno para ver más detalles, personalizar tu diseño o pedir una cotización.</p>
+                    <div class="playeras-hero__actions">
+                        <a class="btn btn-primary" href="#modelos">Explorar modelos <i class="fas fa-arrow-down" aria-hidden="true"></i></a>
+                        <a class="btn btn-outline" href="personaliza-playera.html">Personalizar ahora</a>
+                    </div>
+                    <div class="playeras-hero__stats" aria-label="Catálogo">
+                        <strong id="heroModelCount">240</strong><span>modelos para explorar</span>
+                    </div>
+                </div>
+                <a href="#modelos" class="playeras-hero__image" aria-label="Explorar catálogo de playeras">
+                    <span class="playeras-hero__shine"></span>
+                    <span class="playeras-hero__word">PUBLI<br>SHOP</span>
+                    <span class="playeras-hero__label"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> Tu idea, tu playera</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="playeras-catalog" id="modelos" aria-labelledby="catalogTitle">
+            <div class="container">
+                <header class="playeras-catalog__heading">
+                    <div>
+                        <span class="section-tag">Colección</span>
+                        <h2 id="catalogTitle">Explora los modelos</h2>
+                        <p>Filtra por corte o público, busca un color y abre cualquier modelo para conocerlo mejor.</p>
+                    </div>
+                    <a class="playeras-design-link" href="personaliza-playera.html"><i class="fas fa-pen-ruler" aria-hidden="true"></i> Abre el diseñador</a>
+                </header>
+
+                <div class="playeras-filters" aria-label="Filtros del catálogo">
+                    <div class="playeras-filter-row">
+                        <span class="playeras-filter-label">Público</span>
+                        <div class="playeras-filter-group" id="genderFilters" role="group" aria-label="Filtrar por público">
+                            <button class="playeras-chip is-active" type="button" data-gender="Todos" aria-pressed="true">Todos</button>
+                            <button class="playeras-chip" type="button" data-gender="Hombre" aria-pressed="false">Hombre</button>
+                            <button class="playeras-chip" type="button" data-gender="Mujer" aria-pressed="false">Mujer</button>
+                            <button class="playeras-chip" type="button" data-gender="Unisex" aria-pressed="false">Unisex</button>
+                            <button class="playeras-chip" type="button" data-gender="Por confirmar" aria-pressed="false">Otros modelos</button>
+                        </div>
+                    </div>
+                    <div class="playeras-filter-row playeras-filter-row--types">
+                        <span class="playeras-filter-label">Estilo</span>
+                        <div class="playeras-filter-group" id="kindFilters" role="group" aria-label="Filtrar por estilo"></div>
+                    </div>
+                    <div class="playeras-filter-tools">
+                        <label class="playeras-search" for="modelSearch">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                            <span class="sr-only">Buscar playeras</span>
+                            <input id="modelSearch" type="search" placeholder="Buscar color o estilo…" autocomplete="off">
+                            <kbd>/</kbd>
+                        </label>
+                        <label class="playeras-color-filter" for="colorFilter">
+                            <span>Color</span>
+                            <select id="colorFilter"><option value="Todos">Todos</option></select>
+                        </label>
+                        <label class="playeras-sort" for="sortModels">
+                            <span>Ordenar</span>
+                            <select id="sortModels">
+                                <option value="featured">Recomendados</option>
+                                <option value="az">Nombre A–Z</option>
+                                <option value="za">Nombre Z–A</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="playeras-results-bar">
+                    <p id="resultCount" aria-live="polite">Cargando modelos…</p>
+                    <button id="clearFilters" class="playeras-clear" type="button" hidden>Limpiar filtros</button>
+                </div>
+                <div id="modelsGrid" class="playeras-grid" aria-live="polite"></div>
+                <div id="emptyState" class="playeras-empty" hidden>
+                    <i class="fas fa-shirt" aria-hidden="true"></i>
+                    <h3>No encontramos ese modelo</h3>
+                    <p>Prueba con otro color o estilo, o limpia los filtros.</p>
+                    <button class="btn btn-outline" type="button" id="emptyClear">Ver todos los modelos</button>
+                </div>
+                <noscript><p class="playeras-empty">Activa JavaScript para explorar los filtros y los modelos del catálogo.</p></noscript>
+            </div>
+        </section>
+
+        <section class="playeras-bottom-cta">
+            <div class="container playeras-bottom-cta__inner">
+                <div><span class="section-tag">¿Ya tienes una idea?</span><h2>Diseña tu playera</h2><p>Sube tus imágenes, acomódalas al frente y atrás y mándanos tu diseño para cotizar.</p></div>
+                <a href="personaliza-playera.html" class="btn btn-primary">Ir al diseñador <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand"><img src="assets/images/logo.jpg" alt="PUBLI SHOP LEÓN GTO"><h3>PUBLI SHOP LEÓN GTO</h3><p>Dale vida a tus ideas</p></div>
+                <div class="footer-links"><h4>Explora</h4><ul><li><a href="index.html">Inicio</a></li><li><a href="catalogo.html">Catálogo</a></li><li><a href="playeras.html">Modelos de playeras</a></li><li><a href="personaliza-playera.html">Diseña tu playera</a></li><li><a href="aviso-privacidad.html">Aviso de privacidad</a></li></ul></div>
+                <div class="footer-services"><h4>¿Listo para cotizar?</h4><p>Cuéntanos el modelo, color, cantidad y diseño que buscas.</p><a href="https://wa.me/524778411655?text=Hola%20PUBLI%20SHOP,%20quiero%20cotizar%20playeras" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" aria-hidden="true"></i> Escríbenos por WhatsApp</a></div>
+            </div>
+            <div class="footer-bottom"><p>&copy; <span id="year"></span> PUBLI SHOP LEÓN GTO. Todos los derechos reservados.</p><p><a href="aviso-privacidad.html">Aviso de privacidad</a></p><p class="made-with">Hecho con <i class="fas fa-heart" aria-hidden="true"></i> en León, Gto.</p></div>
+        </div>
+    </footer>
+    <a href="https://wa.me/524778411655?text=Hola%20PUBLI%20SHOP,%20quiero%20cotizar%20playeras" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Cotizar playeras por WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+
+    <dialog id="modelDialog" class="playera-dialog" aria-labelledby="dialogTitle">
+        <button id="closeDialog" class="playera-dialog__close" type="button" aria-label="Cerrar detalles">&times;</button>
+        <div class="playera-dialog__layout">
+            <div id="dialogPhoto" class="playera-photo playera-dialog__photo" role="img"></div>
+            <div class="playera-dialog__content">
+                <span id="dialogGender" class="playera-dialog__eyebrow"></span>
+                <h2 id="dialogTitle"></h2>
+                <p id="dialogIntro"></p>
+                <dl id="dialogSpecs" class="playera-specs"></dl>
+                <p class="playera-dialog__note">Disponibilidad, tallas, material y precio se confirman al cotizar.</p>
+                <div class="playera-dialog__actions">
+                    <a id="dialogDesign" href="personaliza-playera.html" class="btn btn-primary">Diseña tu playera</a>
+                    <a id="dialogQuote" href="#" class="btn btn-outline" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" aria-hidden="true"></i> Cotizar este modelo</a>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <script src="js/main.js"></script>
+    <script src="js/playeras.js"></script>
+</body>
+</html>
